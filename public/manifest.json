@@ -1,6 +1,6 @@
 {
-  "name": "Al Rayyan Admin Panel",
-  "short_name": "Admin",
+  "name": "'أسواق الريان العالمية'",
+  "short_name": "الريان",
   "icons": [
     {
       "src": "/pwa-192x192.png",
@@ -32,5 +32,5 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "description": "اسواق الريان العالمية * كل ما يلزم الاسرة تحت سقف واحد*"
+  "description": "أسواق الريان العالمية تجسد روح الكفاءة والابتكار والتركيز على العملاء"
 }
