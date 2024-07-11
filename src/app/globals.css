@@ -67,3 +67,126 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+/* not-found.tsx styles */
+
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans');
+/*Variables*/
+.left-section .inner-content {
+	@apply absolute -translate-y-2/4 top-2/4;
+}
+* {
+	@apply box-border;
+}
+html,
+body {
+	@apply m-0 p-0;
+}
+body {
+	@apply text-[#f5f6fa];
+	font-family: 'Fira Sans', sans-serif;
+}
+.background {
+	@apply absolute w-full h-full left-0 top-0;
+	background: linear-gradient(#0c0e10, #446182);
+}
+.background .ground {
+	@apply absolute w-full h-[25vh] bottom-0;
+	background: #0c0e10;
+}
+@media (max-width: 770px) {
+	.background .ground {
+		@apply h-[0vh];
+	}
+}
+.errorContainer {
+	@apply relative w-[85%] h-screen flex flex-row justify-around mx-auto my-0 pb-[25vh];
+}
+@media (max-width: 770px) {
+	.container {
+		@apply flex-col pb-[0vh];
+	}
+}
+.left-section,
+.right-section {
+	@apply relative;
+}
+.left-section {
+	@apply w-2/5;
+}
+@media (max-width: 770px) {
+	.left-section {
+		@apply w-full h-2/5 absolute top-0;
+	}
+}
+@media (max-width: 770px) {
+	.left-section .inner-content {
+		@apply relative px-0 py-4;
+	}
+}
+.heading {
+	@apply text-center text-[9em] leading-[1.3em] mt-8 mb-2 mx-0 p-0;
+	text-shadow: 0 0 1rem #fefefe;
+}
+@media (max-width: 770px) {
+	.heading {
+		@apply text-[7em] leading-[1.15] m-0;
+	}
+}
+.subheading {
+	@apply text-center max-w-[480px] text-[1.5em] leading-[1.5em] mx-auto my-0 px-4 py-0;
+}
+@media (max-width: 770px) {
+	.subheading {
+		@apply text-[1.3em] leading-[1.15] max-w-full;
+	}
+}
+.right-section {
+	@apply w-6/12;
+}
+@media (max-width: 770px) {
+	.right-section {
+		@apply w-full h-3/5 absolute bottom-0;
+	}
+}
+.svgimg {
+	@apply absolute max-w-full max-h-full pl-[1vh] pt-[10vh] bottom-0;
+}
+@media (max-width: 770px) {
+	.svgimg {
+		@apply p-0;
+	}
+}
+.svgimg .bench-legs {
+	@apply fill-[#0C0E10];
+}
+.svgimg .top-bench,
+.svgimg .bottom-bench {
+	@apply stroke-[#0C0E10] stroke-[1px] fill-[#5B3E2B];
+}
+.svgimg .bottom-bench path:nth-child(1) {
+	@apply fill-[#432d20];
+}
+.svgimg .lamp-details {
+	@apply fill-[#202425];
+}
+.svgimg .lamp-accent {
+	@apply fill-[#2c3133];
+}
+.svgimg .lamp-bottom {
+	@apply fill-[linear-gradient(#202425,#0C0E10)];
+}
+.svgimg .lamp-light {
+	@apply fill-[#EFEFEF];
+}
+@keyframes glow {
+	0% {
+		text-shadow: 0 0 1rem #fefefe;
+	}
+	50% {
+		text-shadow: 0 0 1.85rem #ededed;
+	}
+	100% {
+		text-shadow: 0 0 1rem #fefefe;
+	}
+}
