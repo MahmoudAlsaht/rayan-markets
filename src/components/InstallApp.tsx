@@ -1,9 +1,11 @@
 'use client';
+
 import {
 	SyntheticEvent,
 	useLayoutEffect,
 	useState,
 } from 'react';
+import { DownloadIcon, X } from 'lucide-react';
 
 const InstallPWA = () => {
 	const [supportsPWA, setSupportsPWA] = useState(false);
@@ -32,8 +34,6 @@ const InstallPWA = () => {
 	};
 
 	useLayoutEffect(() => {
-		const userAgent = navigator.userAgent;
-
 		const installHandler = (e: any) => {
 			localStorage.setItem('pwaInstalled', '0');
 			setIsInstalled(false);
@@ -75,7 +75,7 @@ const InstallPWA = () => {
 		}
 	}, []);
 
-	const onClick = () => {
+	const handleInstall = () => {
 		setIsInstalled(true);
 
 		if (!promptInstall) {
@@ -91,32 +91,34 @@ const InstallPWA = () => {
 		return null;
 
 	return (
-		<main dir='rtl'>
-			{/* <Snackbar
-				open={open}
-				onClose={handleClose}
-				message={
-					<Button
-						variant='outlined'
-						aria-label='Install app'
-						title='Install app'
-						onClick={onClick}
-					>
-						Install <InstallMobileIcon />
-					</Button>
-				}
-				action={
-					<IconButton
-						size='small'
-						aria-label='close'
-						color='inherit'
-						onClick={handleClose}
-					>
-						<CloseIcon fontSize='small' />
-					</IconButton>
-				}
-			/> */}
-		</main>
+		<div
+			dir='rtl'
+			id='toast-default'
+			className='fixed bottom-3 right-4 sm:right-14 flex items-center w-full max-w-xs p-4 bg-white rounded-lg shadow dark:bg-gray-800 text-rayanPrimary-dark dark:text-rayanPrimary-light'
+			role='alert'
+		>
+			<button
+				className='flex flex-shrink-0 w-full h-full rounded-lg hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:text-white dark:hover:bg-gray-700'
+				onClick={handleInstall}
+			>
+				<DownloadIcon />
+				<span className='sr-only'>Download icon</span>
+				<div className='ms-3 mt-1 text-sm font-normal'>
+					Install App
+				</div>
+			</button>
+
+			<button
+				type='button'
+				className='ms-auto -mx-1.5 -my-1.5 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8  dark:hover:text-white dark:hover:bg-gray-700'
+				data-dismiss-target='#toast-default'
+				aria-label='Close'
+				onClick={() => setSupportsPWA(false)}
+			>
+				<span className='sr-only'>Close</span>
+				<X />
+			</button>
+		</div>
 	);
 };
 

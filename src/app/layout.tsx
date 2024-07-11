@@ -1,15 +1,13 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import InstallApp from '../components/InstallApp';
+import './globals.css';
+import { cn } from '@/lib/utils';
 
-const inter = Inter({ subsets: ['latin'] });
-
-const myFont = localFont({
+const Alexandria = localFont({
 	src: '../fonts/Alexandria-VariableFont_wght.ttf',
 	display: 'swap',
 });
-import './globals.css';
 
 const APP_NAME = 'أسواق الريان';
 const APP_DEFAULT_TITLE = 'أسواق الريان العالمية';
@@ -60,8 +58,13 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='ar' className={myFont.className}>
-			<body className={inter.className}>
+		<html lang='ar'>
+			<body
+				className={cn(
+					'min-h-screen antialiased',
+					Alexandria.className,
+				)}
+			>
 				<InstallApp />
 				{children}
 			</body>
