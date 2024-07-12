@@ -1,0 +1,244 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone            String   @unique
+  username         String
+  password         String
+  role             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  verificationCode String?
+
+  orders    Order[]
+  profileId String?  @db.ObjectId
+  profile   Profile?
+}
+
+model Profile {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  contact   Contact[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @db.ObjectId
+}
+
+model OrderProduct {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  price    Int
+  imageUrl String
+  quantity Int
+  counter  Int    @default(0)
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId  String @db.ObjectId
+}
+
+model OrderContact {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  phone String
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique @db.ObjectId
+
+  districtId String   @unique @db.ObjectId
+  district   District @relation(fields: [districtId], references: [id])
+}
+
+model Order {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  shippingFee       Int
+  productTotalPrice Int
+  orderId           String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  status            String
+  isUserRegistered  Boolean
+  promoCodeId       String?  @db.ObjectId
+  paymentMethod     String
+  OrderTotalPrice   Int
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @db.ObjectId
+
+  anonymous   Anonymous? @relation(fields: [anonymousId], references: [id], onDelete: Cascade)
+  anonymousId String?    @db.ObjectId
+
+  products OrderProduct[]
+  contact  OrderContact?
+}
+
+model Product {
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  body               String
+  imageId            String          @db.ObjectId
+  image              Image?
+  price              Int
+  newPrice           Int?
+  quantity           Int
+  isOffer            Boolean         @default(false)
+  isEndDate          Boolean         @default(false)
+  offerExpiresInDays Int?
+  remainingDays      Int?
+  views              Int             @default(0)
+  numberOfPurchases  Int             @default(0)
+  productType        String          @default("normal")
+  discription        String?
+  offerStartsAt      DateTime?
+  offerEndsAt        DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  productOptions     ProductOption[]
+  labelIds           String[]        @db.ObjectId
+
+  labels Label[] @relation(fields: [labelIds], references: [id])
+
+  brand    String
+  category String
+}
+
+model PromoCode {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  promoType String
+  code      String
+  discount  Int
+  expired   Boolean
+  startDate DateTime
+  endDate   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductOption {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  type       String  @default("normal")
+  optionName String
+  price      Int?
+  quantity   Int?
+  productId  String  @db.ObjectId
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Label {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  value String
+
+  productIds String[]  @db.ObjectId
+  products   Product[] @relation(fields: [productIds], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  filename  String
+  path      String
+  imageType String
+  productId String  @unique @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  categoryId String?   @unique @db.ObjectId
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  brandId String? @unique @db.ObjectId
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  bannerId String? @unique @db.ObjectId
+  banner   Banner? @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model District {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String @unique
+  shippingFees Int
+
+  contact      Contact?
+  orderContact OrderContact?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  phone String
+
+  profileId    String     @db.ObjectId
+  profile      Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  districtId   String     @unique @db.ObjectId
+  district     District   @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  anounymous   Anonymous? @relation(fields: [anounymousId], references: [id], onDelete: Cascade)
+  anounymousId String?    @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  banner Banner?
+
+  imageId String @db.ObjectId
+  image   Image?
+}
+
+model Brand {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  banner  Banner?
+  imageId String  @db.ObjectId
+  image   Image?
+}
+
+model Banner {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  bannerType String
+
+  image Image[]
+
+  brandId String? @unique @db.ObjectId
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  categoryId String?   @unique @db.ObjectId
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Anonymous {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  username         String
+  phone            String   @unique
+  verificationCode String?
+  orders           Order[]
+  contact          Contact?
+}

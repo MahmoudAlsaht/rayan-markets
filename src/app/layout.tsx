@@ -61,7 +61,7 @@ export default function RootLayout({
 		<html lang='ar'>
 			<body
 				className={cn(
-					'min-h-screen antialiased',
+					'text-rayanPrimary-dark dark:text-rayanPrimary-light dark:bg-rayanSecondary-dark min-h-screen antialiased',
 					Alexandria.className,
 				)}
 			>
