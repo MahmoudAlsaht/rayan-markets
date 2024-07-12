@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import InstallApp from '../components/InstallApp';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { ThemeProvider } from 'next-themes';
 
 const Alexandria = localFont({
 	src: '../fonts/Alexandria-VariableFont_wght.ttf',
@@ -58,15 +59,17 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='ar'>
+		<html lang='ar' suppressHydrationWarning>
 			<body
 				className={cn(
-					'text-rayanPrimary-dark dark:text-rayanPrimary-light dark:bg-rayanSecondary-dark min-h-screen antialiased',
+					'text-rayanPrimary-dark dark:bg-slate-300 bg-slate-50 min-h-screen antialiased',
 					Alexandria.className,
 				)}
 			>
-				<InstallApp />
-				{children}
+				<ThemeProvider attribute='class'>
+					<InstallApp />
+					{children}
+				</ThemeProvider>
 			</body>
 		</html>
 	);
