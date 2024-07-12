@@ -62,7 +62,7 @@ export default function RootLayout({
 		<html lang='ar' suppressHydrationWarning>
 			<body
 				className={cn(
-					'text-rayanPrimary-dark dark:text-rayanPrimary-dark dark:bg-slate-300 bg-slate-50 min-h-screen antialiased',
+					'text-rayanPrimary-dark dark:text-rayanPrimary-dark dark:bg-slate-200 bg-slate-50 min-h-screen antialiased',
 					Alexandria.className,
 				)}
 			>
