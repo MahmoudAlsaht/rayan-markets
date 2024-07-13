@@ -103,7 +103,7 @@ const InstallPWA = () => {
 			>
 				<DownloadIcon />
 				<span className='sr-only'>Download icon</span>
-				<div className='ms-3 mt-1 text-sm font-normal'>
+				<div className='ms-2 mt-1 text-sm font-normal'>
 					Install App
 				</div>
 			</button>
