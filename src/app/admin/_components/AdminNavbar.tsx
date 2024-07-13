@@ -2,8 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '../../rayan.marketLogo.png';
 import AdminSideBar from './AdminSideBar';
+import logout from '@/app/(siteFacing)/auth/_actions/logout';
 
 export default function AdminNavbar() {
+	const handleLogout = logout;
+
 	return (
 		<>
 			<nav
@@ -22,7 +25,7 @@ export default function AdminNavbar() {
 						/>
 					</Link>
 
-					<AdminSideBar />
+					<AdminSideBar logout={handleLogout} />
 				</div>
 			</nav>
 		</>

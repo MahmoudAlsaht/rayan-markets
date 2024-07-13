@@ -3,14 +3,20 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { LogOut, Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 import { SETTINGS } from './AdminOptions';
 
-export default function AdminSideBar() {
+export default function AdminSideBar({
+	logout,
+}: {
+	logout: () => void;
+}) {
 	const [show, setShow] = useState(false);
 
 	const toggleShow = () => setShow(!show);
+
+	const router = useRouter();
 
 	return (
 		<>
@@ -63,11 +69,17 @@ export default function AdminSideBar() {
 					</ul>
 
 					<ul className='pt-5 mt-5 space-y-2 border-t border-gray-700'>
-						<SideLink href='#'>
+						<SideLink
+							href='#'
+							onClick={async () => {
+								await logout();
+								router.refresh();
+							}}
+						>
 							<LogOut className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
 
 							<span className='ml-3 mr-2'>
-								Logout
+								تسجيل الخروج
 							</span>
 						</SideLink>
 					</ul>

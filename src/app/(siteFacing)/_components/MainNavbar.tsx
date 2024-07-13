@@ -12,8 +12,15 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { User } from '@prisma/client';
 
-export default function MainNavbar() {
+export default function MainNavbar({
+	user,
+	logout,
+}: {
+	user: Partial<User> | null;
+	logout: () => void;
+}) {
 	const router = useRouter();
 
 	return (
@@ -58,37 +65,59 @@ export default function MainNavbar() {
 									<UserCircle />
 								</DropdownMenuTrigger>
 								<DropdownMenuContent className='w-50'>
-									<DropdownMenuCheckboxItem
-										className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
-										onClick={() =>
-											router.push(
-												'/auth/register',
-											)
-										}
-									>
-										التسجيل
-									</DropdownMenuCheckboxItem>
-									<DropdownMenuCheckboxItem
-										className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
-										onClick={() =>
-											router.push(
-												'/auth/login',
-											)
-										}
-									>
-										تسجيل الدخول
-									</DropdownMenuCheckboxItem>
-									<DropdownMenuCheckboxItem
-										className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
-										onClick={() =>
-											router.push('#')
-										}
-									>
-										الصفحة الشخصية
-									</DropdownMenuCheckboxItem>
-									<DropdownMenuCheckboxItem className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'>
-										تسجيل الخروج
-									</DropdownMenuCheckboxItem>
+									{!user ? (
+										<>
+											<DropdownMenuCheckboxItem
+												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
+												onClick={() =>
+													router.push(
+														'/auth/register',
+													)
+												}
+											>
+												التسجيل
+											</DropdownMenuCheckboxItem>
+											<DropdownMenuCheckboxItem
+												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
+												onClick={() =>
+													router.push(
+														'/auth/login',
+													)
+												}
+											>
+												تسجيل الدخول
+											</DropdownMenuCheckboxItem>
+										</>
+									) : (
+										<>
+											<DropdownMenuCheckboxItem
+												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
+												onClick={() => {
+													user.role ===
+													'customer'
+														? router.push(
+																'/account',
+														  )
+														: router.push(
+																'/admin',
+														  );
+												}}
+											>
+												{user.role ===
+												'customer'
+													? 'الصفحة الشخصية'
+													: 'لوحة التحكم'}
+											</DropdownMenuCheckboxItem>
+											<DropdownMenuCheckboxItem
+												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
+												onClick={() => {
+													logout();
+												}}
+											>
+												تسجيل الخروج
+											</DropdownMenuCheckboxItem>
+										</>
+									)}
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</li>
