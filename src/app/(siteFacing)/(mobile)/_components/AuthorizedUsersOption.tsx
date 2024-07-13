@@ -11,7 +11,7 @@ export default function AuthorizedUsersOption({
 	user: Partial<User>;
 }) {
 	const router = useRouter();
-
+	//
 	return (
 		<>
 			{SETTINGS.map((setting) =>
