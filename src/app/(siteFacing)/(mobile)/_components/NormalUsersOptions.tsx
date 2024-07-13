@@ -14,6 +14,10 @@ export default function NormalUsersOptions({
 
 	return (
 		<>
+			<OptionLink href='/account'>
+				الصفحة الشخصية
+			</OptionLink>
+
 			{USER_SETTINGS.map(
 				(setting) =>
 					setting.displayName !== 'المتجر' && (

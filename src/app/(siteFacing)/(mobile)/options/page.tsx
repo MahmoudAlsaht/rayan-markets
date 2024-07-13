@@ -10,7 +10,7 @@ export default async function OptionsPage() {
 	return (
 		<main dir='rtl' className='sm:hidden'>
 			<MobileNav />
-			<div className='flex flex-col w-full h-screen text-2xl text-rayanPrimary-dark bg-inherit'>
+			<div className='flex flex-col mx-4 w-full h-screen text-2xl text-rayanPrimary-dark bg-inherit'>
 				{!user && (
 					<>
 						<OptionLink href='/auth/register'>

@@ -6,8 +6,8 @@ export default function MobileNav() {
 	const router = useRouter();
 
 	return (
-		<nav className='bg-rayanPrimary-dark '>
-			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
+		<nav className='bg-rayanPrimary-dark mb-4 sm:hidden'>
+			<div className='max-w-screen-xl h-14 flex flex-wrap items-center justify-between mx-auto p-4'>
 				<button
 					data-collapse-toggle='navbar-default'
 					type='button'

@@ -14,6 +14,7 @@ export default function AuthorizedUsersOption({
 	//
 	return (
 		<>
+			<OptionLink href='/admin'>لوحة التحكم</OptionLink>
 			{SETTINGS.map((setting) =>
 				setting.displayName !== 'المتجر' &&
 				user.role !== 'admin'

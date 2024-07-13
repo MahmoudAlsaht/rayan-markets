@@ -11,7 +11,7 @@ export default async function AdminLayout({
 }) {
 	await isAdmin();
 	return (
-		<main dir='rtl'>
+		<main dir='rtl' className='h-full bg-slate-50'>
 			<AdminNavbar />
 			{children}
 		</main>

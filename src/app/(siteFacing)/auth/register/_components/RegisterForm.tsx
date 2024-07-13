@@ -11,7 +11,10 @@ export function RegisterForm() {
 	const [error, action] = useFormState(register, {});
 
 	return (
-		<form action={action} className='max-w-sm mx-auto'>
+		<form
+			action={action}
+			className='max-w-sm mx-4 sm:mx-auto'
+		>
 			<div className='relative z-0 w-full mb-5 group'>
 				<input
 					type='tel'

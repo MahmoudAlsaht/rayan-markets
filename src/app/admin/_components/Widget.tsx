@@ -17,12 +17,18 @@ export default function Widget({
 }) {
 	return (
 		<>
-			<Card dir='rtl'>
+			<Card dir='rtl' className='border-none'>
 				<CardHeader>
-					<CardTitle>{title}</CardTitle>
+					<CardTitle className='text-rayanPrimary-dark'>
+						{title}
+					</CardTitle>
 				</CardHeader>
 				<CardFooter>
-					<Button asChild>
+					<Button
+						asChild
+						className='text-rayanPrimary-dark hover:text-white hover:bg-rayanPrimary-dark'
+						variant='outline'
+					>
 						<Link href={href}>
 							انظر المزيد
 							<MoveLeft className='mr-4' />
