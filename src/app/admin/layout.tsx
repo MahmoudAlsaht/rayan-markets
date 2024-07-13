@@ -7,9 +7,9 @@ export default function AdminLayout({
 	children: ReactNode;
 }) {
 	return (
-		<>
+		<main dir='rtl'>
 			<AdminNavbar />
 			{children}
-		</>
+		</main>
 	);
 }

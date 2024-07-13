@@ -1,10 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ChevronDownCircle, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
+import { SETTINGS } from './AdminOptions';
 
 export default function AdminSideBar() {
 	const [show, setShow] = useState(false);
@@ -47,21 +48,26 @@ export default function AdminSideBar() {
 							</Button>
 						</li>
 
-						<SideLink href='/admin'>
-							<ChevronDownCircle className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
+						{SETTINGS.map((setting) => (
+							<SideLink
+								key={setting.displayName}
+								href={setting.href}
+							>
+								{setting.icon}
 
-							<span className='ml-3 mr-2'>
-								Docs
-							</span>
-						</SideLink>
+								<span className='ml-3 mr-2'>
+									{setting.displayName}
+								</span>
+							</SideLink>
+						))}
 					</ul>
 
 					<ul className='pt-5 mt-5 space-y-2 border-t border-gray-700'>
 						<SideLink href='#'>
-							<ChevronDownCircle className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
+							<LogOut className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
 
 							<span className='ml-3 mr-2'>
-								Docs
+								Logout
 							</span>
 						</SideLink>
 					</ul>
