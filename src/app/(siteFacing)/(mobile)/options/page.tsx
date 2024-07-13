@@ -1,8 +1,8 @@
-import MobileNav from './_components/MobileNav';
+import MobileNav from '../_components/MobileNav';
 import { checkUser } from '../../auth/_actions/isAuthenticated';
-import { OptionLink } from './_components/OptionLink';
-import NormalUsersOptions from './_components/NormalUsersOptions';
-import AuthorizedUsersOption from './_components/AuthorizedUsersOption';
+import { OptionLink } from '../_components/OptionLink';
+import NormalUsersOptions from '../_components/NormalUsersOptions';
+import AuthorizedUsersOption from '../_components/AuthorizedUsersOption';
 
 export default async function OptionsPage() {
 	const user = await checkUser();
