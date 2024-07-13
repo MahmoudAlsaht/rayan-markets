@@ -98,7 +98,7 @@ const InstallPWA = () => {
 			role='alert'
 		>
 			<button
-				className='flex flex-shrink-0 w-full h-full rounded-lg hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:text-white dark:hover:bg-gray-700'
+				className='flex flex-shrink-0 h-full rounded-lg hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:text-white dark:hover:bg-gray-700'
 				onClick={handleInstall}
 			>
 				<DownloadIcon />
