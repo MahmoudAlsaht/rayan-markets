@@ -4,7 +4,7 @@ import { LoginForm } from './_components/LoginForm';
 
 export default async function LoginPage() {
 	const user = await checkUser();
-	// if (user) redirect('/');
+	if (user) redirect('/');
 	return (
 		<main dir='rtl'>
 			<h1 className='text-center mt-16 text-4xl mb-4'>

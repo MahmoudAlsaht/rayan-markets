@@ -13,13 +13,12 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User } from '@prisma/client';
+import logout from '../auth/_actions/logout';
 
 export default function MainNavbar({
 	user,
-	logout,
 }: {
 	user: Partial<User> | null;
-	logout: () => void;
 }) {
 	const router = useRouter();
 
@@ -110,8 +109,8 @@ export default function MainNavbar({
 											</DropdownMenuCheckboxItem>
 											<DropdownMenuCheckboxItem
 												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
-												onClick={() => {
-													logout();
+												onClick={async () => {
+													await logout();
 												}}
 											>
 												تسجيل الخروج

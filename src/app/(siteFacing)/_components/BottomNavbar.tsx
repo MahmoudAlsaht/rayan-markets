@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { User } from '@prisma/client';
 import { HomeIcon, Search, Settings2 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -43,7 +44,7 @@ export default function BottomNavbar() {
 						></div>
 					</div>
 
-					<NavLink href='/user-options'>
+					<NavLink href='/options'>
 						<Settings2 />
 						<span className='sr-only'>Options</span>
 					</NavLink>
@@ -75,7 +76,13 @@ function NavLink(
 			className={cn(
 				'inline-flex flex-col items-center justify-center px-5  group',
 				pathname === props.href &&
-					'bg-gray-100 dark:bg-gray-800',
+					`bg-gray-100 dark:bg-gray-800 ${
+						pathname === '/options' &&
+						'rounded-e-full'
+					} ${
+						pathname === '/products' &&
+						'rounded-s-full'
+					}`,
 			)}
 		/>
 	);

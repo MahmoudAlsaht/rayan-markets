@@ -4,7 +4,7 @@ import { RegisterForm } from './_components/RegisterForm';
 
 export default async function RegisterPage() {
 	const user = await checkUser();
-	// if (user) redirect('/');
+	if (user) redirect('/');
 	return (
 		<main dir='rtl'>
 			<h1 className='text-center mt-16 text-4xl mb-4'>
