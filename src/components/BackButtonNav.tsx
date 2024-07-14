@@ -1,26 +1,40 @@
 'use client';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
 
-export default function MobileNav() {
+export default function BackButtonNav({
+	bg = true,
+}: {
+	bg?: boolean;
+}) {
 	const router = useRouter();
 
 	return (
-		<nav className='bg-rayanPrimary-dark mb-4 sm:hidden'>
+		<nav
+			className={`${
+				bg ? 'bg-rayanPrimary-dark' : 'bg-none'
+			}  mb-4`}
+		>
 			<div className='max-w-screen-xl h-14 flex flex-wrap items-center justify-between mx-auto p-4'>
-				<button
+				<Button
 					data-collapse-toggle='navbar-default'
 					type='button'
-					className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg'
+					variant='outline'
+					className={`${
+						bg
+							? 'text-white hover:bg-inherit bg-inherit border-none'
+							: 'text-rayanPrimary-dark bg-inherit'
+					} inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg`}
 					aria-controls='navbar-default'
 					aria-expanded='false'
 					onClick={() => router.back()}
 				>
 					<span className='sr-only'>
-						Open main menu
+						Go Back One Page
 					</span>
 					<ArrowRight />
-				</button>
+				</Button>
 			</div>
 		</nav>
 	);

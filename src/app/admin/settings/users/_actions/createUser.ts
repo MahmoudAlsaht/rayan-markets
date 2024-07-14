@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 
 const phoneNumberRegex = /^(07[789]\d{7})$/;
 
-const registerSchema = z
+const addSchema = z
 	.object({
 		phone: z
 			.string()
@@ -26,6 +26,9 @@ const registerSchema = z
 				6,
 				'كلمة المرور يجب ان لا تكون اقل من 6 خانات &',
 			),
+		role: z
+			.string()
+			.min(1, 'يجب أن تقوم باختيار دور للمستخدم!'),
 	})
 	.superRefine(({ confirmPassword, password }, ctx) => {
 		if (confirmPassword !== password) {
@@ -37,11 +40,11 @@ const registerSchema = z
 		}
 	});
 
-export const register = async (
+export const createNewUser = async (
 	_pervState: unknown,
 	formData: FormData,
 ) => {
-	const result = await registerSchema.safeParse(
+	const result = await addSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
 
@@ -60,29 +63,17 @@ export const register = async (
 			username: '',
 			password: '',
 			confirmPassword: '',
+			role: '',
 		};
 
-	const newUser = await db.user.create({
+	await db.user.create({
 		data: {
 			phone: data.phone,
 			username: data.username,
 			password: await hashPassword(data.password),
-			role: 'customer',
+			role: data.role,
 		},
 	});
 
-	const token = jwt.sign(
-		{ id: newUser?.id, name: newUser?.username },
-		process.env.SECRET_1,
-	);
-
-	const date = new Date();
-	date.setTime(date.getTime() + 1000 * 60 * 60 * 24 * 60);
-
-	cookies().set('token', token, {
-		path: '/',
-		expires: date,
-	});
-
-	redirect('/');
+	redirect('/admin/settings/users');
 };

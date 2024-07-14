@@ -15,7 +15,7 @@ const loginSchema = z.object({
 });
 
 export const login = async (
-	pervState: unknown,
+	_pervState: unknown,
 	formData: FormData,
 ) => {
 	const result = await loginSchema.safeParse(

@@ -83,7 +83,7 @@ function SubmitButton() {
 			{pending ? (
 				<Loader2 className='animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light' />
 			) : (
-				'التسجيل'
+				'تسجيل الدخول'
 			)}
 		</Button>
 	);

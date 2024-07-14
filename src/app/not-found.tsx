@@ -17,15 +17,10 @@ export default function NotFound() {
 							موجودة، تأكد من الرابط المدخل وأعد
 							المحاولة
 						</p>
-						<Link
-							href='/'
-							style={{
-								textDecoration: 'none',
-							}}
-						>
+						<Link href='/'>
 							<Button>
-								الرئيسية
 								<MoveRight className='ml-3' />
+								الرئيسية
 							</Button>
 						</Link>
 					</div>

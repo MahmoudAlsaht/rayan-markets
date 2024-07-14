@@ -4,6 +4,7 @@ import InstallApp from '../components/InstallApp';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from 'next-themes';
+import BottomNavbar from './(mobile)/_components/BottomNavbar';
 
 const Alexandria = localFont({
 	src: '../fonts/Alexandria-VariableFont_wght.ttf',
@@ -65,10 +66,13 @@ export default function RootLayout({
 					'text-rayanPrimary-dark dark:text-rayanPrimary-dark dark:bg-slate-200 bg-slate-50 min-h-screen antialiased',
 					Alexandria.className,
 				)}
+				dir='rtl'
 			>
 				<ThemeProvider attribute='class'>
 					<InstallApp />
 					{children}
+
+					<BottomNavbar />
 				</ThemeProvider>
 			</body>
 		</html>
