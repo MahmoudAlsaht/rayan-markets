@@ -69,10 +69,11 @@ export default function RootLayout({
 				dir='rtl'
 			>
 				<ThemeProvider attribute='class'>
-					<InstallApp />
+					<main className='z-0'></main>
 					{children}
-
 					<BottomNavbar />
+
+					<InstallApp />
 				</ThemeProvider>
 			</body>
 		</html>

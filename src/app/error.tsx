@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function Error({
@@ -11,6 +12,8 @@ export default function Error({
 	error: Error & { digest?: string };
 	reset: () => void;
 }) {
+	const router = useRouter();
+
 	useEffect(() => {
 		// Log the error to an error reporting service
 		console.error(error.message);

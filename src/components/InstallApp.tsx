@@ -1,10 +1,6 @@
 'use client';
 
-import {
-	SyntheticEvent,
-	useLayoutEffect,
-	useState,
-} from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { DownloadIcon, X } from 'lucide-react';
 
 const InstallPWA = () => {
@@ -12,28 +8,18 @@ const InstallPWA = () => {
 	const [promptInstall, setPromptInstall] =
 		useState<any>(null);
 
-	const [isInstalled, setIsInstalled] = useState(() => {
-		if (typeof window !== 'undefined')
-			return (
-				localStorage.getItem('pwaInstalled') === '1' ||
-				false
-			);
-	});
-
-	const [open, setOpen] = useState(!isInstalled);
-
-	const handleClose = (
-		event: SyntheticEvent | Event,
-		reason?: string,
-	) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-
-		setOpen(false);
-	};
+	const [isInstalled, setIsInstalled] = useState(true);
 
 	useLayoutEffect(() => {
+		setIsInstalled(() => {
+			if (typeof window !== 'undefined')
+				return (
+					localStorage.getItem('pwaInstalled') ===
+						'1' || false
+				);
+			else return true;
+		});
+
 		const installHandler = (e: any) => {
 			localStorage.setItem('pwaInstalled', '0');
 			setIsInstalled(false);
@@ -94,11 +80,11 @@ const InstallPWA = () => {
 		<div
 			dir='rtl'
 			id='toast-default'
-			className='fixed bottom-3 right-4 sm:right-14 flex items-center w-full max-w-xs p-4 bg-white rounded-lg shadow dark:bg-gray-800 text-rayanPrimary-dark dark:text-rayanPrimary-light'
+			className='fixed z-50 bottom-3 sm:right-14 flex items-center w-[97%] sm:w-full mr-1 sm:mr-0  sm:max-w-xs p-4 bg-rayanSecondary-dark rounded-lg shadow'
 			role='alert'
 		>
 			<button
-				className='flex flex-shrink-0 w-[1/2] h-full rounded-lg hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:text-white dark:hover:bg-gray-700'
+				className='flex flex-shrink-0 w-[1/2] h-full rounded-lg p-4 text-rayanPrimary-light hover:bg-rayanSecondary-light'
 				onClick={handleInstall}
 			>
 				<DownloadIcon />
