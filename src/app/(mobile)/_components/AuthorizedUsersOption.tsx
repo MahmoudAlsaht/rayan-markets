@@ -4,6 +4,7 @@ import { OptionLink } from './OptionLink';
 import { User } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import logout from '@/app/(siteFacing)/auth/_actions/logout';
+import { LogOut } from 'lucide-react';
 
 export default function AuthorizedUsersOption({
 	user,
@@ -14,25 +15,34 @@ export default function AuthorizedUsersOption({
 	//
 	return (
 		<>
-			<OptionLink href='/admin'>لوحة التحكم</OptionLink>
 			{SETTINGS.map((setting) =>
 				setting.displayName !== 'المتجر' &&
 				user.role !== 'admin'
 					? setting.displayName !== 'المستخدمين' && (
-							<OptionLink
-								key={setting.displayName}
-								href={setting.href}
-							>
-								{setting.displayName}
-							</OptionLink>
+							<>
+								<OptionLink
+									key={setting.displayName}
+									href={setting.href}
+								>
+									<span className='ml-4'>
+										{setting.icon}
+									</span>
+									{setting.displayName}
+								</OptionLink>
+							</>
 					  )
 					: setting.displayName !== 'المتجر' && (
-							<OptionLink
-								key={setting.displayName}
-								href={setting.href}
-							>
-								{setting.displayName}
-							</OptionLink>
+							<>
+								<OptionLink
+									key={setting.displayName}
+									href={setting.href}
+								>
+									<span className='ml-4'>
+										{setting.icon}
+									</span>
+									{setting.displayName}
+								</OptionLink>
+							</>
 					  ),
 			)}
 			<OptionLink
@@ -42,6 +52,9 @@ export default function AuthorizedUsersOption({
 					router.refresh();
 				}}
 			>
+				<span className='ml-4'>
+					<LogOut />
+				</span>
 				تسجيل الخروج
 			</OptionLink>
 		</>

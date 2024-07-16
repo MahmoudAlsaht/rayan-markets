@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import AdminNavbar from './_components/AdminNavbar';
 import { isAdmin } from '../(siteFacing)/auth/_actions/isAdmin';
-import BottomNavbar from '../(mobile)/_components/BottomNavbar';
 
 export const dynamic = 'force-dynamic';
 

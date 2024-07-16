@@ -5,6 +5,7 @@ import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { sendVerificationCode } from '@/app/webhook/_actions/sendMessage';
 
 const phoneNumberRegex = /^(07[789]\d{7})$/;
 
@@ -83,6 +84,7 @@ export const register = async (
 		path: '/',
 		expires: date,
 	});
+	// await sendVerificationCode('546897');
 
 	redirect('/');
 };

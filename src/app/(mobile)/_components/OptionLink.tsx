@@ -9,7 +9,7 @@ export function OptionLink(
 		<Link
 			{...props}
 			className={cn(
-				'w-full px-4 py-2 hover:bg-rayanPrimary-light hover:text-black',
+				'flex px-4 py-3 hover:bg-rayanPrimary-light hover:text-black',
 			)}
 		/>
 	);
