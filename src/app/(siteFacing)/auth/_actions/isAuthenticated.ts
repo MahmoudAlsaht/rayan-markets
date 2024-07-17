@@ -19,7 +19,6 @@ export const checkUser = async () => {
 			phone: true,
 			username: true,
 			role: true,
-			orders: true,
 			profileId: true,
 		},
 	});

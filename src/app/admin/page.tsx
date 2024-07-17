@@ -14,7 +14,7 @@ export default async function AdminHome() {
 				setting.displayName !== 'المتجر' &&
 				user?.role === 'admin' ? (
 					<Widget
-						key={setting.displayName}
+						key={setting.key}
 						title={setting.displayName}
 						href={setting.href}
 					/>
@@ -22,7 +22,7 @@ export default async function AdminHome() {
 					setting.displayName !== 'المتجر' &&
 					setting.displayName !== 'المستخدمين' && (
 						<Widget
-							key={setting.displayName}
+							key={setting.key}
 							title={setting.displayName}
 							href={setting.href}
 						/>

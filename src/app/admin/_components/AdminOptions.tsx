@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { ReactNode } from 'react';
 
-type TypeSettings = {
+export type TypeSettings = {
 	displayName: string;
 	href: string;
 	icon: ReactNode;

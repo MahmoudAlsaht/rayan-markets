@@ -1,3 +1,4 @@
+import { TypeSettings } from '@/app/admin/_components/AdminOptions';
 import {
 	Home,
 	Locate,
@@ -5,12 +6,6 @@ import {
 	Truck,
 } from 'lucide-react';
 import { ReactNode } from 'react';
-
-type TypeSettings = {
-	displayName: string;
-	href: string;
-	icon: ReactNode;
-};
 
 export const USER_SETTINGS: TypeSettings[] = [
 	{
