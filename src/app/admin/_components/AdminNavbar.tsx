@@ -2,10 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '../../rayan.marketLogo.png';
 import AdminSideBar from './AdminSideBar';
-import { checkUser } from '@/app/(siteFacing)/auth/_actions/isAuthenticated';
+import { getUserPermission } from './UserPermissions';
 
 export default async function AdminNavbar() {
-	const user = await checkUser();
+	const user = await getUserPermission();
 
 	return (
 		<>
@@ -25,7 +25,7 @@ export default async function AdminNavbar() {
 						/>
 					</Link>
 
-					<AdminSideBar user={user} />
+					<AdminSideBar {...user} />
 				</div>
 			</nav>
 		</>

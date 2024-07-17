@@ -1,16 +1,17 @@
 'use client';
+import { customerPermissions } from '@/app/admin/_components/UserPermissions';
 import { OptionLink } from '../../_components/OptionLink';
-import { User } from '@prisma/client';
-import { USER_SETTINGS } from '@/app/(siteFacing)/account/_components/UserOptions';
 
 export default function NormalUsersOptions({
-	user,
+	profile,
 }: {
-	user: Partial<User>;
+	profile: string;
 }) {
 	return (
 		<>
-			{USER_SETTINGS.map(
+			{customerPermissions(
+				profile || 'unRegisteredUser',
+			).map(
 				(setting) =>
 					setting.displayName !== 'المتجر' && (
 						<OptionLink

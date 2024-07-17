@@ -1,34 +1,24 @@
 'use client';
-import { SETTINGS } from '@/app/admin/_components/AdminOptions';
+import {
+	adminPermissions,
+	editorPermissions,
+	staffPermissions,
+	UserPermission,
+} from '@/app/admin/_components/UserPermissions';
 import { OptionLink } from '../../_components/OptionLink';
-import { User } from '@prisma/client';
 
 export default function AuthorizedUsersOption({
-	user,
-}: {
-	user: Partial<User>;
-}) {
-	const adminSettings = SETTINGS.map((setting) => {
-		return setting.displayName !== 'المتجر' ? setting : null;
-	});
-
-	const editorSettings = adminSettings.map((setting) => {
-		return setting?.displayName !== 'المستخدمين'
-			? setting
-			: null;
-	});
-
-	const staffSettings = SETTINGS.map((setting) => {
-		return setting.displayName === 'إعدادات الحساب' ||
-			setting.displayName === 'الطلبات'
-			? setting
-			: null;
-	});
-
+	admin,
+	editor,
+	staff,
+	profile,
+}: Partial<UserPermission>) {
 	return (
 		<>
-			{user.role === 'admin' &&
-				adminSettings?.map(
+			{admin &&
+				adminPermissions(
+					profile || 'unRegisteredUser',
+				)?.map(
 					(setting) =>
 						setting && (
 							<OptionLink
@@ -40,8 +30,10 @@ export default function AuthorizedUsersOption({
 						),
 				)}
 
-			{user.role === 'editor' &&
-				editorSettings?.map(
+			{editor &&
+				editorPermissions(
+					profile || 'unRegisteredUser',
+				)?.map(
 					(setting) =>
 						setting && (
 							<OptionLink
@@ -53,8 +45,10 @@ export default function AuthorizedUsersOption({
 						),
 				)}
 
-			{user.role === 'staff' &&
-				staffSettings?.map(
+			{staff &&
+				staffPermissions(
+					profile || 'unRegisteredUser',
+				)?.map(
 					(setting) =>
 						setting && (
 							<OptionLink

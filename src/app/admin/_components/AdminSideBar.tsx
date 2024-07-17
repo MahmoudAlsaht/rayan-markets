@@ -5,15 +5,20 @@ import { LogOut, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
-import { SETTINGS } from './AdminOptions';
 import logout from '@/app/(siteFacing)/auth/_actions/logout';
-import { User } from '@prisma/client';
+import {
+	adminPermissions,
+	editorPermissions,
+	staffPermissions,
+	UserPermission,
+} from './UserPermissions';
 
 export default function AdminSideBar({
-	user,
-}: {
-	user: Partial<User> | null;
-}) {
+	admin,
+	editor,
+	staff,
+	profile,
+}: UserPermission) {
 	const [show, setShow] = useState(false);
 
 	const toggleShow = () => setShow(!show);
@@ -56,34 +61,74 @@ export default function AdminSideBar({
 							</Button>
 						</li>
 
-						{SETTINGS.map((setting) =>
-							user?.role !== 'admin' ? (
-								setting.displayName !==
-									'المستخدمين' && (
-									<SideLink
-										key={setting.displayName}
-										href={setting.href}
-									>
-										{setting.icon}
+						{admin &&
+							adminPermissions(
+								profile || 'unRegisteredUser',
+							).map(
+								(setting) =>
+									setting && (
+										<SideLink
+											key={
+												setting.displayName
+											}
+											href={setting.href}
+										>
+											{setting.icon}
 
-										<span className='ml-3 mr-2'>
-											{setting.displayName}
-										</span>
-									</SideLink>
-								)
-							) : (
-								<SideLink
-									key={setting.displayName}
-									href={setting.href}
-								>
-									{setting.icon}
+											<span className='ml-3 mr-2'>
+												{
+													setting.displayName
+												}
+											</span>
+										</SideLink>
+									),
+							)}
 
-									<span className='ml-3 mr-2'>
-										{setting.displayName}
-									</span>
-								</SideLink>
-							),
-						)}
+						{editor &&
+							editorPermissions(
+								profile || 'unRegisteredUser',
+							).map(
+								(setting) =>
+									setting && (
+										<SideLink
+											key={
+												setting.displayName
+											}
+											href={setting.href}
+										>
+											{setting.icon}
+
+											<span className='ml-3 mr-2'>
+												{
+													setting.displayName
+												}
+											</span>
+										</SideLink>
+									),
+							)}
+
+						{staff &&
+							staffPermissions(
+								profile || 'unRegisteredUser',
+							).map(
+								(setting) =>
+									setting && (
+										<SideLink
+											key={
+												setting.displayName
+											}
+											href={setting.href}
+										>
+											{setting.icon}
+
+											<span className='ml-3 mr-2'>
+												{
+													setting.displayName
+												}
+											</span>
+										</SideLink>
+									),
+							)}
 					</ul>
 
 					<ul className='pt-5 mt-5 space-y-2 border-t border-gray-700'>

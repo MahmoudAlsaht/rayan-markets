@@ -95,7 +95,10 @@ export default function MainNavbar({
 													user.role ===
 													'customer'
 														? router.push(
-																'/account',
+																`/account/${
+																	user.profileId ||
+																	'unRegisteredUser'
+																}`,
 														  )
 														: router.push(
 																'/admin',
