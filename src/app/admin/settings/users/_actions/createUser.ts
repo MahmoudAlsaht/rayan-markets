@@ -2,8 +2,6 @@
 import db from '@/db/db';
 import { hashPassword } from '@/lib/hashPassword';
 import { z } from 'zod';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const phoneNumberRegex = /^(07[789]\d{7})$/;
@@ -57,6 +55,7 @@ export const createNewUser = async (
 	const user = await db.user.findUnique({
 		where: { phone: data.phone },
 	});
+
 	if (user !== null)
 		return {
 			phone: 'هذا الهاتف مسجل بالفعل',
@@ -66,12 +65,27 @@ export const createNewUser = async (
 			role: '',
 		};
 
-	await db.user.create({
+	const newUser = await db.user.create({
 		data: {
 			phone: data.phone,
 			username: data.username,
 			password: await hashPassword(data.password),
 			role: data.role,
+		},
+	});
+
+	const profile = await db.profile.create({
+		data: {
+			userId: newUser.id,
+		},
+	});
+
+	await db.user.update({
+		where: {
+			id: newUser.id,
+		},
+		data: {
+			profileId: profile.id,
 		},
 	});
 

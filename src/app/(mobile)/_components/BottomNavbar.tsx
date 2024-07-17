@@ -71,6 +71,7 @@ function NavLink(
 
 	return (
 		<Link
+			replace
 			{...props}
 			className={cn(
 				'inline-flex flex-col items-center justify-center px-5 group',

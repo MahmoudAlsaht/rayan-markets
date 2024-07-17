@@ -22,6 +22,11 @@ export default function MainNavbar({
 }) {
 	const router = useRouter();
 
+	const pathname = usePathname();
+
+	const isAccountPage =
+		pathname === `/account/${user?.profileId}`;
+
 	return (
 		<nav
 			className='hidden sm:block border-gray-200 dark:bg-[#C7E7E2]'
@@ -42,7 +47,7 @@ export default function MainNavbar({
 				<div id='navbar-default'>
 					<ul className='font-medium text-rayanSecondary-dark flex flex-row p-4 md:p-0 mt-4 rounded-lg  sm:space-x-8 rtl:space-x-reverse'>
 						<li>
-							<NavLink href='#'>الرئيسية</NavLink>
+							<NavLink href='/'>الرئيسية</NavLink>
 						</li>
 						<li>
 							<NavLink href='#'>المنتجات</NavLink>
@@ -89,27 +94,29 @@ export default function MainNavbar({
 										</>
 									) : (
 										<>
-											<DropdownMenuCheckboxItem
-												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
-												onClick={() => {
-													user.role ===
+											{!isAccountPage && (
+												<DropdownMenuCheckboxItem
+													className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
+													onClick={() => {
+														user.role ===
+														'customer'
+															? router.push(
+																	`/account/${
+																		user.profileId ||
+																		'unRegisteredUser'
+																	}`,
+															  )
+															: router.push(
+																	'/admin',
+															  );
+													}}
+												>
+													{user.role ===
 													'customer'
-														? router.push(
-																`/account/${
-																	user.profileId ||
-																	'unRegisteredUser'
-																}`,
-														  )
-														: router.push(
-																'/admin',
-														  );
-												}}
-											>
-												{user.role ===
-												'customer'
-													? 'الصفحة الشخصية'
-													: 'لوحة التحكم'}
-											</DropdownMenuCheckboxItem>
+														? 'الصفحة الشخصية'
+														: 'لوحة التحكم'}
+												</DropdownMenuCheckboxItem>
+											)}
 											<DropdownMenuCheckboxItem
 												className='hover:cursor-pointer hover:bg-gray-400 hover:text-white'
 												onClick={async () => {
@@ -141,7 +148,7 @@ function NavLink(
 			className={cn(
 				'p-2 text-base font-normal rounded-lg transition duration-75 hover:text-white hover:bg-gray-700 group',
 				pathname === props.href &&
-					'bg-gray-700 text-white',
+					'bg-gray-700 text-white px-6',
 			)}
 		/>
 	);

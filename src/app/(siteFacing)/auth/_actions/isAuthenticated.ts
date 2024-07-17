@@ -13,7 +13,7 @@ export const checkUser = async () => {
 		process.env.SECRET_1,
 	);
 
-	const user = db.user.findUnique({
+	const user = await db.user.findUnique({
 		where: { id: decoded.id },
 		select: {
 			id: true,
@@ -25,6 +25,23 @@ export const checkUser = async () => {
 	});
 
 	if (user == null) return null;
+
+	if (user.profileId == null) {
+		const profile = await db.profile.create({
+			data: {
+				userId: user.id,
+			},
+		});
+
+		await db.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				profileId: profile.id,
+			},
+		});
+	}
 
 	return user;
 };

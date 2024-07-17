@@ -11,7 +11,9 @@ import { MoveLeft } from 'lucide-react';
 export default function Widget({
 	title,
 	href,
+	danger,
 }: {
+	danger?: boolean;
 	title: string;
 	href: string;
 }) {
@@ -19,14 +21,24 @@ export default function Widget({
 		<>
 			<Card dir='rtl' className='border-none'>
 				<CardHeader>
-					<CardTitle className='text-rayanPrimary-dark'>
+					<CardTitle
+						className={
+							danger
+								? 'text-destructive'
+								: 'text-rayanPrimary-dark'
+						}
+					>
 						{title}
 					</CardTitle>
 				</CardHeader>
 				<CardFooter>
 					<Button
 						asChild
-						className='text-rayanPrimary-dark hover:text-white hover:bg-rayanPrimary-dark'
+						className={`${
+							danger
+								? 'text-destructive hover:bg-destructive'
+								: 'text-rayanPrimary-dark hover:bg-rayanPrimary-dark'
+						}  hover:text-white `}
 						variant='outline'
 					>
 						<Link href={href}>

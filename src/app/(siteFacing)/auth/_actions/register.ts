@@ -72,6 +72,21 @@ export const register = async (
 		},
 	});
 
+	const profile = await db.profile.create({
+		data: {
+			userId: newUser.id,
+		},
+	});
+
+	await db.user.update({
+		where: {
+			id: newUser.id,
+		},
+		data: {
+			profileId: profile.id,
+		},
+	});
+
 	const token = jwt.sign(
 		{ id: newUser?.id, name: newUser?.username },
 		process.env.SECRET_1,
