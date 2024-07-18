@@ -19,7 +19,6 @@ export function OptionLink({
 
 	return (
 		<Link
-			replace
 			href={href}
 			className={cn(
 				'flex px-4 py-3 hover:bg-rayanPrimary-light hover:text-black',
