@@ -6,6 +6,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 
 import Link from 'next/link';
 import { login } from '../../_actions/login';
+import SubmitButton from '@/components/SubmitButton';
 
 export function LoginForm() {
 	const [error, action] = useFormState(login, {});
@@ -66,25 +67,7 @@ export function LoginForm() {
 					التسجيل
 				</Link>
 			</div>
-			<SubmitButton />
+			<SubmitButton body={'تسجيل الدخول'} />
 		</form>
-	);
-}
-
-function SubmitButton() {
-	const { pending } = useFormStatus();
-
-	return (
-		<Button
-			className='w-full'
-			type='submit'
-			disabled={pending}
-		>
-			{pending ? (
-				<Loader2 className='animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light' />
-			) : (
-				'تسجيل الدخول'
-			)}
-		</Button>
 	);
 }

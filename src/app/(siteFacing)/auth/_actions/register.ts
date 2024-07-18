@@ -21,12 +21,7 @@ const registerSchema = z
 		password: z
 			.string()
 			.min(6, 'كلمة المرور يجب ان لا تكون اقل من 6 خانات'),
-		confirmPassword: z
-			.string()
-			.min(
-				6,
-				'كلمة المرور يجب ان لا تكون اقل من 6 خانات &',
-			),
+		confirmPassword: z.string(),
 	})
 	.superRefine(({ confirmPassword, password }, ctx) => {
 		if (confirmPassword !== password) {

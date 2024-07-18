@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { useFormState, useFormStatus } from 'react-dom';
 import Link from 'next/link';
 import { createNewUser } from '../../_actions/createUser';
+import SubmitButton from '@/components/SubmitButton';
 
 export function NewUserForm() {
 	const [error, action] = useFormState(createNewUser, {});
@@ -115,25 +116,7 @@ export function NewUserForm() {
 					</div>
 				)}
 			</div>
-			<SubmitButton />
+			<SubmitButton body='إضافة' />
 		</form>
-	);
-}
-
-function SubmitButton() {
-	const { pending } = useFormStatus();
-
-	return (
-		<Button
-			className='w-full'
-			type='submit'
-			disabled={pending}
-		>
-			{pending ? (
-				<Loader2 className='animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light' />
-			) : (
-				'إضافة'
-			)}
-		</Button>
 	);
 }

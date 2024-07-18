@@ -6,6 +6,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 
 import { register } from '../../_actions/register';
 import Link from 'next/link';
+import SubmitButton from '@/components/SubmitButton';
 
 export function RegisterForm() {
 	const [error, action] = useFormState(register, {});
@@ -104,25 +105,7 @@ export function RegisterForm() {
 					تسجيل الدخول
 				</Link>
 			</div>
-			<SubmitButton />
+			<SubmitButton body={'التسجيل'} />
 		</form>
-	);
-}
-
-function SubmitButton() {
-	const { pending } = useFormStatus();
-
-	return (
-		<Button
-			className='w-full'
-			type='submit'
-			disabled={pending}
-		>
-			{pending ? (
-				<Loader2 className='animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light' />
-			) : (
-				'التسجيل'
-			)}
-		</Button>
 	);
 }

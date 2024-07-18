@@ -1,32 +1,37 @@
 import BackButtonNav from '@/components/BackButtonNav';
+import UsernameForm from '../_components/UsernameForm';
+import PhoneForm from '../_components/PhoneForm';
+import PasswordForm from '../_components/PasswordForm';
+import DeleteAccountForm from '../_components/DeleteAccountForm';
+import { checkUser } from '@/app/(siteFacing)/auth/_actions/isAuthenticated';
 
-export default function page({
+export default async function page({
 	params: { id, setting },
 }: {
 	params: { id: string; setting: string };
 }) {
+	const user = await checkUser();
+
 	return (
 		<div dir='rtl'>
 			<BackButtonNav bg={false} />
 			{setting === 'username' && (
-				<h1 className='text-center text-4xl py-8'>
-					إعدادات اسم المستخدم
-				</h1>
+				<UsernameForm
+					username={user?.username as string}
+					profileId={id}
+				/>
 			)}
 			{setting === 'phone' && (
-				<h1 className='text-center text-4xl py-8'>
-					إعدادات الهاتف
-				</h1>
+				<PhoneForm
+					phone={user?.phone as string}
+					profileId={id}
+				/>
 			)}
 			{setting === 'password' && (
-				<h1 className='text-center text-4xl py-8'>
-					إعدادات كلمة المرور
-				</h1>
+				<PasswordForm profileId={id} />
 			)}
 			{setting === 'account-deletion' && (
-				<h1 className='text-center text-destructive text-4xl py-8'>
-					حذف الحساب
-				</h1>
+				<DeleteAccountForm profileId={id} />
 			)}
 		</div>
 	);

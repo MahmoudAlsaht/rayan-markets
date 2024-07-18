@@ -1,6 +1,7 @@
 import { customerPermissions } from '@/app/admin/_components/UserPermissions';
 import Widget from '@/app/admin/_components/Widget';
 import { redirect } from 'next/navigation';
+import { checkUser } from '../../auth/_actions/isAuthenticated';
 
 export default async function Profile({
 	params: { id },
@@ -8,6 +9,12 @@ export default async function Profile({
 	params: { id: string };
 }) {
 	if (id === 'unRegisteredUser') redirect('/auth/login');
+
+	const user = await checkUser();
+
+	if (user == null) redirect('/auth/login');
+
+	if (user.profileId !== id) redirect('/auth/login');
 
 	return (
 		<div
