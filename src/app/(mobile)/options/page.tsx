@@ -7,7 +7,7 @@ export default async function OptionsPage() {
 
 	return (
 		<>
-			<BackButtonNav />
+			<BackButtonNav goHome />
 			<main dir='rtl' className='sm:hidden'>
 				<OptionsList {...user} />
 			</main>

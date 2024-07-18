@@ -5,7 +5,9 @@ import { Button } from './ui/button';
 
 export default function BackButtonNav({
 	bg = true,
+	goHome,
 }: {
+	goHome?: boolean;
 	bg?: boolean;
 }) {
 	const router = useRouter();
@@ -28,7 +30,11 @@ export default function BackButtonNav({
 					} inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg`}
 					aria-controls='navbar-default'
 					aria-expanded='false'
-					onClick={() => router.back()}
+					onClick={() =>
+						!goHome
+							? router.back()
+							: router.replace('/')
+					}
 				>
 					<span className='sr-only'>
 						Go Back One Page
