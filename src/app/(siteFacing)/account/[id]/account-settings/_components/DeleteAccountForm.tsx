@@ -1,8 +1,8 @@
 'use client';
 import SubmitButton from '@/components/SubmitButton';
 import { useFormState } from 'react-dom';
-import { updatePassword } from '../_actions/updatePassword';
 import { deleteAccount } from '../_actions/deleteAccount';
+import PageHeader from '@/components/PageHeader';
 
 export default function DeleteAccountForm({
 	profileId,
@@ -15,9 +15,7 @@ export default function DeleteAccountForm({
 	);
 	return (
 		<>
-			<h1 className='text-center text-destructive text-4xl py-8'>
-				حذف الحساب
-			</h1>
+			<PageHeader title='حذف الحساب' />
 
 			<form
 				action={action}

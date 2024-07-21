@@ -56,8 +56,8 @@ model OrderContact {
   order   Order  @relation(fields: [orderId], references: [id])
   orderId String @unique @db.ObjectId
 
-  districtId String   @unique @db.ObjectId
-  district   District @relation(fields: [districtId], references: [id])
+  district   District? @relation(fields: [districtid], references: [id])
+  districtid String?   @unique @db.ObjectId
 }
 
 model Order {
@@ -87,8 +87,6 @@ model Product {
   id                 String          @id @default(auto()) @map("_id") @db.ObjectId
   name               String
   body               String
-  imageId            String          @db.ObjectId
-  image              Image?
   price              Int
   newPrice           Int?
   quantity           Int
@@ -105,12 +103,18 @@ model Product {
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
   productOptions     ProductOption[]
-  labelIds           String[]        @db.ObjectId
 
-  labels Label[] @relation(fields: [labelIds], references: [id])
+  labelIds String[] @db.ObjectId
+  labels   Label[]  @relation(fields: [labelIds], references: [id])
 
-  brand    String
-  category String
+  imageId String? @unique @db.ObjectId
+  image   Image?  @relation(fields: [imageId], references: [id])
+
+  brand   Brand?  @relation(fields: [brandId], references: [id])
+  brandId String? @db.ObjectId
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
 }
 
 model PromoCode {
@@ -148,24 +152,22 @@ model Label {
 }
 
 model Image {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
   filename  String
   path      String
   imageType String
-  productId String  @unique @db.ObjectId
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  categoryId String?   @unique @db.ObjectId
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  brandId String? @unique @db.ObjectId
-  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: Cascade)
-
-  bannerId String? @unique @db.ObjectId
-  banner   Banner? @relation(fields: [bannerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  category Category?
+
+  product Product?
+
+  brand Brand?
+
+  bannerId String? @db.ObjectId
+  banner   Banner? @relation(fields: [bannerId], references: [id], onDelete: Cascade)
 }
 
 model District {
@@ -173,11 +175,12 @@ model District {
   name         String @unique
   shippingFees Int
 
-  contact      Contact?
-  orderContact OrderContact?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  OrderContact OrderContact[]
+
+  Contact Contact[]
 }
 
 model Contact {
@@ -187,7 +190,7 @@ model Contact {
   profileId    String     @db.ObjectId
   profile      Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
   districtId   String     @unique @db.ObjectId
-  district     District   @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  district     District   @relation(fields: [districtId], references: [id])
   anounymous   Anonymous? @relation(fields: [anounymousId], references: [id], onDelete: Cascade)
   anounymousId String?    @unique @db.ObjectId
 
@@ -201,10 +204,13 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  banner Banner?
+  bannerId String? @unique @db.ObjectId
+  banner   Banner? @relation(fields: [bannerId], references: [id])
 
-  imageId String @db.ObjectId
-  image   Image?
+  imageId String? @unique @db.ObjectId
+  image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  products Product[]
 }
 
 model Brand {
@@ -213,9 +219,13 @@ model Brand {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  banner  Banner?
-  imageId String  @db.ObjectId
-  image   Image?
+  bannerId String? @unique @db.ObjectId
+  banner   Banner? @relation(fields: [bannerId], references: [id])
+
+  imageId String? @unique @db.ObjectId
+  image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  products Product[]
 }
 
 model Banner {
@@ -225,13 +235,11 @@ model Banner {
   updatedAt  DateTime @updatedAt
   bannerType String
 
-  image Image[]
+  images Image[]
 
-  brandId String? @unique @db.ObjectId
-  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brand Brand?
 
-  categoryId String?   @unique @db.ObjectId
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category Category?
 }
 
 model Anonymous {

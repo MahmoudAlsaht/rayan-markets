@@ -1,15 +1,14 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import { getAllUsers } from './_actions/getAllUsers';
 import UsersTable from './_components/UsersTable';
+import PageHeader from '@/components/PageHeader';
 
 export default async function UsersSettingsPage() {
 	const users = await getAllUsers();
 	return (
 		<main dir='rtl'>
-			<BackButtonNav bg={false} />
-			<h1 className='text-center text-4xl py-8'>
-				إعدادات المستخدمين
-			</h1>
+			<BackButtonNav bg={false} href='/admin' />
+			<PageHeader title='إعدادات المستخدمين' />
 			<UsersTable data={users} />
 		</main>
 	);

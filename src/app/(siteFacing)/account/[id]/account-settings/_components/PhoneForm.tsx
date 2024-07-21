@@ -3,6 +3,7 @@ import SubmitButton from '@/components/SubmitButton';
 import { useFormState } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { updatePhone } from '../_actions/updatePhone';
+import PageHeader from '@/components/PageHeader';
 
 export default function PhoneForm({
 	phone,
@@ -20,9 +21,7 @@ export default function PhoneForm({
 
 	return (
 		<>
-			<h1 className='text-center text-4xl py-8'>
-				إعدادات الهاتف
-			</h1>
+			<PageHeader title='إعدادات الهاتف' />
 
 			<form
 				action={action}

@@ -6,9 +6,11 @@ import { Button } from './ui/button';
 export default function BackButtonNav({
 	bg = true,
 	goHome,
+	href = '',
 }: {
 	goHome?: boolean;
 	bg?: boolean;
+	href?: string;
 }) {
 	const router = useRouter();
 
@@ -32,7 +34,9 @@ export default function BackButtonNav({
 					aria-expanded='false'
 					onClick={() =>
 						!goHome
-							? router.back()
+							? href === ''
+								? router.back()
+								: router.replace(href)
 							: router.replace('/')
 					}
 				>

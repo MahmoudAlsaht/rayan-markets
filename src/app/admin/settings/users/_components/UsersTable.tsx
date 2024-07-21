@@ -13,20 +13,13 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import {
-	ChevronDown,
-	Loader2,
-	MoreHorizontal,
-	Plus,
-} from 'lucide-react';
+import { ChevronDown, Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -38,8 +31,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { useEffect, useState } from 'react';
-import { getAllUsers } from '../_actions/getAllUsers';
+import { useState } from 'react';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import EditRoleForm from './EditRoleForm';

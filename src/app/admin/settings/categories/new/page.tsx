@@ -1,14 +1,14 @@
 import BackButtonNav from '@/components/BackButtonNav';
-import { NewUserForm } from './_components/NewUserForm';
 import PageHeader from '@/components/PageHeader';
+import { CategoryForm } from './_components/CategoryForm';
 
-export default function NewUser() {
+export default function NewCategory() {
 	return (
 		<main dir='rtl'>
 			<BackButtonNav bg={false} />
-			<PageHeader title='إضافة مستخدم جديد' />
+			<PageHeader title='إضافة قسم جديد' />
 
-			<NewUserForm />
+			<CategoryForm />
 		</main>
 	);
 }

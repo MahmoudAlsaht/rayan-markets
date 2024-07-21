@@ -4,9 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 export async function updateUserRole(role: string, id: string) {
-	console.log(id);
-	console.log(role);
-
 	const user = await db.user.findUnique({ where: { id } });
 
 	if (user == null) return notFound();
@@ -17,8 +14,6 @@ export async function updateUserRole(role: string, id: string) {
 			role: role as string,
 		},
 	});
-
-	revalidatePath('/');
 }
 
 export async function deleteUser(id: string) {

@@ -1,5 +1,6 @@
 import Widget from '@/app/admin/_components/Widget';
 import BackButtonNav from '@/components/BackButtonNav';
+import PageHeader from '@/components/PageHeader';
 
 const accountSettings = (id: string) => [
 	{
@@ -28,9 +29,7 @@ export default function AccountSettings({
 	return (
 		<main dir='rtl'>
 			<BackButtonNav bg={false} />
-			<h1 className='text-center text-4xl py-8'>
-				إعدادات الحساب
-			</h1>
+			<PageHeader title='إعدادات الحساب' />
 
 			<div className='h-dvh grid mt-4 sm:mt-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 				{accountSettings(id || 'unRegisteredUser').map(

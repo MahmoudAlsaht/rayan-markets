@@ -2,6 +2,7 @@
 import SubmitButton from '@/components/SubmitButton';
 import { useFormState } from 'react-dom';
 import { updatePassword } from '../_actions/updatePassword';
+import PageHeader from '@/components/PageHeader';
 
 export default function PasswordForm({
 	profileId,
@@ -15,9 +16,7 @@ export default function PasswordForm({
 
 	return (
 		<>
-			<h1 className='text-center text-4xl py-8'>
-				إعدادات كلمة المرور
-			</h1>
+			<PageHeader title='إعدادات كلمة المرور' />
 
 			<form
 				action={action}

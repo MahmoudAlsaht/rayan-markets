@@ -3,6 +3,7 @@
 import SubmitButton from '@/components/SubmitButton';
 import { useFormState } from 'react-dom';
 import { updateUsername } from '../_actions/updateUsername';
+import PageHeader from '@/components/PageHeader';
 
 export default function UsernameForm({
 	username,
@@ -18,9 +19,7 @@ export default function UsernameForm({
 
 	return (
 		<>
-			<h1 className='text-center text-4xl py-8'>
-				إعدادات اسم المستخدم
-			</h1>
+			<PageHeader title='إعدادات اسم المستخدم' />
 
 			<form
 				action={action}

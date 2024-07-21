@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 import withPWAInit from '@ducanh2912/next-pwa';
+import { hostname } from 'os';
+import path from 'path';
 
 const withPWA = withPWAInit({
 	dest: 'public',
@@ -13,6 +15,15 @@ const withPWA = withPWAInit({
 	},
 });
 
-const nextConfig = {};
+const nextConfig = {
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '**cloudinary.com',
+			},
+		],
+	},
+};
 
 export default withPWA(nextConfig);
