@@ -344,7 +344,7 @@ export default function CategoriesTable({
 									colSpan={columns.length}
 									className='h-24 text-center'
 								>
-									<Loader2 className='size-20 animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light' />
+									جار الحذف...
 								</TableCell>
 							</TableRow>
 						)}
