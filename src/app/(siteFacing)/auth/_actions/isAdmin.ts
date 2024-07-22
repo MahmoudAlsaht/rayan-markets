@@ -1,11 +1,17 @@
 import { redirect } from 'next/navigation';
 import { checkUser } from './isAuthenticated';
 
-export const isAdmin = async () => {
+export async function isAuthorizedUser() {
 	const user = await checkUser();
+	if (user == null || user.role === 'customer') redirect('/');
+}
 
-	if (user == null) redirect('/');
-	if (user.role === 'customer') redirect('/');
+export async function isAdmin() {
+	const user = await checkUser();
+	if (user == null || user.role !== 'admin') redirect('/');
+}
 
-	return user;
-};
+export async function isEditor() {
+	const user = await checkUser();
+	if (user == null || user.role === 'staff') redirect('/');
+}

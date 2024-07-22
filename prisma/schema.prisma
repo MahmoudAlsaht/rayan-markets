@@ -84,28 +84,25 @@ model Order {
 }
 
 model Product {
-  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  body               String
-  price              Int
-  newPrice           Int?
-  quantity           Int
-  isOffer            Boolean         @default(false)
-  isEndDate          Boolean         @default(false)
-  offerExpiresInDays Int?
-  remainingDays      Int?
-  views              Int             @default(0)
-  numberOfPurchases  Int             @default(0)
-  productType        String          @default("normal")
-  discription        String?
-  offerStartsAt      DateTime?
-  offerEndsAt        DateTime?
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
-  productOptions     ProductOption[]
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  body              String
+  price             Int
+  newPrice          Int?
+  quantity          Int
+  isOffer           Boolean   @default(false)
+  offerStartsAt     DateTime?
+  offerEndsAt       DateTime?
+  views             Int       @default(0)
+  numberOfPurchases Int       @default(0)
+  productType       String    @default("normal")
+  description       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  labelIds String[] @db.ObjectId
-  labels   Label[]  @relation(fields: [labelIds], references: [id])
+  productOptions ProductOption[]
+  labelIds       String[]        @db.ObjectId
+  labels         Label[]         @relation(fields: [labelIds], references: [id])
 
   imageId String? @unique @db.ObjectId
   image   Image?  @relation(fields: [imageId], references: [id])
