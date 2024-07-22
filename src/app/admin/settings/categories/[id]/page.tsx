@@ -1,7 +1,7 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import PageHeader from '@/components/PageHeader';
-import { CategoryForm } from '../new/_components/CategoryForm';
 import db from '@/db/db';
+import { CategoryForm } from '../_components/CategoryForm';
 
 export default async function EditCategoryPage({
 	params: { id },

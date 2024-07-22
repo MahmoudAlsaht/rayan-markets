@@ -1,6 +1,6 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import PageHeader from '@/components/PageHeader';
-import { CategoryForm } from './_components/CategoryForm';
+import { CategoryForm } from '../_components/CategoryForm';
 
 export default function NewCategory() {
 	return (
