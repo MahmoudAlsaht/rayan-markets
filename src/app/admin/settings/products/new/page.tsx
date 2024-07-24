@@ -3,7 +3,7 @@ import PageHeader from '@/components/PageHeader';
 import { ProductForm } from '../_components/ProductForm';
 import db from '@/db/db';
 
-export default async function NewCategory() {
+export default async function NewProduct() {
 	const brands = await db.brand.findMany({
 		select: { name: true, id: true },
 	});

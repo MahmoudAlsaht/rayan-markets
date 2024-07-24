@@ -1,14 +1,14 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import PageHeader from '@/components/PageHeader';
-import { BrandForm } from '../_components/BrandForm';
+import { PromoForm } from '../_components/PromoForm';
 
-export default function NewBrand() {
+export default function NewPromo() {
 	return (
 		<main dir='rtl'>
 			<BackButtonNav bg={false} />
-			<PageHeader title='إضافة علامة تجارية جديدة' />
+			<PageHeader title='إضافة كوبون جديد' />
 
-			<BrandForm />
+			<PromoForm />
 		</main>
 	);
 }
