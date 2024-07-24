@@ -96,7 +96,7 @@ export default function LabelForm({
 						/>
 					))}
 			</div>
-			<div className='relative z-0 w-full mb-5 group'>
+			<div className='flex relative z-0 w-full mb-5 group'>
 				<input
 					type='text'
 					name='label'
@@ -117,6 +117,14 @@ export default function LabelForm({
 				>
 					الكلمات المفتاحية
 				</label>
+				<Button
+					variant='ghost'
+					size='sm'
+					className='mt-1'
+					onClick={() => addToSelectedLabel()}
+				>
+					إدخال
+				</Button>
 			</div>
 
 			<div className='relative z-0 w-full mb-5 group'>
