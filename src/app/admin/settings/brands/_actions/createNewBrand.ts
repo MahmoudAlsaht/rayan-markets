@@ -14,7 +14,7 @@ const addBrandSchema = z.object({
 	name: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
 	brandImage: brandImageSchema.refine(
 		(file) => file.size > 0,
-		'الرجاء اختر صورة للقسم',
+		'الرجاء اختر صورة للعلامة',
 	),
 });
 

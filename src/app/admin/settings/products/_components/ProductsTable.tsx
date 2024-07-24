@@ -116,6 +116,13 @@ export default function ProductsTable({
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align='end'>
 								<Link
+									href={`/admin/settings/products/${product.id}/labels`}
+								>
+									<DropdownMenuItem>
+										الكلمات المفتاحية
+									</DropdownMenuItem>
+								</Link>
+								<Link
 									href={`/admin/settings/products/${product.id}`}
 								>
 									<DropdownMenuItem className='text-rayanWarning-dark'>
