@@ -3,7 +3,7 @@ import PageHeader from '@/components/PageHeader';
 import { getAllPromos } from './_actions/getAllPromos';
 import PromosTable from './_components/PromosTable';
 
-export default async function CategoriesSettingsPage() {
+export default async function PromosSettingsPage() {
 	const brands = await getAllPromos();
 
 	return (
