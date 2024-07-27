@@ -66,7 +66,7 @@ export async function createNewProduct(
 
 	if (checkProductExists != null)
 		return {
-			name: 'هذا القسم موجود بالفعل',
+			name: 'هذا المنتج موجود بالفعل',
 			category: '',
 			brand: '',
 			body: '',

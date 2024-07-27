@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import z from 'zod';
 
 const brandImageSchema = z
-	.instanceof(File, { message: 'الرجاء اختر صورة للقسم' })
+	.instanceof(File, { message: 'الرجاء اختر صورة للعلامة' })
 	.refine(
 		(file) =>
 			file.size === 0 || file.type.startsWith('image/'),
@@ -37,7 +37,7 @@ export async function createNewBrand(
 
 	if (checkBrandExists != null)
 		return {
-			name: 'هذا القسم موجود بالفعل',
+			name: 'هذه العلامة موجود بالفعل',
 			brandImage: '',
 		};
 

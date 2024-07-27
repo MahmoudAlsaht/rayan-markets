@@ -205,6 +205,7 @@ export function ProductForm({
 					</div>
 				)}
 			</div>
+
 			<div className='relative z-0 w-full mb-5 group'>
 				<select
 					name='productType'
@@ -243,6 +244,7 @@ export function ProductForm({
 					</div>
 				)}
 			</div>
+
 			<div className='relative z-0 w-full mb-5 group'>
 				<input
 					type='text'
