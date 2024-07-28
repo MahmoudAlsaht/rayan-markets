@@ -12,18 +12,21 @@ export default async function EditBannerPage({
 		where: { id },
 		select: {
 			id: true,
-			name: true,
 			bannerType: true,
 			images: { select: { path: true, id: true } },
-			category: { select: { id: true, name: true } },
-			brand: { select: { id: true, name: true } },
 		},
 	});
 
 	return (
 		<main dir='rtl'>
 			<BackButtonNav bg={false} />
-			<PageHeader title={`تعديل ${banner?.name}`} />
+			<PageHeader
+				title={
+					banner?.bannerType === 'offers'
+						? 'تعديل لافتة العروض'
+						: 'تعديل اللافتة الرئيسية'
+				}
+			/>
 
 			<BannerForm banner={banner} />
 		</main>

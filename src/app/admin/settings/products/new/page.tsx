@@ -4,11 +4,13 @@ import { ProductForm } from '../_components/ProductForm';
 import db from '@/db/db';
 
 export default async function NewProduct() {
-	const brands = await db.brand.findMany({
+	const brands = await db.section.findMany({
+		where: { type: 'brands' },
 		select: { name: true, id: true },
 	});
 
-	const categories = await db.category.findMany({
+	const categories = await db.section.findMany({
+		where: { type: 'categories' },
 		select: { name: true, id: true },
 	});
 

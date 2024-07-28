@@ -4,25 +4,26 @@ import db from '@/db/db';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 
-const categoryImageSchema = z
+const SectionImageSchema = z
 	.instanceof(File, { message: 'الرجاء اختر صورة للقسم' })
 	.refine(
 		(file) =>
 			file.size === 0 || file.type.startsWith('image/'),
 	);
-const addCategorySchema = z.object({
+const addSectionSchema = z.object({
 	name: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
-	categoryImage: categoryImageSchema.refine(
+	type: z.string().min(1, 'الرجاء اختيار نوع القسم'),
+	sectionImage: SectionImageSchema.refine(
 		(file) => file.size > 0,
 		'الرجاء اختر صورة للقسم',
 	),
 });
 
-export async function createNewCategory(
+export async function createNewSection(
 	_prevState: unknown,
 	formData: FormData,
 ) {
-	const result = addCategorySchema.safeParse(
+	const result = addSectionSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
 
@@ -31,26 +32,30 @@ export async function createNewCategory(
 
 	const data = result.data;
 
-	const checkCategoryExists = await db.category.findUnique({
-		where: { name: data.name },
-	});
+	const checkSectionExists = (
+		await db.section.findMany({
+			where: { type: data.type },
+		})
+	).find((s) => s.name === data.name);
 
-	if (checkCategoryExists != null)
+	if (checkSectionExists != undefined)
 		return {
 			name: 'هذا القسم موجود بالفعل',
-			categoryImage: '',
+			type: '',
+			sectionImage: '',
 		};
 
-	const categoryImage = await upload(data.categoryImage);
+	const sectionImage = await upload(data.sectionImage);
 
-	const newCategory = await db.category.create({
+	const newSection = await db.section.create({
 		data: {
 			name: data.name,
-			image: {
+			type: data.type,
+			cover: {
 				create: {
-					imageType: 'CategoryImage',
-					filename: categoryImage?.filename as string,
-					path: categoryImage?.path as string,
+					imageType: 'SectionCover',
+					filename: sectionImage?.filename as string,
+					path: sectionImage?.path as string,
 				},
 			},
 		},
@@ -60,45 +65,25 @@ export async function createNewCategory(
 		| File[]
 		| null;
 
-	createBannerCategory(
-		bannerFiles,
-		newCategory.id,
-		newCategory.name,
-	);
+	createBannerSection(bannerFiles, newSection.id);
 
-	redirect('/admin/settings/categories');
+	redirect('/admin/settings/sections');
 }
 
-async function createBannerCategory(
+async function createBannerSection(
 	files: File[] | null,
-	categoryId: string,
-	categoryName: string,
+	sectionId: string,
 ) {
-	const banner = await db.category.update({
-		where: { id: categoryId },
-		data: {
-			banner: {
-				create: {
-					name: `banner for ${categoryName}`,
-					bannerType: 'CategoryBanner',
-				},
-			},
-		},
-		select: {
-			bannerId: true,
-		},
-	});
-
 	if (files)
 		for (const file of files) {
 			if (file.size === 0) break;
 			const bannerImage = await upload(file);
-			await db.banner.update({
-				where: { id: banner.bannerId as string },
+			await db.section.update({
+				where: { id: sectionId },
 				data: {
-					images: {
+					sectionBanners: {
 						create: {
-							imageType: 'BannerImage',
+							imageType: 'SectionBannerImage',
 							filename:
 								bannerImage?.filename as string,
 							path: bannerImage?.path as string,

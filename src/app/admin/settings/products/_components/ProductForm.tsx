@@ -4,7 +4,7 @@ import SubmitButton from '@/components/SubmitButton';
 import { createNewProduct } from '../_actions/createNewProduct';
 import Image from 'next/image';
 import { editProduct } from '../_actions/editProduct';
-import { Brand, Category } from '@prisma/client';
+import { Section } from '@prisma/client';
 import { useState } from 'react';
 import OfferDatePicker from './OfferDatePicker';
 import { DateRange } from 'react-day-picker';
@@ -40,8 +40,8 @@ export function ProductForm({
 		} | null;
 	} | null;
 
-	brands: Partial<Brand>[];
-	categories: Partial<Category>[];
+	brands: Partial<Section>[];
+	categories: Partial<Section>[];
 }) {
 	const [productType, setProductType] = useState<
 		string | null
@@ -86,7 +86,7 @@ export function ProductForm({
 								{product.category?.name}
 							</option>
 						) : (
-							<option value=''>اختر القسم</option>
+							<option value=''>اختر الفئة</option>
 						)}
 						{categories &&
 							categories.map((category) =>
@@ -165,45 +165,6 @@ export function ProductForm({
 						</div>
 					)}
 				</div>
-			</div>
-
-			<div className='relative z-0 w-full mb-5 group'>
-				<select
-					name='productType'
-					className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3'
-					onChange={(e) =>
-						setProductType(e.target.value)
-					}
-				>
-					{product ? (
-						<option value={product.productType}>
-							{product.productType === 'normal'
-								? 'عادي'
-								: product.productType ===
-								  'forHome'
-								? 'منزلية'
-								: 'منتج بالوزن'}
-						</option>
-					) : (
-						<option value=''>اختر نوع المنتج</option>
-					)}
-					{product?.productType !== 'normal' && (
-						<option value='normal'>عادي</option>
-					)}
-					{product?.productType !== 'weight' && (
-						<option value='weight'>
-							منتج بالوزن
-						</option>
-					)}
-					{product?.productType !== 'forHome' && (
-						<option value='forHome'>منزلية</option>
-					)}
-				</select>
-				{error?.productType && (
-					<div className='text-destructive'>
-						{error?.productType}
-					</div>
-				)}
 			</div>
 
 			<div className='relative z-0 w-full mb-5 group'>

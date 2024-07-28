@@ -2,7 +2,7 @@
 import { upload } from '@/cloudinary';
 import db from '@/db/db';
 import { redirect } from 'next/navigation';
-import z, { date } from 'zod';
+import z from 'zod';
 
 const bannerImageSchema = z
 	.instanceof(File, { message: 'الرجاء اختر صورة للقسم' })
@@ -10,8 +10,7 @@ const bannerImageSchema = z
 		(file) =>
 			file.size === 0 || file.type.startsWith('image/'),
 	);
-const addBrandSchema = z.object({
-	name: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
+const addBannerSchema = z.object({
 	bannerType: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
 	bannerImages: bannerImageSchema.refine(
 		(file) => file.size > 0,
@@ -23,7 +22,7 @@ export async function createNewBanner(
 	_prevState: unknown,
 	formData: FormData,
 ) {
-	const result = addBrandSchema.safeParse(
+	const result = addBannerSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
 
@@ -33,15 +32,8 @@ export async function createNewBanner(
 	const data = result.data;
 
 	const checkBannerExists = await db.banner.findUnique({
-		where: { name: data.name },
+		where: { bannerType: data.bannerType },
 	});
-
-	if (checkBannerExists != null)
-		return {
-			name: 'هذا الاسم موجود بالفعل',
-			bannerImages: '',
-			bannerType: '',
-		};
 
 	const bannerImages = formData.getAll(
 		'bannerImages',
@@ -52,10 +44,9 @@ export async function createNewBanner(
 	});
 	const imagesIds = await uploadBannerImages(bannerImages);
 
-	if (bannerBasedOnType == null) {
+	if (checkBannerExists == null) {
 		await db.banner.create({
 			data: {
-				name: data.name,
 				bannerType: data.bannerType,
 				images: {
 					connect: imagesIds,
@@ -66,9 +57,8 @@ export async function createNewBanner(
 	}
 
 	await db.banner.update({
-		where: { id: bannerBasedOnType.id },
+		where: { id: checkBannerExists.id },
 		data: {
-			name: data.name || bannerBasedOnType.name,
 			images: {
 				connect: imagesIds,
 			},

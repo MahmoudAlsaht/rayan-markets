@@ -11,5 +11,8 @@ export const getAllPromos = async () => {
 		},
 	});
 
-	return promos;
+	return promos.map((promo, index) => ({
+		...promo,
+		index: index + 1,
+	}));
 };

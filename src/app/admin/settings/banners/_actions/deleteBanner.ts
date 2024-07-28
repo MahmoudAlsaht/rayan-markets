@@ -8,6 +8,7 @@ export async function deleteBanner(id: string) {
 		where: { id },
 		select: {
 			id: true,
+			bannerType: true,
 			images: { select: { id: true, filename: true } },
 		},
 	});

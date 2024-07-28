@@ -13,5 +13,8 @@ export const getAllUsers = async () => {
 		},
 	});
 
-	return users;
+	return users.map((user, index) => ({
+		...user,
+		index: index + 1,
+	}));
 };

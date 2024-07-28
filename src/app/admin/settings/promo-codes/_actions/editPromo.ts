@@ -7,10 +7,16 @@ import { DateRange } from 'react-day-picker';
 import z from 'zod';
 
 const editPromoSchema = z.object({
-	code: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
+	code: z.string().min(1, 'الرجاء ادخال هذا الحقل').optional(),
 	expired: z.string().optional(),
-	discount: z.string().min(1, 'الرجاء ادخل قيمة الخصم'),
-	promoType: z.string().min(1, 'الرجاء ادخل نوع الكوبون '),
+	discount: z
+		.string()
+		.min(1, 'الرجاء ادخل قيمة الخصم')
+		.optional(),
+	promoType: z
+		.string()
+		.min(1, 'الرجاء ادخل نوع الكوبون ')
+		.optional(),
 });
 
 export async function editPromo(
@@ -37,7 +43,7 @@ export async function editPromo(
 		data: {
 			code: data.code || currentPromo?.code,
 			discount:
-				parseInt(data.discount) ||
+				parseInt(data?.discount as string) ||
 				currentPromo?.discount,
 			promoType: data.promoType || currentPromo?.promoType,
 			expired: data.expired === 'on' ? false : true,

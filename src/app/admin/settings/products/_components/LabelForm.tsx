@@ -36,6 +36,7 @@ export default function LabelForm({
 	};
 
 	const addToSelectedLabel = async () => {
+		if (labelRef.current!.value === '') return;
 		await setSelectedLabels((prevLabels) => [
 			...prevLabels,
 			{ value: labelRef.current?.value as string },

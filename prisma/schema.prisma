@@ -109,11 +109,11 @@ model Product {
   imageId String? @unique @db.ObjectId
   image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  brand   Brand?  @relation(fields: [brandId], references: [id])
-  brandId String? @db.ObjectId
+  brand   Section? @relation(name: "brand", fields: [brandId], references: [id])
+  brandId String?  @db.ObjectId
 
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @db.ObjectId
+  category   Section? @relation(name: "category", fields: [categoryId], references: [id])
+  categoryId String?  @db.ObjectId
 }
 
 model PromoCode {
@@ -149,14 +149,32 @@ model Image {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  category Category?
-
   product Product?
 
-  brand Brand?
+  section Section? @relation(name: "sectionCover")
+
+  sectionId     String?  @db.ObjectId
+  sectionBanner Section? @relation(name: "sectionBanner", fields: [sectionId], references: [id])
 
   bannerId String? @db.ObjectId
   banner   Banner? @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+}
+
+model Section {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  coverId String? @unique @db.ObjectId
+  cover   Image?  @relation(name: "sectionCover", fields: [coverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  sectionBanners Image[] @relation(name: "sectionBanner")
+
+  categoryProducts Product[] @relation(name: "category")
+
+  brandProducts Product[] @relation(name: "brand")
 }
 
 model District {
@@ -187,48 +205,13 @@ model Contact {
   updatedAt DateTime @updatedAt
 }
 
-model Category {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  bannerId String? @unique @db.ObjectId
-  banner   Banner? @relation(fields: [bannerId], references: [id])
-
-  imageId String? @unique @db.ObjectId
-  image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  products Product[]
-}
-
-model Brand {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  bannerId String? @unique @db.ObjectId
-  banner   Banner? @relation(fields: [bannerId], references: [id])
-
-  imageId String? @unique @db.ObjectId
-  image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  products Product[]
-}
-
 model Banner {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String   @unique
+  bannerType String   @unique
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  bannerType String
 
   images Image[]
-
-  brand Brand?
-
-  category Category?
 }
 
 model Anonymous {

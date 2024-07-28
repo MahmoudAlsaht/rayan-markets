@@ -60,7 +60,7 @@ export async function createNewProduct(
 
 	const data = result.data;
 
-	const checkProductExists = await db.brand.findUnique({
+	const checkProductExists = await db.product.findFirst({
 		where: { name: data.name },
 	});
 

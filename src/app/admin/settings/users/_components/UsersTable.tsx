@@ -50,6 +50,17 @@ export default function UsersTable({
 
 	const columns: ColumnDef<Partial<User>>[] = [
 		{
+			accessorKey: 'index',
+			header: () => (
+				<div className='text-right'>{data.length}</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('index')}
+				</div>
+			),
+		},
+		{
 			accessorKey: 'username',
 			header: () => (
 				<div className='text-right'>الاسم</div>

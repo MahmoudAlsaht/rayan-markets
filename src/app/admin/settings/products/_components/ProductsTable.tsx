@@ -70,6 +70,17 @@ export default function ProductsTable({
 
 	const columns: ColumnDef<Partial<Product>>[] = [
 		{
+			accessorKey: 'index',
+			header: () => (
+				<div className='text-right'>{data.length}</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('index')}
+				</div>
+			),
+		},
+		{
 			accessorKey: 'name',
 			header: () => (
 				<div className='text-right'>الاسم</div>

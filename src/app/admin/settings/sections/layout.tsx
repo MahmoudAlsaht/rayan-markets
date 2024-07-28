@@ -1,5 +1,7 @@
 import { isEditor } from '@/app/(siteFacing)/auth/_actions/isAdmin';
 import { ReactNode } from 'react';
+import CustomBackButtonNav from './_components/CustomBackButtonNav';
+import SectionNav from './_components/SectionNav';
 
 export default async function CategoriesSettingsLayout({
 	children,
@@ -8,5 +10,11 @@ export default async function CategoriesSettingsLayout({
 }) {
 	await isEditor();
 
-	return <div>{children}</div>;
+	return (
+		<div>
+			<CustomBackButtonNav />
+			<SectionNav />
+			{children}
+		</div>
+	);
 }

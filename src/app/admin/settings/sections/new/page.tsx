@@ -1,14 +1,13 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import PageHeader from '@/components/PageHeader';
-import { CategoryForm } from '../_components/CategoryForm';
+import { SectionForm } from '../_components/SectionForm';
 
-export default function NewCategory() {
+export default function NewSection() {
 	return (
 		<main dir='rtl'>
-			<BackButtonNav bg={false} />
 			<PageHeader title='إضافة قسم جديد' />
 
-			<CategoryForm />
+			<SectionForm />
 		</main>
 	);
 }

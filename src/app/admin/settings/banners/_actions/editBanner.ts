@@ -1,5 +1,5 @@
 'use server';
-import { deleteCloudinaryImage, upload } from '@/cloudinary';
+import { upload } from '@/cloudinary';
 import db from '@/db/db';
 import { redirect } from 'next/navigation';
 import z from 'zod';
@@ -12,8 +12,8 @@ const bannerImageSchema = z
 	);
 
 const editBannerSchema = z.object({
-	name: z.string().min(1, 'الرجاء ادخال هذا الحقل'),
 	bannerImages: bannerImageSchema.optional(),
+	bannerType: z.string().optional(),
 });
 
 export async function editBanner(
@@ -28,21 +28,15 @@ export async function editBanner(
 	if (result.success === false)
 		return result.error.formErrors.fieldErrors;
 
-	const data = result.data;
 	const bannerImages = formData.getAll('bannerImages') as
 		| File[]
 		| null;
 
 	const imagesIds = await uploadBannerImages(bannerImages);
 
-	const currentBanner = await db.banner.findUnique({
-		where: { id },
-	});
-
 	await db.banner.update({
 		where: { id },
 		data: {
-			name: data.name || currentBanner?.name,
 			images: {
 				connect: imagesIds,
 			},

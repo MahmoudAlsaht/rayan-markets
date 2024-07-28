@@ -41,7 +41,6 @@ import {
 import { useState, useTransition } from 'react';
 import { PromoCode } from '@prisma/client';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
 	Dialog,
 	DialogContent,
@@ -69,6 +68,17 @@ export default function PromosTable({
 	const router = useRouter();
 
 	const columns: ColumnDef<Partial<PromoCode>>[] = [
+		{
+			accessorKey: 'index',
+			header: () => (
+				<div className='text-right'>{data.length}</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('index')}
+				</div>
+			),
+		},
 		{
 			accessorKey: 'code',
 			header: () => (

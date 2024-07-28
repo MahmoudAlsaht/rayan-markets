@@ -5,7 +5,7 @@ import {
 	Home,
 	LayoutPanelTop,
 	Locate,
-	ShoppingBag,
+	// ShoppingBag,
 	SlidersHorizontal,
 	TicketCheck,
 	Truck,
@@ -66,18 +66,18 @@ export const authorizedUserPermissions = (profileId: string) =>
 		},
 		{
 			displayName: 'الأقسام',
-			href: '/admin/settings/categories',
+			href: '/admin/settings/sections',
 			icon: (
 				<LayoutPanelTop className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
 			),
 		},
-		{
-			displayName: 'العلامات التجارية',
-			href: '/admin/settings/brands',
-			icon: (
-				<ShoppingBag className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
-			),
-		},
+		// {
+		// 	displayName: 'العلامات التجارية',
+		// 	href: '/admin/settings/brands',
+		// 	icon: (
+		// 		<ShoppingBag className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
+		// 	),
+		// },
 		{
 			displayName: 'المنتجات',
 			href: '/admin/settings/products',

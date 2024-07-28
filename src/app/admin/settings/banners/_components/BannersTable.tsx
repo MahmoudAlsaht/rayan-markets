@@ -70,13 +70,27 @@ export default function BannersTable({
 
 	const columns: ColumnDef<Partial<Banner>>[] = [
 		{
-			accessorKey: 'name',
+			accessorKey: 'index',
 			header: () => (
-				<div className='text-right'>الاسم</div>
+				<div className='text-right'>{data.length}</div>
 			),
 			cell: ({ row }) => (
 				<div className='capitalize'>
-					{row.getValue('name' as string)}
+					{row.getValue('index')}
+				</div>
+			),
+		},
+		{
+			accessorKey: 'bannerType',
+			header: () => (
+				<div className='text-right'>لافتة</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('bannerType' as string) ===
+					'main'
+						? 'الرئيسية'
+						: 'العروض'}
 				</div>
 			),
 		},
@@ -142,7 +156,8 @@ export default function BannersTable({
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle className='text-destructive'>
-									حذف اللافتة {banner.name}
+									حذف اللافتة{' '}
+									{banner.bannerType}
 								</DialogTitle>
 							</DialogHeader>
 							<DialogFooter>

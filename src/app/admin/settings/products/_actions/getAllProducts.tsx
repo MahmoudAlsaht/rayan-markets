@@ -33,8 +33,9 @@ export const getAllProducts = async () => {
 		},
 	});
 
-	const selectedProducts = products.map((product) => ({
+	const selectedProducts = products.map((product, index) => ({
 		id: product.id,
+		index: index + 1,
 		name: product.name,
 		image: product.image?.path,
 	}));

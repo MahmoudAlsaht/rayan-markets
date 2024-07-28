@@ -39,7 +39,6 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { useState, useTransition } from 'react';
-import { Category } from '@prisma/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -51,12 +50,13 @@ import {
 } from '@/components/ui/dialog';
 import { DialogTrigger } from '@radix-ui/react-dialog';
 import { useRouter } from 'next/navigation';
-import { deleteCategory } from '../_actions/deleteCategory';
+import { deleteSection } from '../_actions/deleteSection';
+import { Section } from '@prisma/client';
 
-export default function CategoriesTable({
+export default function SectionsTable({
 	data,
 }: {
-	data: Partial<Category>[];
+	data: Partial<Section>[];
 }) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
@@ -68,7 +68,18 @@ export default function CategoriesTable({
 
 	const router = useRouter();
 
-	const columns: ColumnDef<Partial<Category>>[] = [
+	const columns: ColumnDef<Partial<Section>>[] = [
+		{
+			accessorKey: 'index',
+			header: () => (
+				<div className='text-right'>{data.length}</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('index')}
+				</div>
+			),
+		},
 		{
 			accessorKey: 'name',
 			header: () => (
@@ -76,19 +87,32 @@ export default function CategoriesTable({
 			),
 			cell: ({ row }) => (
 				<div className='capitalize'>
-					{row.getValue('name' as string)}
+					{row.getValue('name')}
 				</div>
 			),
 		},
 		{
-			accessorKey: 'categoryImage',
+			accessorKey: 'type',
+			header: () => (
+				<div className='text-right'>نوع القسم</div>
+			),
+			cell: ({ row }) => (
+				<div className='capitalize'>
+					{row.getValue('type') === 'categories'
+						? 'فئات'
+						: 'علامات تجارية'}
+				</div>
+			),
+		},
+		{
+			accessorKey: 'cover',
 			header: () => (
 				<div className='text-right'>صورة القسم</div>
 			),
 			cell: ({ row }) => (
 				<Image
 					alt={row.getValue('name')}
-					src={row.getValue('categoryImage')}
+					src={row.getValue('cover')}
 					width={100}
 					height={100}
 					className='h-20 w-24'
@@ -122,7 +146,7 @@ export default function CategoriesTable({
 			id: 'الخيارات',
 			enableHiding: false,
 			cell: ({ row }) => {
-				const category = row.original;
+				const section = row.original;
 				return (
 					<Dialog>
 						<DropdownMenu dir='rtl'>
@@ -139,7 +163,7 @@ export default function CategoriesTable({
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align='end'>
 								<Link
-									href={`/admin/settings/categories/${category.id}`}
+									href={`/admin/settings/sections/${section.type}/${section.id}`}
 								>
 									<DropdownMenuItem className='text-rayanWarning-dark'>
 										تعديل
@@ -157,7 +181,7 @@ export default function CategoriesTable({
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle className='text-destructive'>
-									حذف قسم {category.name}
+									حذف قسم {section.name}
 								</DialogTitle>
 							</DialogHeader>
 							<DialogFooter>
@@ -167,8 +191,8 @@ export default function CategoriesTable({
 									onClick={() => {
 										startTransition(
 											async () => {
-												await deleteCategory(
-													category.id as string,
+												await deleteSection(
+													section.id as string,
 												);
 												router.refresh();
 											},
@@ -221,7 +245,7 @@ export default function CategoriesTable({
 					className='max-w-sm ml-2'
 				/>
 
-				<Link href='/admin/settings/categories/new'>
+				<Link href='/admin/settings/sections/new'>
 					<Button variant='outline'>
 						<Plus className='ml-2 h-4 w-4' />
 					</Button>
@@ -302,13 +326,7 @@ export default function CategoriesTable({
 								table
 									.getRowModel()
 									.rows.map((row) => (
-										<TableRow
-											key={row.id}
-											data-state={
-												row.getIsSelected() &&
-												'selected'
-											}
-										>
+										<TableRow key={row.id}>
 											{row
 												.getVisibleCells()
 												.map((cell) => (

@@ -93,8 +93,9 @@ export async function editProduct(
 			quantity:
 				parseInt(data.quantity) ||
 				currentProduct?.quantity,
-			productType:
-				data.productType || currentProduct?.productType,
+			productType: data.productType
+				? data.productType
+				: currentProduct?.productType,
 			weights:
 				data.productType === 'weight'
 					? weights?.map((w) => parseFloat(w)) ||
@@ -103,8 +104,9 @@ export async function editProduct(
 			isOffer: data.isOffer === 'on' ? true : false,
 			description:
 				data.productType === 'forHome'
-					? data.description ||
-					  currentProduct?.description
+					? data.description
+						? data.description
+						: currentProduct?.description
 					: null,
 			newPrice:
 				data.isOffer === 'on'
