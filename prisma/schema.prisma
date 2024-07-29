@@ -138,11 +138,11 @@ model Label {
 }
 
 model Image {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   filename  String
   path      String
   imageType String
-
+  link      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

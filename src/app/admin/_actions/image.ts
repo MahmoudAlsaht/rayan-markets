@@ -34,3 +34,16 @@ export async function deleteImage(id: string) {
 
 	await db.image.delete({ where: { id } });
 }
+
+export async function addImageLink(id: string, link: string) {
+	const image = await db.image.findUnique({ where: { id } });
+
+	if (image == null) return;
+
+	await db.image.update({
+		where: { id },
+		data: {
+			link,
+		},
+	});
+}

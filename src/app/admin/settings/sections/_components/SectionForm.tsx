@@ -146,7 +146,6 @@ export function SectionForm({
 						section.sectionBanners?.map((image) => (
 							<ClickableImageCard
 								key={image.id}
-								id={image.id}
 								image={image}
 								imageAlt={`${section.name} banner's image`}
 							/>

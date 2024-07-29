@@ -80,7 +80,6 @@ export function BannerForm({
 						banner?.images.map((image) => (
 							<ClickableImageCard
 								key={image.id}
-								id={image.id}
 								image={image}
 								imageAlt={`${banner.bannerType} banner's image`}
 							/>
