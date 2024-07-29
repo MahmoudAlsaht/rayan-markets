@@ -1,7 +1,7 @@
 import { isEditor } from '@/app/(siteFacing)/auth/_actions/isAdmin';
 import { ReactNode } from 'react';
 
-export default async function BannersSettingsLayout({
+export default async function DistrictsSettingsLayout({
 	children,
 }: {
 	children: ReactNode;

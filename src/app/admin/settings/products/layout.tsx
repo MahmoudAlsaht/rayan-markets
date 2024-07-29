@@ -1,7 +1,7 @@
 import { isEditor } from '@/app/(siteFacing)/auth/_actions/isAdmin';
 import { ReactNode } from 'react';
 
-export default async function BrandsSettingsLayout({
+export default async function ProductsSettingsLayout({
 	children,
 }: {
 	children: ReactNode;

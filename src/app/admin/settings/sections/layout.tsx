@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import CustomBackButtonNav from './_components/CustomBackButtonNav';
 import SectionNav from './_components/SectionNav';
 
-export default async function CategoriesSettingsLayout({
+export default async function SectionsSettingsLayout({
 	children,
 }: {
 	children: ReactNode;
