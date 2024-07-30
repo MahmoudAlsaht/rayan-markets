@@ -29,7 +29,7 @@ export default function MainNavbar({
 
 	return (
 		<nav
-			className='hidden sm:block border-gray-200 dark:bg-[#C7E7E2]'
+			className='hidden sm:block max-w-[1481.6px] mx-auto border-gray-200 dark:bg-[#C7E7E2]'
 			dir='rtl'
 		>
 			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>

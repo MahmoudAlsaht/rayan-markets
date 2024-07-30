@@ -38,7 +38,6 @@ next-env.d.ts
 
 .eslintrc.json
 
-/public/sw.js*
-/public/swe-worker-development.js
-/public/workbox-7144475a.js
-/public/workbox-7144475a.js.map
+/public/sw*
+/public/swe-worker-*
+/public/workbox-*

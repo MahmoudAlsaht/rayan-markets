@@ -19,6 +19,9 @@ const config = {
 			},
 		},
 		extend: {
+			width: {
+				'95%': '95%',
+			},
 			colors: {
 				rayanPrimary: {
 					dark: colors.teal[500],
@@ -98,6 +101,9 @@ const config = {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+			},
+			inset: {
+				'47%': '47%',
 			},
 		},
 	},
