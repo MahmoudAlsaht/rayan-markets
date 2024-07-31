@@ -103,7 +103,7 @@ const config = {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
 			inset: {
-				'47%': '47%',
+				'47%': '39%',
 			},
 		},
 	},

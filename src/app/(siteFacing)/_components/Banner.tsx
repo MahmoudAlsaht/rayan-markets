@@ -4,15 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { checkUser } from '../auth/_actions/isAuthenticated';
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import ImageCarousel from './ImageCarousel';
 
 const getBanner = cache(
 	(type: string) => {
@@ -85,7 +79,7 @@ async function BannerSuspense({
 
 	return (
 		images && (
-			<div className='flex flex-col'>
+			<div className=''>
 				{user &&
 					(user.role === 'admin' ||
 						user.role === 'editor') && (
@@ -106,34 +100,13 @@ async function BannerSuspense({
 						</Link>
 					)}
 				{images.length > 1 ? (
-					<Carousel
-						opts={{
-							align: 'start',
-							loop: true,
-						}}
-						className='w-full max-w-[1481.6px] mx-auto'
-					>
-						<CarouselContent className='mx-auto h-44 sm:h-56 md:h-72'>
-							{images?.map((image) => (
-								<Link
-									key={image.id}
-									href={image.link}
-								>
-									<CarouselItem className='relative'>
-										<Image
-											fill
-											alt={`banner's image`}
-											src={image.path}
-											className='mx-auto cursor-pointer'
-											priority
-										/>
-									</CarouselItem>
-								</Link>
-							))}
-						</CarouselContent>
-						<CarouselPrevious />
-						<CarouselNext />
-					</Carousel>
+					<ImageCarousel
+						images={images.map((image) => ({
+							id: image.id,
+							path: image.path,
+							link: image.link,
+						}))}
+					/>
 				) : (
 					<Link href={images[0].link || '#'}>
 						<div className='relative w-full max-w-[1481.6px] mx-auto h-44 sm:h-56 md:h-72'>

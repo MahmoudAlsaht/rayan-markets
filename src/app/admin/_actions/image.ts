@@ -1,6 +1,7 @@
 'use server';
 import { deleteCloudinaryImage, upload } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 
 export async function editImage(id: string, formData: FormData) {
 	const file = formData.get('file') as File;
@@ -23,6 +24,9 @@ export async function editImage(id: string, formData: FormData) {
 			path: uploadedImage.path,
 		},
 	});
+
+	revalidatePath('/');
+	revalidatePath('/offers');
 }
 
 export async function deleteImage(id: string) {
@@ -33,6 +37,8 @@ export async function deleteImage(id: string) {
 	deleteCloudinaryImage(image.filename);
 
 	await db.image.delete({ where: { id } });
+	revalidatePath('/');
+	revalidatePath('/offers');
 }
 
 export async function addImageLink(id: string, link: string) {
@@ -46,4 +52,6 @@ export async function addImageLink(id: string, link: string) {
 			link,
 		},
 	});
+	revalidatePath('/');
+	revalidatePath('/offers');
 }

@@ -1,6 +1,7 @@
 'use server';
 import { upload } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 
@@ -43,6 +44,8 @@ export async function editBanner(
 		},
 	});
 
+	revalidatePath('/');
+	revalidatePath('/offers');
 	redirect('/admin/settings/banners');
 }
 

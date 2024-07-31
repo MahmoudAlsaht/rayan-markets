@@ -2,6 +2,7 @@
 
 import { deleteCloudinaryImage } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 
 export async function deleteBanner(id: string) {
 	const banner = await db.banner.findUnique({
@@ -20,4 +21,7 @@ export async function deleteBanner(id: string) {
 		}
 
 	await db.banner.delete({ where: { id } });
+
+	revalidatePath('/');
+	revalidatePath('/offers');
 }
