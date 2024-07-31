@@ -134,7 +134,7 @@ function CarouselNavButton({
 		<Button
 			className={`${prev && 'left-0'} ${
 				next && 'right-0'
-			} absolute top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer rounded-xl`}
+			} absolute top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-rayanPrimary-dark cursor-pointer rounded-xl`}
 			variant='ghost'
 			onClick={onClick}
 		>
