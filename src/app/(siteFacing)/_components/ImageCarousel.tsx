@@ -37,13 +37,13 @@ export default function ImageCarousel({
 		const isRightSwipe = distance < -minSwipeDistance;
 
 		if (isLeftSwipe || isRightSwipe) {
-			if (isRightSwipe) nextImage();
+			if (isRightSwipe) prevImage();
 
-			if (isLeftSwipe) prevImage();
+			if (isLeftSwipe) nextImage();
 		}
 	};
 
-	const nextImage = () => {
+	const prevImage = () => {
 		if (targetedIndex + 1 === images.length) {
 			setTargetedIndex(0);
 			return;
@@ -51,7 +51,7 @@ export default function ImageCarousel({
 		setTargetedIndex((prevIndex) => prevIndex + 1);
 	};
 
-	const prevImage = () => {
+	const nextImage = () => {
 		if (targetedIndex === 0) {
 			setTargetedIndex(images.length - 1);
 			return;
@@ -98,20 +98,8 @@ export default function ImageCarousel({
 					</div>
 				))}
 
-				<Button
-					className='absolute right-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer'
-					variant='ghost'
-					onClick={prevImage}
-				>
-					<ArrowRight />
-				</Button>
-				<Button
-					className='absolute left-0 top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer rounded-xl'
-					variant='ghost'
-					onClick={nextImage}
-				>
-					<ArrowLeft />
-				</Button>
+				<CarouselNavButton next onClick={nextImage} />
+				<CarouselNavButton prev onClick={prevImage} />
 			</div>
 			<br />
 			<div className='flex justify-center items-center'>
@@ -130,5 +118,28 @@ export default function ImageCarousel({
 				))}
 			</div>
 		</>
+	);
+}
+
+function CarouselNavButton({
+	next = false,
+	prev = false,
+	onClick,
+}: {
+	next?: boolean;
+	prev?: boolean;
+	onClick: () => void;
+}) {
+	return (
+		<Button
+			className={`${prev && 'left-0'} ${
+				next && 'right-0'
+			} absolute top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-amber-500 cursor-pointer rounded-xl`}
+			variant='ghost'
+			onClick={onClick}
+		>
+			{prev && <ArrowLeft />}
+			{next && <ArrowRight />}
+		</Button>
 	);
 }
