@@ -63,17 +63,17 @@ export default function ImageCarousel({
 		setTargetedIndex(index);
 	};
 
-	// useEffect(() => {
-	// 	const intervalId = setInterval(async () => {
-	// 		setTargetedIndex((prevIndex) =>
-	// 			prevIndex + 1 === images.length
-	// 				? 0
-	// 				: prevIndex + 1,
-	// 		);
-	// 	}, 4000);
+	useEffect(() => {
+		const intervalId = setInterval(async () => {
+			setTargetedIndex((prevIndex) =>
+				prevIndex + 1 === images.length
+					? 0
+					: prevIndex + 1,
+			);
+		}, 4000);
 
-	// 	return () => clearInterval(intervalId);
-	// }, [images.length]);
+		return () => clearInterval(intervalId);
+	}, [images.length]);
 
 	return (
 		<>
