@@ -12,6 +12,7 @@ export default async function BannersSettingsPage() {
 			<PageHeader title='إعدادات اللافتات' />
 
 			<BannersTable data={banners} />
+			<div className='h-20'></div>
 		</main>
 	);
 }

@@ -2,6 +2,7 @@
 
 import { deleteCloudinaryImage } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 
 export async function deleteSection(id: string) {
 	const section = await db.section.findUnique({
@@ -44,4 +45,7 @@ export async function deleteSection(id: string) {
 			});
 		}
 	}
+
+	revalidatePath('/');
+	revalidatePath('/sections/*');
 }

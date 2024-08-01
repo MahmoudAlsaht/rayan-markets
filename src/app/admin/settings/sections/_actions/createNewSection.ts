@@ -1,6 +1,7 @@
 'use server';
 import { upload } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 
@@ -66,6 +67,9 @@ export async function createNewSection(
 		| null;
 
 	createBannerSection(bannerFiles, newSection.id);
+
+	revalidatePath('/');
+	revalidatePath('/sections/*');
 
 	redirect('/admin/settings/sections');
 }

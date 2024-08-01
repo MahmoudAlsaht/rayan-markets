@@ -1,10 +1,11 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { HomeIcon, Search, Settings2 } from 'lucide-react';
+import { HomeIcon, Settings2 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ComponentProps } from 'react';
+import { CiShop } from 'react-icons/ci';
 
 export default function BottomNavbar() {
 	return (
@@ -12,7 +13,7 @@ export default function BottomNavbar() {
 			<div className='fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-rayanPrimary-dark text-white border border-gray-100 rounded-full bottom-4 left-1/2'>
 				<div className='grid h-full max-w-lg grid-cols-3 mx-auto'>
 					<NavLink href='/products'>
-						<Search />
+						<CiShop className='size-8' />
 						<span className='sr-only'>Products</span>
 					</NavLink>
 					<div

@@ -5,7 +5,7 @@ import Logo from '../../rayan.marketLogo.png';
 import { usePathname, useRouter } from 'next/navigation';
 import { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
-import { Search, UserCircle } from 'lucide-react';
+import { UserCircle } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User } from '@prisma/client';
 import logout from '../auth/_actions/logout';
+import SearchProducts from './SearchProducts';
 
 export default function MainNavbar({
 	user,
@@ -50,17 +51,23 @@ export default function MainNavbar({
 							<NavLink href='/'>الرئيسية</NavLink>
 						</li>
 						<li>
-							<NavLink href='#'>المنتجات</NavLink>
+							<NavLink href='/products'>
+								المنتجات
+							</NavLink>
 						</li>
 						<li>
-							<NavLink href='#'>العروض</NavLink>
+							<NavLink href='/products/offers'>
+								العروض
+							</NavLink>
 						</li>
 						<li>
-							<NavLink href='#'>المنزلية</NavLink>
+							<NavLink href='/products/for-home'>
+								المنزلية
+							</NavLink>
 						</li>
 
 						<li className='hover:cursor-pointer'>
-							<Search />
+							<SearchProducts />
 						</li>
 
 						<li className='hover:cursor-pointer'>

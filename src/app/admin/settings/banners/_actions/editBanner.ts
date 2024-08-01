@@ -35,7 +35,7 @@ export async function editBanner(
 
 	const imagesIds = await uploadBannerImages(bannerImages);
 
-	await db.banner.update({
+	const updatedBanner = await db.banner.update({
 		where: { id },
 		data: {
 			images: {
@@ -44,8 +44,10 @@ export async function editBanner(
 		},
 	});
 
-	revalidatePath('/');
-	revalidatePath('/offers');
+	updatedBanner.bannerType === 'main' && revalidatePath('/');
+	updatedBanner.bannerType === 'offers' &&
+		revalidatePath('/offers');
+
 	redirect('/admin/settings/banners');
 }
 

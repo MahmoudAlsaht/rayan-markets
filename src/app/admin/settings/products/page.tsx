@@ -12,6 +12,7 @@ export default async function ProductsSettingsPage() {
 			<PageHeader title='إعدادات المنتجات' />
 
 			<ProductsTable data={products} />
+			<div className='h-20'></div>
 		</main>
 	);
 }

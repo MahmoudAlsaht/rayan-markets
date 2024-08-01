@@ -12,6 +12,7 @@ export default async function PromosSettingsPage() {
 			<PageHeader title='إعدادات كوبونات الخصم' />
 
 			<PromosTable data={brands} />
+			<div className='h-20'></div>
 		</main>
 	);
 }

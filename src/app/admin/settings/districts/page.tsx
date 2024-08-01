@@ -10,6 +10,7 @@ export default async function DistrictsPage() {
 			<BackButtonNav bg={false} href='/admin' />
 			<PageHeader title='المناطق المدعومة' />
 			<DistrictsTable data={districts} />
+			<div className='h-20'></div>
 		</main>
 	);
 }

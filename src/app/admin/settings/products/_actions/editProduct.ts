@@ -2,6 +2,7 @@
 import { deleteCloudinaryImage, upload } from '@/cloudinary';
 import db from '@/db/db';
 import { addHours, addMinutes } from 'date-fns';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { DateRange } from 'react-day-picker';
 import z from 'zod';
@@ -125,6 +126,9 @@ export async function editProduct(
 					: null,
 		},
 	});
+
+	revalidatePath('/');
+	revalidatePath('/products/*');
 
 	redirect('/admin/settings/products');
 }

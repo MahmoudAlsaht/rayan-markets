@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 
 export default function SubmitButton({
@@ -9,16 +10,19 @@ export default function SubmitButton({
 	handleClick,
 	className,
 	destructive,
+	size,
 }: {
-	body: string;
+	body: ReactNode;
 	handleClick?: () => void;
 	className?: string;
 	destructive?: boolean;
+	size?: 'default' | 'sm' | 'lg' | 'icon' | null | undefined;
 }) {
 	const { pending } = useFormStatus();
 
 	return (
 		<Button
+			size={size}
 			variant={destructive ? 'destructive' : 'default'}
 			className={`w-full ${className}`}
 			type='submit'

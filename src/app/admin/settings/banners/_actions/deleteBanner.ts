@@ -22,6 +22,6 @@ export async function deleteBanner(id: string) {
 
 	await db.banner.delete({ where: { id } });
 
-	revalidatePath('/');
-	revalidatePath('/offers');
+	banner?.bannerType === 'main' && revalidatePath('/');
+	banner?.bannerType === 'offers' && revalidatePath('/offers');
 }

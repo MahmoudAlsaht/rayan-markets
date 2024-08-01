@@ -9,6 +9,7 @@ export default async function SectionsSettingsPage() {
 		<main dir='rtl'>
 			<PageHeader title='إعدادات الأقسام' />
 			<SectionsTable data={sections} />
+			<div className='h-20'></div>
 		</main>
 	);
 }

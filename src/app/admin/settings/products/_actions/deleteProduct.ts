@@ -2,6 +2,7 @@
 
 import { deleteCloudinaryImage } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 
 export async function deleteProduct(id: string) {
 	const product = await db.product.findUnique({
@@ -46,4 +47,7 @@ export async function deleteProduct(id: string) {
 	await db.image.delete({
 		where: { id: product?.imageId as string },
 	});
+
+	revalidatePath('/');
+	revalidatePath('/products/*');
 }

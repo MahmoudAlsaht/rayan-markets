@@ -1,6 +1,7 @@
 'use server';
 import { deleteCloudinaryImage, upload } from '@/cloudinary';
 import db from '@/db/db';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 
@@ -76,6 +77,9 @@ export async function editSection(
 			bannerFiles,
 			currentSection?.id as string,
 		);
+
+	revalidatePath('/');
+	revalidatePath('/sections/*');
 
 	redirect('/admin/settings/sections');
 }

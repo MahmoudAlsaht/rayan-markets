@@ -40,9 +40,6 @@ export async function createNewBanner(
 		'bannerImages',
 	) as File[];
 
-	const bannerBasedOnType = await db.banner.findFirst({
-		where: { bannerType: data.bannerType },
-	});
 	const imagesIds = await uploadBannerImages(bannerImages);
 
 	if (checkBannerExists == null) {
@@ -54,6 +51,10 @@ export async function createNewBanner(
 				},
 			},
 		});
+
+		data.bannerType === 'main' && revalidatePath('/');
+		data.bannerType === 'offers' &&
+			revalidatePath('/offers');
 
 		return redirect('/admin/settings/banners');
 	}
@@ -67,8 +68,8 @@ export async function createNewBanner(
 		},
 	});
 
-	revalidatePath('/');
-	revalidatePath('/offers');
+	data.bannerType === 'main' && revalidatePath('/');
+	data.bannerType === 'offers' && revalidatePath('/offers');
 
 	redirect('/admin/settings/banners');
 }
