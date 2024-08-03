@@ -16,6 +16,7 @@ export default function ImageCarousel({
 	images,
 }: ImageCarouselProps) {
 	const [targetedIndex, setTargetedIndex] = useState(0);
+	const [showNavigation, setShowNavigation] = useState(false);
 	const [touchStart, setTouchStart] = useState<number | null>(
 		null,
 	);
@@ -76,7 +77,11 @@ export default function ImageCarousel({
 	}, [images.length]);
 
 	return (
-		<>
+		<div
+			className='container mb-6 mt-4 sm:mt-8'
+			onMouseOver={() => setShowNavigation(true)}
+			onMouseLeave={() => setShowNavigation(false)}
+		>
 			<div className='relative'>
 				{images.map((image, index) => (
 					<div
@@ -92,14 +97,24 @@ export default function ImageCarousel({
 							src={image.path || ''}
 							fill
 							alt={`banner's image`}
-							className='mx-auto cursor-pointer object-cover'
+							className='w-full rounded-2xl mx-auto cursor-pointer object-cover'
 							priority
 						/>
 					</div>
 				))}
 
-				<CarouselNavButton next onClick={nextImage} />
-				<CarouselNavButton prev onClick={prevImage} />
+				{showNavigation && (
+					<>
+						<CarouselNavButton
+							next
+							onClick={nextImage}
+						/>
+						<CarouselNavButton
+							prev
+							onClick={prevImage}
+						/>
+					</>
+				)}
 			</div>
 			<br />
 			<div className='flex justify-center items-center'>
@@ -117,7 +132,7 @@ export default function ImageCarousel({
 					</div>
 				))}
 			</div>
-		</>
+		</div>
 	);
 }
 
