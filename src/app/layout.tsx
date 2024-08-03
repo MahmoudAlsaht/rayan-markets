@@ -71,8 +71,9 @@ export default function RootLayout({
 				<ThemeProvider attribute='class'>
 					<main className='z-0'></main>
 					{children}
-					<BottomNavbar />
-
+					<main className='sm:hidden'>
+						<BottomNavbar />
+					</main>
 					<InstallApp />
 				</ThemeProvider>
 			</body>

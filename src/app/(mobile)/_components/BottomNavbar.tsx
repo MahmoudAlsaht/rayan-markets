@@ -1,90 +1,106 @@
-'use client';
+import { CiDeliveryTruck } from 'react-icons/ci';
+import { SlOptions } from 'react-icons/sl';
+import BottomNavLink from './BottomNavLink';
+import { ImHome } from 'react-icons/im';
+import SearchProducts from '@/app/(siteFacing)/_components/SearchProducts';
+import db from '@/db/db';
+import { addHours } from 'date-fns';
+import { cache } from '@/lib/cache';
+import { TProduct } from '@/app/(siteFacing)/_actions/product';
 
-import { cn } from '@/lib/utils';
-import { HomeIcon, Settings2 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ComponentProps } from 'react';
-import { CiShop } from 'react-icons/ci';
+const getProducts = cache(() => {
+	db.product.updateMany({
+		where: {
+			offerEndsAt: {
+				lt: addHours(new Date(), 3),
+			},
+		},
+		data: {
+			newPrice: null,
+			isOffer: false,
+			offerStartsAt: null,
+			offerEndsAt: null,
+		},
+	});
 
-export default function BottomNavbar() {
+	db.product.updateMany({
+		where: {
+			offerStartsAt: {
+				gt: addHours(new Date(), 3),
+			},
+		},
+		data: {
+			isOffer: false,
+		},
+	});
+
+	db.product.updateMany({
+		where: {
+			AND: [
+				{
+					offerStartsAt: {
+						lte: addHours(new Date(), 3),
+					},
+				},
+				{
+					offerEndsAt: {
+						gt: addHours(new Date(), 3),
+					},
+				},
+			],
+		},
+		data: {
+			isOffer: true,
+		},
+	});
+
+	return db.product.findMany({
+		select: {
+			id: true,
+			name: true,
+			price: true,
+			newPrice: true,
+			image: {
+				select: {
+					path: true,
+				},
+			},
+		},
+	});
+}, ['/products', 'getProducts']);
+
+export default async function BottomNavbar() {
+	const products = await getProducts();
+
 	return (
-		<main className='sm:hidden'>
-			<div className='fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-rayanPrimary-dark text-white border border-gray-100 rounded-full bottom-4 left-1/2'>
-				<div className='grid h-full max-w-lg grid-cols-3 mx-auto'>
-					<NavLink href='/products'>
-						<CiShop className='size-8' />
-						<span className='sr-only'>Products</span>
-					</NavLink>
-					<div
-						id='tooltip-products'
-						role='tooltip'
-						className='absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700'
-					>
-						Products
-						<div
-							className='tooltip-arrow'
-							data-popper-arrow
-						></div>
-					</div>
+		<div className='fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-rayanPrimary-dark text-white border border-gray-100 rounded-full bottom-4 left-1/2'>
+			<div className='grid h-full max-w-lg grid-cols-4 mx-auto'>
+				<BottomNavLink
+					href='/'
+					title='الرئيسية'
+					icon={<ImHome className='size-7' />}
+				/>
 
-					<NavLink href='/'>
-						<HomeIcon />
-						<span className='sr-only'>Home</span>
-					</NavLink>
-					<div
-						id='tooltip-home'
-						role='tooltip'
-						className='absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700'
-					>
-						Home
-						<div
-							className='tooltip-arrow'
-							data-popper-arrow
-						></div>
-					</div>
+				<BottomNavLink
+					title={
+						<SearchProducts
+							allProducts={products as TProduct[]}
+						/>
+					}
+				/>
 
-					<NavLink href='/options'>
-						<Settings2 />
-						<span className='sr-only'>Options</span>
-					</NavLink>
-					<div
-						id='tooltip-options'
-						role='tooltip'
-						className='absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700'
-					>
-						Options
-						<div
-							className='tooltip-arrow'
-							data-popper-arrow
-						></div>
-					</div>
-				</div>
+				<BottomNavLink
+					href='/orders'
+					icon={<CiDeliveryTruck className='size-8' />}
+					title='طلباتي'
+				/>
+
+				<BottomNavLink
+					href='/options'
+					icon={<SlOptions className='size-8' />}
+					title='الخيارات'
+				/>
 			</div>
-		</main>
-	);
-}
-
-function NavLink(
-	props: Omit<ComponentProps<typeof Link>, 'classNameName'>,
-) {
-	const pathname = usePathname();
-
-	return (
-		<Link
-			replace
-			{...props}
-			className={cn(
-				'inline-flex flex-col items-center justify-center px-5 group',
-				pathname === props.href &&
-					`bg-gray-100 text-rayanPrimary-dark ${
-						pathname === '/options' &&
-						'rounded-e-full'
-					} ${
-						pathname === '/products' &&
-						'rounded-s-full'
-					}`,
-			)}
-		/>
+		</div>
 	);
 }

@@ -1,12 +1,8 @@
 import BackButtonNav from '@/components/BackButtonNav';
 import db from '@/db/db';
 import { cache } from '@/lib/cache';
-import {
-	ProductCard,
-	ProductCardSkeleton,
-} from '../_components/ProductCard';
+import { ProductCard } from '../_components/ProductCard';
 import { addHours } from 'date-fns';
-import { Suspense } from 'react';
 
 const getProducts = cache(() => {
 	db.product.updateMany({
@@ -74,7 +70,7 @@ export default async function Products() {
 
 	return (
 		<div dir='rtl' className='h-screen'>
-			<div className='md:hidden'>
+			<div className='sm:hidden'>
 				<BackButtonNav goHome />
 			</div>
 			<div className='overflow-auto md:p-4 rounded-t-[10px]'>
