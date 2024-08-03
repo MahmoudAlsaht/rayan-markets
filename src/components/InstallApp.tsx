@@ -4,11 +4,12 @@ import { useLayoutEffect, useState } from 'react';
 import { DownloadIcon, X } from 'lucide-react';
 
 const InstallPWA = () => {
-	const [supportsPWA, setSupportsPWA] = useState(false);
 	const [promptInstall, setPromptInstall] =
 		useState<any>(null);
 
 	const [isInstalled, setIsInstalled] = useState(true);
+	const [showInstallButton, setShowInstallButton] =
+		useState(false);
 
 	useLayoutEffect(() => {
 		setIsInstalled(() => {
@@ -19,11 +20,19 @@ const InstallPWA = () => {
 				);
 			else return true;
 		});
+		if (typeof window !== 'undefined') {
+			const now = new Date().getTime();
+			const startDate = localStorage.getItem('startDate');
+			const isExpired =
+				startDate == null
+					? true
+					: now - JSON.parse(startDate) > 4;
+			if (isExpired) setShowInstallButton(true);
+		}
 
 		const installHandler = (e: any) => {
 			localStorage.setItem('pwaInstalled', '0');
 			setIsInstalled(false);
-			setSupportsPWA(true);
 			setPromptInstall(e);
 		};
 
@@ -61,6 +70,19 @@ const InstallPWA = () => {
 		}
 	}, []);
 
+	const handleDismiss = () => {
+		if (typeof window !== 'undefined') {
+			const date =
+				new Date().getTime() + 1000 * 60 * 60 * 24 * 4;
+			localStorage.setItem(
+				'startDate',
+				JSON.stringify(date),
+			);
+			setShowInstallButton(false);
+			return;
+		}
+	};
+
 	const handleInstall = () => {
 		setIsInstalled(true);
 
@@ -70,8 +92,8 @@ const InstallPWA = () => {
 		promptInstall.prompt();
 	};
 	if (
-		!supportsPWA ||
 		isInstalled ||
+		!showInstallButton ||
 		process.env.NODE_ENV !== 'production'
 	)
 		return null;
@@ -99,7 +121,7 @@ const InstallPWA = () => {
 				className='ms-auto -mx-1.5 -my-1.5 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8  dark:hover:text-white dark:hover:bg-gray-700'
 				data-dismiss-target='#toast-default'
 				aria-label='Close'
-				onClick={() => setSupportsPWA(false)}
+				onClick={handleDismiss}
 			>
 				<span className='sr-only'>Close</span>
 				<X />
