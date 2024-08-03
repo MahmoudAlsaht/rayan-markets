@@ -13,7 +13,7 @@ function escapeRegExp(str: string) {
 }
 
 export async function searchProducts(
-	prevState: unknown,
+	_prevState: unknown,
 	formData: FormData,
 ): Promise<{ products?: TProduct[]; noProducts?: boolean }> {
 	const query = escapeRegExp(formData.get('query') as string);

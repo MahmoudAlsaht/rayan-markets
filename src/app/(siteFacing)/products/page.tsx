@@ -69,7 +69,9 @@ const getProducts = cache(() => {
 	});
 }, ['/products', 'getProducts']);
 
-export default function Products() {
+export default async function Products() {
+	const products = await getProducts();
+
 	return (
 		<div dir='rtl' className='h-screen'>
 			<div className='md:hidden'>
@@ -77,31 +79,15 @@ export default function Products() {
 			</div>
 			<div className='overflow-auto md:p-4 rounded-t-[10px]'>
 				<div className='grid grid-cols-2 md:grid-cols-4'>
-					<Suspense
-						fallback={
-							<>
-								<ProductCardSkeleton />
-								<ProductCardSkeleton />
-								<ProductCardSkeleton />
-								<ProductCardSkeleton />
-								<ProductCardSkeleton />
-								<ProductCardSkeleton />
-							</>
-						}
-					>
-						<ProductsSuspense />
-					</Suspense>
+					{products.map((product) => (
+						<ProductCard
+							key={product.id}
+							{...product}
+						/>
+					))}
 				</div>
 			</div>
 			<div className='h-20'></div>
 		</div>
 	);
-}
-
-async function ProductsSuspense() {
-	const products = await getProducts();
-	console.log(products);
-	return products.map((product) => (
-		<ProductCard key={product.id} {...product} />
-	));
 }
