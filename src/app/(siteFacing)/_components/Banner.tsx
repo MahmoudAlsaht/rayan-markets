@@ -99,27 +99,13 @@ async function BannerSuspense({
 							</Button>
 						</Link>
 					)}
-				{images.length > 1 ? (
-					<ImageCarousel
-						images={images.map((image) => ({
-							id: image.id,
-							path: image.path,
-							link: image.link,
-						}))}
-					/>
-				) : (
-					<Link href={images[0].link || '#'}>
-						<div className='relative w-full max-w-[1481.6px] mx-auto h-44 sm:h-56 md:h-72'>
-							<Image
-								fill
-								alt={`banner's image`}
-								src={images[0].path}
-								className='mx-auto cursor-pointer'
-								priority
-							/>
-						</div>
-					</Link>
-				)}
+				<ImageCarousel
+					images={images.map((image) => ({
+						id: image.id,
+						path: image.path,
+						link: image.link,
+					}))}
+				/>
 			</div>
 		)
 	);

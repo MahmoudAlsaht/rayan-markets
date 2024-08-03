@@ -79,8 +79,12 @@ export default function ImageCarousel({
 	return (
 		<div
 			className='container mb-6 mt-4 sm:mt-8'
-			onMouseOver={() => setShowNavigation(true)}
-			onMouseLeave={() => setShowNavigation(false)}
+			onMouseOver={() =>
+				images.length >= 2 && setShowNavigation(true)
+			}
+			onMouseLeave={() =>
+				images.length >= 2 && setShowNavigation(false)
+			}
 		>
 			<div className='relative'>
 				{images.map((image, index) => (
@@ -91,19 +95,19 @@ export default function ImageCarousel({
 						key={image.id}
 						className={`${
 							index !== targetedIndex && 'hidden'
-						} relative w-full max-w-[1481.6px] mx-auto h-44 sm:h-56 md:h-72 transition-opacity ease-in duration-700 opacity-100`}
+						} relative w-full h-32 sm:h-52 md:h-80 transition-opacity ease-in duration-700 opacity-100`}
 					>
 						<Image
 							src={image.path || ''}
 							fill
 							alt={`banner's image`}
-							className='w-full rounded-2xl mx-auto cursor-pointer object-cover'
+							className='rounded-2xl cursor-pointer object-cover'
 							priority
 						/>
 					</div>
 				))}
 
-				{showNavigation && (
+				{true && (
 					<>
 						<CarouselNavButton
 							next
@@ -149,12 +153,12 @@ function CarouselNavButton({
 		<Button
 			className={`${prev && 'left-0'} ${
 				next && 'right-0'
-			} absolute top-1/2 p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-rayanPrimary-dark cursor-pointer rounded-xl`}
+			} w-9 h-8 md:w-14 md:h-10 absolute top-1/2 p-1 md:p-4 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white hover:text-rayanPrimary-dark cursor-pointer rounded-xl`}
 			variant='ghost'
 			onClick={onClick}
 		>
-			{prev && <ArrowLeft />}
-			{next && <ArrowRight />}
+			{prev && <ArrowLeft className='size-5 md:size-8' />}
+			{next && <ArrowRight className='size-5 md:size-8' />}
 		</Button>
 	);
 }
