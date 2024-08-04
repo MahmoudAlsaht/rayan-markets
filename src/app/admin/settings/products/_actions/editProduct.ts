@@ -128,7 +128,9 @@ export async function editProduct(
 	});
 
 	revalidatePath('/');
-	revalidatePath('/products/*');
+	revalidatePath('/products');
+	revalidatePath('/products/offers');
+	revalidatePath('/products/houseware');
 
 	redirect('/admin/settings/products');
 }

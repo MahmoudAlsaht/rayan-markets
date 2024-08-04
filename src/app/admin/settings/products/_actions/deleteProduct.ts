@@ -49,5 +49,7 @@ export async function deleteProduct(id: string) {
 	});
 
 	revalidatePath('/');
-	revalidatePath('/products/*');
+	revalidatePath('/products');
+	revalidatePath('/products/offers');
+	revalidatePath('/products/houseware');
 }

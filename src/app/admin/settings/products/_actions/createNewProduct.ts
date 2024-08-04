@@ -127,7 +127,9 @@ export async function createNewProduct(
 	});
 
 	revalidatePath('/');
-	revalidatePath('/products/*');
+	revalidatePath('/products');
+	revalidatePath('/products/offers');
+	revalidatePath('/products/houseware');
 
 	redirect('/admin/settings/products');
 }
