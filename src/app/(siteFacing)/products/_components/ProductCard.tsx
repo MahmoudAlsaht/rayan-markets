@@ -77,7 +77,7 @@ export function ProductCard({
           onClick={showPage}
         />
         <div
-          className={`absolute -bottom-4 rounded-2xl bg-white py-2 shadow-md shadow-slate-200 duration-500 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${!isProductDetailsPage && addingToCart && "w-11/12 sm:w-full"} ${isProductDetailsPage ? `-bottom-6 ${addingToCart ? "right-0 w-full pr-6 sm:pr-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm` : "left-2 sm:left-0"}`}
+          className={`absolute -bottom-4 rounded-2xl bg-white px-2 py-2 shadow-md shadow-slate-200 duration-500 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${!isProductDetailsPage && addingToCart && "w-11/12 sm:w-full"} ${isProductDetailsPage ? `-bottom-6 ${addingToCart ? "right-0 w-full pr-6 sm:pr-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm` : "left-2 sm:left-0"}`}
         >
           {!addingToCart && (
             <ProductMenuPrice
