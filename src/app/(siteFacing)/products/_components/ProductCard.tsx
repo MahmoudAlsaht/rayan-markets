@@ -22,7 +22,7 @@ export type ProductCardProps = {
   name: string | null;
   price: number | null;
   newPrice: number | null;
-  productType?: string | null;
+  productType: string;
   description?: string | null;
   body?: string | null;
   weights: number[] | null;
@@ -45,7 +45,6 @@ export function ProductCard({
     name,
     price,
     newPrice,
-    productType,
     description,
     body,
     weights,

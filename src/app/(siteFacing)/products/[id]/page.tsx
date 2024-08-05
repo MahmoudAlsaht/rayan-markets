@@ -1,8 +1,8 @@
 import db from "@/db/db";
-import { ProductCard, ProductCardProps } from "../_components/ProductCard";
 import BackButtonNav from "@/components/BackButtonNav";
+import { ProductCard, ProductCardProps } from "../_components/ProductCard";
 
-export default async function ProductDetailsPage({
+export default async function ProductsTypePage({
   params: { id },
 }: {
   params: { id: string };
@@ -26,7 +26,6 @@ export default async function ProductDetailsPage({
       },
     },
   });
-
   return (
     <>
       <div className="sm:hidden">

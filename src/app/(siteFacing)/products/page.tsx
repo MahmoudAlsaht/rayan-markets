@@ -3,6 +3,7 @@ import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { addHours } from "date-fns";
 import ProductsContainer from "./_components/ProductsContainer";
+import { ProductCardProps } from "./_components/ProductCard";
 
 const getProducts = cache(() => {
   db.product.updateMany({
@@ -72,7 +73,7 @@ export default async function Products() {
 
   return (
     <div dir="rtl" className="h-screen">
-      <ProductsContainer products={products} />
+      <ProductsContainer products={products as ProductCardProps[]} />
       <div className="h-20"></div>
     </div>
   );
