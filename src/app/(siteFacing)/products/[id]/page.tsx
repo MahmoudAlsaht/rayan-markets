@@ -1,5 +1,6 @@
 import db from "@/db/db";
 import { ProductCard, ProductCardProps } from "../_components/ProductCard";
+import BackButtonNav from "@/components/BackButtonNav";
 
 export default async function ProductDetailsPage({
   params: { id },
@@ -27,8 +28,16 @@ export default async function ProductDetailsPage({
   });
 
   return (
-    <div className="container h-screen w-full p-0">
-      <ProductCard product={product as ProductCardProps} isProductDetailsPage />
-    </div>
+    <>
+      <div className="sm:hidden">
+        <BackButtonNav goHome={false} />
+      </div>
+      <div className="container h-screen w-full p-0">
+        <ProductCard
+          product={product as ProductCardProps}
+          isProductDetailsPage
+        />
+      </div>
+    </>
   );
 }

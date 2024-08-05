@@ -72,9 +72,6 @@ export default async function Products() {
 
   return (
     <div dir="rtl" className="h-screen">
-      <div className="sm:hidden">
-        <BackButtonNav goHome />
-      </div>
       <ProductsContainer products={products} />
       <div className="h-20"></div>
     </div>
