@@ -7,6 +7,7 @@ import db from "@/db/db";
 import { addHours } from "date-fns";
 import { cache } from "@/lib/cache";
 import { ProductCardProps } from "../../products/_components/ProductCard";
+import Banner from "../../_components/Banner";
 
 const getProducts = cache(() => {
   db.product.updateMany({
@@ -62,6 +63,7 @@ const getProducts = cache(() => {
       newPrice: true,
       weights: true,
       isOffer: true,
+      productType: true,
       image: {
         select: {
           path: true,
@@ -84,6 +86,8 @@ export default async function BottomNavbar() {
         />
 
         <SearchProducts
+          offersBanner={<Banner type="offers" />}
+          forHomeBanner={<Banner type="forHome" />}
           className="group inline-flex flex-col items-center justify-center px-5"
           allProducts={products as ProductCardProps[]}
         />

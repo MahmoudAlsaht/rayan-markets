@@ -1,8 +1,8 @@
 "use server";
 
 import db from "@/db/db";
-import { Product } from "@prisma/client";
 import { addHours } from "date-fns";
+import { ProductCardProps } from "../products/_components/ProductCard";
 
 function escapeRegExp(str: string) {
   return str?.replace(/[.@&*+?^${}()|[\]\\]/g, ""); // $& means the whole matched string
@@ -11,7 +11,7 @@ function escapeRegExp(str: string) {
 export async function searchProducts(
   _prevState: unknown,
   formData: FormData,
-): Promise<{ products?: Partial<Product>[]; noProducts?: boolean }> {
+): Promise<{ products?: ProductCardProps[] | null; noProducts?: boolean }> {
   const query = escapeRegExp(formData.get("query") as string);
 
   if (query === "" || query == "null") return { noProducts: true };
@@ -80,6 +80,7 @@ export async function searchProducts(
           id: true,
           name: true,
           price: true,
+          productType: true,
           newPrice: true,
           weights: true,
           isOffer: true,
@@ -94,7 +95,7 @@ export async function searchProducts(
   });
 
   if (brands && brands.brandProducts.length > 0)
-    return { products: brands.brandProducts as Partial<Product>[] };
+    return { products: brands.brandProducts };
 
   const categories = await db.section.findFirst({
     where: {
@@ -133,7 +134,7 @@ export async function searchProducts(
 
   if (categories && categories.categoryProducts.length > 0)
     return {
-      products: categories.categoryProducts as Partial<Product>[],
+      products: categories.categoryProducts,
     };
 
   const products = await db.product.findMany({
@@ -240,10 +241,10 @@ export async function searchProducts(
             ...mostResentProducts,
           ].map((product) => [product["id"], product]),
         ).values(),
-      ] as Partial<Product>[],
+      ],
       noProducts: true,
     };
   }
 
-  return { products: products as Partial<Product>[] };
+  return { products: products };
 }

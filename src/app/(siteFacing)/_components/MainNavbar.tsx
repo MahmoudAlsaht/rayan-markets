@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../rayan.marketLogo.png";
 import { usePathname, useRouter } from "next/navigation";
-import { ComponentProps } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { UserCircle } from "lucide-react";
 import {
@@ -15,13 +15,27 @@ import {
 import { User } from "@prisma/client";
 import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
+import { checkProductTypeExists } from "../_actions/checkProductsType";
 
 export default function MainNavbar({ user }: { user: Partial<User> | null }) {
+  const [offersExists, setOffersExists] = useState(false);
+  const [forHomeExists, setForHomeExists] = useState(false);
+
   const router = useRouter();
 
   const pathname = usePathname();
 
   const isAccountPage = pathname === `/account/${user?.profileId}`;
+
+  useEffect(() => {
+    const checkProductsLinks = async () => {
+      const isOffer = await checkProductTypeExists("offers");
+      const isForHome = await checkProductTypeExists("forHome");
+      setOffersExists(isOffer);
+      setForHomeExists(isForHome);
+    };
+    checkProductsLinks();
+  }, []);
 
   return (
     <nav
@@ -44,12 +58,16 @@ export default function MainNavbar({ user }: { user: Partial<User> | null }) {
             <li>
               <NavLink href="/products">المنتجات</NavLink>
             </li>
-            <li>
-              <NavLink href="/products/offers">العروض</NavLink>
-            </li>
-            <li>
-              <NavLink href="/products/for-home">المنزلية</NavLink>
-            </li>
+            {offersExists && (
+              <li>
+                <NavLink href="/products/offers">العروض</NavLink>
+              </li>
+            )}
+            {forHomeExists && (
+              <li>
+                <NavLink href="/products/for-home">المنزلية</NavLink>
+              </li>
+            )}
 
             <li className="hover:cursor-pointer">
               <SearchProducts />
