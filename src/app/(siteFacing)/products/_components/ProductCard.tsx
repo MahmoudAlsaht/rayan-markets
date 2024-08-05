@@ -22,7 +22,7 @@ export type ProductCardProps = {
   name: string | null;
   price: number | null;
   newPrice: number | null;
-  productType: string | null;
+  productType?: string | null;
   description?: string | null;
   body?: string | null;
   weights: number[] | null;
@@ -77,12 +77,13 @@ export function ProductCard({
           onClick={showPage}
         />
         <div
-          className={`absolute -bottom-4 rounded-2xl bg-white py-2 shadow-md shadow-slate-200 duration-500 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${!isProductDetailsPage && addingToCart && "w-11/12 sm:w-full"} ${isProductDetailsPage ? "-bottom-6 right-1/4 w-1/2 shadow-sm" : "left-2 sm:left-0"}`}
+          className={`absolute -bottom-4 rounded-2xl bg-white py-2 shadow-md shadow-slate-200 duration-500 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${!isProductDetailsPage && addingToCart && "w-11/12 sm:w-full"} ${isProductDetailsPage ? `-bottom-6 ${addingToCart ? "right-0 w-full pr-6 sm:pr-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm` : "left-2 sm:left-0"}`}
         >
           {!addingToCart && (
             <ProductMenuPrice
               weights={weights && weights.length ? weights : null}
               handleClick={() => setAddingToCart(true)}
+              isProductDetailsPage={isProductDetailsPage}
             />
           )}
           {addingToCart && (
@@ -107,22 +108,26 @@ export function ProductCard({
       </div>
 
       <div
-        className={`${isProductDetailsPage ? "mt-10 flex w-1/2 flex-col items-center py-0 sm:items-end md:mt-8 md:w-1/2 md:items-start" : "mt-2 w-full py-3 sm:px-4"}`}
+        className={`${isProductDetailsPage ? "mt-10 flex w-full flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start" : "mt-2 w-full py-3 sm:px-4"}`}
         onClick={showPage}
       >
         <p
           className={`font-bold capitalize text-rayanPrimary-dark ${isProductDetailsPage ? "text-2xl sm:text-3xl" : "text-md mt-2 block truncate text-center sm:text-start sm:text-lg"}`}
         >
-          {body || name}
+          {isProductDetailsPage ? body : name}
         </p>
         <div
-          className={`${isProductDetailsPage ? "mt-6 flex items-center gap-6" : "flex items-center justify-around sm:gap-2 md:justify-start"}`}
+          className={`${isProductDetailsPage && "mt-4 flex items-center justify-center gap-6"}`}
         >
-          <p
-            className={`sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark ${isProductDetailsPage && "text-xl sm:text-3xl"}`}
+          <div
+            className={`${!isProductDetailsPage && "flex items-center justify-around sm:gap-2 md:justify-start"}`}
           >
-            {formatCurrency(newPrice ? newPrice : (price as number))}
-          </p>
+            <p
+              className={`sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark ${isProductDetailsPage && "text-xl sm:text-3xl"}`}
+            >
+              {formatCurrency(newPrice ? newPrice : (price as number))}
+            </p>
+          </div>
           {newPrice && (
             <del>
               <p
@@ -139,6 +144,7 @@ export function ProductCard({
           </div>
         )}
       </div>
+      {isProductDetailsPage && <div className="h-24"></div>}
     </div>
   );
 }
@@ -146,13 +152,15 @@ export function ProductCard({
 function ProductMenuPrice({
   weights,
   handleClick,
+  isProductDetailsPage = false,
 }: {
   weights?: number[] | null;
+  isProductDetailsPage?: boolean;
   handleClick?: () => void;
 }) {
   if (!weights)
     return (
-      <ShoppingBag className="size-6 w-full px-10" onClick={handleClick} />
+      <ShoppingBag className={`size-6 w-full px-10`} onClick={handleClick} />
     );
 
   return (

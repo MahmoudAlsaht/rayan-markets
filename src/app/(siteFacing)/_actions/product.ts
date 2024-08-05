@@ -79,11 +79,8 @@ export async function searchProducts(
         select: {
           id: true,
           name: true,
-          description: true,
-          body: true,
           price: true,
           newPrice: true,
-          productType: true,
           weights: true,
           isOffer: true,
           image: {
