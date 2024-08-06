@@ -66,7 +66,10 @@ export function ProductCard({
       router.push(`/products/${id}`);
       handleSearchClose && handleSearchClose();
       handleAddView();
+      return;
     }
+    router.push(`/products/${id}`);
+    handleAddView();
   };
   return (
     <div

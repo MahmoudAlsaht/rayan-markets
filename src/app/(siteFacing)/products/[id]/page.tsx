@@ -1,6 +1,8 @@
 import db from "@/db/db";
 import BackButtonNav from "@/components/BackButtonNav";
 import { ProductCard, ProductCardProps } from "../_components/ProductCard";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function ProductsTypePage({
   params: { id },
@@ -34,6 +36,11 @@ export default async function ProductsTypePage({
       <div className="hidden sm:block">
         <BackButtonNav bg={false} />
       </div>
+      <Button className="w-full">
+        <Link href={`/admin/settings/products/${product?.id as string}`}>
+          تعديل المنتج
+        </Link>
+      </Button>
       <div className="container h-screen w-full p-0">
         <ProductCard
           product={product as ProductCardProps}

@@ -8,6 +8,7 @@ import { addHours } from "date-fns";
 import { cache } from "@/lib/cache";
 import { ProductCardProps } from "../../products/_components/ProductCard";
 import Banner from "../../_components/Banner";
+import { checkUser } from "../../auth/_actions/isAuthenticated";
 
 const getProducts = cache(() => {
   db.product.updateMany({
@@ -75,10 +76,13 @@ const getProducts = cache(() => {
 
 export default async function BottomNavbar() {
   const products = await getProducts();
+  const user = await checkUser();
 
   return (
     <div className="fixed bottom-4 left-1/2 z-50 h-16 w-full max-w-lg -translate-x-1/2 rounded-full border border-gray-100 bg-rayanPrimary-dark text-white">
-      <div className="mx-auto grid h-full max-w-lg grid-cols-4">
+      <div
+        className={`mx-auto grid h-full max-w-lg ${user ? "grid-cols-4" : "grid-cols-3"}`}
+      >
         <BottomNavLink
           href="/"
           title="الرئيسية"
@@ -92,11 +96,13 @@ export default async function BottomNavbar() {
           allProducts={products as ProductCardProps[]}
         />
 
-        <BottomNavLink
-          href="/orders"
-          icon={<CiDeliveryTruck className="size-8" />}
-          title="طلباتي"
-        />
+        {user && (
+          <BottomNavLink
+            href={`/account/${user.profileId}/orders`}
+            icon={<CiDeliveryTruck className="size-8" />}
+            title="طلباتي"
+          />
+        )}
 
         <BottomNavLink
           href="/options"

@@ -82,7 +82,7 @@ async function BannerSuspense({
         {user && (user.role === "admin" || user.role === "editor") && (
           <Link
             href={`/admin/settings/${
-              !banner ? `sections/${sectionId}` : `banners/${banner.id}`
+              !banner ? `sections/${type}/${sectionId}` : `banners/${banner.id}`
             }`}
             target="_blank"
           >
