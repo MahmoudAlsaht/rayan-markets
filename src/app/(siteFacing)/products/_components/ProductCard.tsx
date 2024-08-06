@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { updateProductViews } from "../../_actions/product";
 
 export type ProductCardProps = {
   id: string | null;
@@ -52,11 +53,19 @@ export function ProductCard({
   } = product;
 
   const [addingToCart, setAddingToCart] = useState(false);
+  const [_pending, startTransition] = useTransition();
+
+  const handleAddView = () => {
+    startTransition(async () => {
+      await updateProductViews(product?.id as string);
+    });
+  };
 
   const showPage = () => {
     if (!isProductDetailsPage) {
       router.push(`/products/${id}`);
       handleSearchClose && handleSearchClose();
+      handleAddView();
     }
   };
   return (

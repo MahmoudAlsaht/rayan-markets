@@ -248,3 +248,14 @@ export async function searchProducts(
 
   return { products: products };
 }
+
+export async function updateProductViews(id: string) {
+  const product = await db.product.findUnique({
+    where: { id },
+    select: { views: true },
+  });
+  await db.product.update({
+    where: { id },
+    data: { views: (product?.views as number) + 1 },
+  });
+}
