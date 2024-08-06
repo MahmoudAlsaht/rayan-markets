@@ -69,7 +69,7 @@ export function ProductCard({
         <Image
           fill
           priority
-          className={`rounded-3xl duration-500 ${!isProductDetailsPage && "rounded-t-xl object-cover sm:hover:scale-105 sm:hover:shadow-xl"}`}
+          className={`duration-500 ${!isProductDetailsPage ? "rounded-t-xl object-cover sm:hover:scale-105 sm:hover:shadow-xl" : "rounded-3xl"}`}
           src={image?.path as string}
           alt={`${name || "product"}'s image`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
