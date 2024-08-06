@@ -1,9 +1,8 @@
-import BackButtonNav from "@/components/BackButtonNav";
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { addHours } from "date-fns";
-import ProductsContainer from "./_components/ProductsContainer";
-import { ProductCardProps } from "./_components/ProductCard";
+import ProductsContainer from "../_components/ProductsContainer";
+import { ProductCardProps } from "../_components/ProductCard";
 
 const getProducts = cache(() => {
   db.product.updateMany({

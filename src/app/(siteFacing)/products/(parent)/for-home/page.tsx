@@ -1,9 +1,9 @@
+import Banner from "@/app/(siteFacing)/_components/Banner";
 import db from "@/db/db";
-import { ProductCardProps } from "../_components/ProductCard";
-import ProductsContainer from "../_components/ProductsContainer";
-import Banner from "../../_components/Banner";
 import { cache } from "@/lib/cache";
 import { addHours } from "date-fns";
+import ProductsContainer from "../../_components/ProductsContainer";
+import { ProductCardProps } from "../../_components/ProductCard";
 
 const getForHome = cache(() => {
   db.product.updateMany({

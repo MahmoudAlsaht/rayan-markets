@@ -29,7 +29,7 @@ export default async function ProductsTypePage({
   return (
     <>
       <div className="sm:hidden">
-        <BackButtonNav goHome={false} />
+        <BackButtonNav />
       </div>
       <div className="container h-screen w-full p-0">
         <ProductCard
