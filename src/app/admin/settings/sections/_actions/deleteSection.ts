@@ -8,6 +8,7 @@ export async function deleteSection(id: string) {
   const section = await db.section.findUnique({
     where: { id },
     select: {
+      type: true,
       coverId: true,
       cover: {
         select: {
@@ -43,6 +44,5 @@ export async function deleteSection(id: string) {
   }
 
   revalidatePath("/");
-  revalidatePath("/sections/categories");
-  revalidatePath("/sections/brands");
+  revalidatePath(`/sections/${section.type}`);
 }

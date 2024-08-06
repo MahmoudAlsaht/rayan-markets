@@ -16,7 +16,7 @@ export default function BackButtonNav({
 
   return (
     <>
-      <nav className={`pb-2 ${bg ? "bg-rayanPrimary-dark" : "bg-none"}`}>
+      <nav className={`pb-2 ${bg ? "bg-rayanPrimary-dark" : "bg-inherit"}`}>
         <div className="mx-auto flex h-14 max-w-screen-xl flex-wrap items-center justify-between p-4">
           <Button
             data-collapse-toggle="navbar-default"

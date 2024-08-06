@@ -87,7 +87,7 @@ async function BannerSuspense({
             target="_blank"
           >
             <Button className="w-full">
-              {type === "offers" || type === "main"
+              {type === "offers" || type === "main" || type === "forHome"
                 ? "تعديل اللافتة"
                 : "تعديل القسم"}
             </Button>

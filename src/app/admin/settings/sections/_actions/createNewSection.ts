@@ -63,8 +63,7 @@ export async function createNewSection(
   createBannerSection(bannerFiles, newSection.id);
 
   revalidatePath("/");
-  revalidatePath("/sections/categories");
-  revalidatePath("/sections/brands");
+  revalidatePath(`/sections/${newSection.type}`);
 
   redirect("/admin/settings/sections");
 }

@@ -67,8 +67,7 @@ export async function editSection(
     updateBannerSection(bannerFiles, currentSection?.id as string);
 
   revalidatePath("/");
-  revalidatePath("/sections/categories");
-  revalidatePath("/sections/brands");
+  revalidatePath(`/sections/${currentSection?.type}`);
 
   redirect("/admin/settings/sections");
 }

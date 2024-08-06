@@ -61,7 +61,7 @@ export function ProductCard({
   };
   return (
     <div
-      className={`bg-slate-100 duration-500 ${!isProductDetailsPage ? "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 sm:hover:scale-105 sm:hover:shadow-xl" : "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"}`}
+      className={`bg-inherit duration-500 ${!isProductDetailsPage ? "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 sm:hover:scale-105 sm:hover:shadow-xl" : "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"}`}
     >
       <div
         className={`relative ${isProductDetailsPage ? "mx-auto h-72 w-10/12 sm:h-96 sm:w-3/5 md:w-2/5" : "h-44"}`}

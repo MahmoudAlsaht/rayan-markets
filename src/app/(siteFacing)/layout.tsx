@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import MainNavbar from "./_components/MainNavbar";
 import { checkUser } from "./auth/_actions/isAuthenticated";
 import BottomNavbar from "./(mobile)/_components/BottomNavbar";
+import BackButtonNav from "@/components/BackButtonNav";
 
 export default async function SiteFacingLayout({
   children,
@@ -10,12 +11,13 @@ export default async function SiteFacingLayout({
 }) {
   const user = await checkUser();
   return (
-    <div dir="rtl">
+    <main dir="rtl">
       <MainNavbar user={user} />
+      <div></div>
       {children}
       <main className="sm:hidden">
         <BottomNavbar />
       </main>
-    </div>
+    </main>
   );
 }

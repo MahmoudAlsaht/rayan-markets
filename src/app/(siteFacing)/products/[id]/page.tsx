@@ -31,6 +31,9 @@ export default async function ProductsTypePage({
       <div className="sm:hidden">
         <BackButtonNav />
       </div>
+      <div className="hidden sm:block">
+        <BackButtonNav bg={false} />
+      </div>
       <div className="container h-screen w-full p-0">
         <ProductCard
           product={product as ProductCardProps}
