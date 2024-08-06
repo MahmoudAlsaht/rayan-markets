@@ -4,7 +4,7 @@ import ProductsContainer from "@/app/(siteFacing)/products/_components/ProductsC
 import BackButtonNav from "@/components/BackButtonNav";
 import db from "@/db/db";
 
-export default async function SectionsProducts({
+export default async function SectionProducts({
   params: { id, type },
 }: {
   params: { id: string; type: string };
@@ -58,6 +58,11 @@ export default async function SectionsProducts({
       <Banner
         type={`${type === "categories" ? "category" : "brand"}'s Banner`}
         sectionId={id}
+        sectionBanners={section?.sectionBanners.map((banner, index) => ({
+          id: `${index}-${section.name}-${type}`,
+          path: banner.path,
+          link: banner.link as string,
+        }))}
       />
 
       <h1 className="mt-4 text-center text-4xl">{section?.name}</h1>
