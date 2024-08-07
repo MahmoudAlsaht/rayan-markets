@@ -1,4 +1,3 @@
-import db from "@/db/db";
 import Banner from "./_components/Banner";
 import SectionsHomeContainer from "./_components/SectionsHomeContainer";
 import ProductsHomeContainer from "./_components/ProductsHomeContainer";
@@ -10,9 +9,9 @@ export default async function Home() {
       <div>
         <SectionsHomeContainer type="categories" />
 
-        {/* <ProductsHomeContainer type="purchases" />
+        <ProductsHomeContainer type="purchases" />
         <ProductsHomeContainer type="views" />
-        <ProductsHomeContainer type="" /> */}
+        <ProductsHomeContainer type="newest offers" />
 
         <SectionsHomeContainer type="brands" />
       </div>

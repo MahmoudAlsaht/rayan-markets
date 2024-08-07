@@ -5,73 +5,81 @@ import { addHours } from "date-fns";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { ProductCardProps } from "../../_components/ProductCard";
 
-const getOffers = cache(() => {
-  db.product.updateMany({
-    where: {
-      offerEndsAt: {
-        lt: addHours(new Date(), 3),
+const getOffers = cache(
+  (orderBy?: string) => {
+    db.product.updateMany({
+      where: {
+        offerEndsAt: {
+          lt: addHours(new Date(), 3),
+        },
       },
-    },
-    data: {
-      newPrice: null,
-      isOffer: false,
-      offerStartsAt: null,
-      offerEndsAt: null,
-    },
-  });
-
-  db.product.updateMany({
-    where: {
-      offerStartsAt: {
-        gt: addHours(new Date(), 3),
+      data: {
+        newPrice: null,
+        isOffer: false,
+        offerStartsAt: null,
+        offerEndsAt: null,
       },
-    },
-    data: {
-      isOffer: false,
-    },
-  });
+    });
 
-  db.product.updateMany({
-    where: {
-      AND: [
-        {
-          offerStartsAt: {
-            lte: addHours(new Date(), 3),
+    db.product.updateMany({
+      where: {
+        offerStartsAt: {
+          gt: addHours(new Date(), 3),
+        },
+      },
+      data: {
+        isOffer: false,
+      },
+    });
+
+    db.product.updateMany({
+      where: {
+        AND: [
+          {
+            offerStartsAt: {
+              lte: addHours(new Date(), 3),
+            },
+          },
+          {
+            offerEndsAt: {
+              gt: addHours(new Date(), 3),
+            },
+          },
+        ],
+      },
+      data: {
+        isOffer: true,
+      },
+    });
+
+    return db.product.findMany({
+      where: { isOffer: true },
+      orderBy: { createdAt: orderBy ? "desc" : "asc" },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        newPrice: true,
+        weights: true,
+        isOffer: true,
+        productType: true,
+        image: {
+          select: {
+            path: true,
           },
         },
-        {
-          offerEndsAt: {
-            gt: addHours(new Date(), 3),
-          },
-        },
-      ],
-    },
-    data: {
-      isOffer: true,
-    },
-  });
-
-  return db.product.findMany({
-    where: { isOffer: true },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      newPrice: true,
-      weights: true,
-      isOffer: true,
-      productType: true,
-      image: {
-        select: {
-          path: true,
-        },
       },
-    },
-  });
-}, ["/products/offers", "getOffers"]);
+    });
+  },
+  ["/products/offers", "getOffers"],
+);
 
-export default async function OffersPage() {
-  const offers = await getOffers();
+export default async function OffersPage({
+  searchParams: { orderBy },
+}: {
+  searchParams: { orderBy: string };
+}) {
+  const offers = await getOffers(orderBy);
 
   return (
     <div dir="rtl" className="h-screen">

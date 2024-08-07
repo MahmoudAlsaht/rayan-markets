@@ -17,12 +17,12 @@ export default function SectionCarouselCard({
 
   return (
     <Card
-      className="border-0 bg-inherit sm:w-full"
+      className="border-0 bg-inherit"
       onMouseOver={handleShowName}
       onMouseLeave={handleHideName}
     >
       <Link href={`/sections/${section.type}/${section.id}`}>
-        <CardContent className="relative flex aspect-square items-center justify-center p-6">
+        <CardContent className="relative flex aspect-square w-full items-center justify-center p-6">
           <Image
             fill
             className="rounded-3xl"

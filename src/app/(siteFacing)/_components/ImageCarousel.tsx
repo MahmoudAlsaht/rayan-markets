@@ -102,10 +102,12 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
             <CarouselNavButton prev onClick={prevImage} />
           </legend>
         )}
-        <legend className="sm:hidden">
-          <CarouselNavButton next onClick={nextImage} />
-          <CarouselNavButton prev onClick={prevImage} />
-        </legend>
+        {images.length >= 2 && (
+          <legend className="sm:hidden">
+            <CarouselNavButton next onClick={nextImage} />
+            <CarouselNavButton prev onClick={prevImage} />
+          </legend>
+        )}
       </div>
       <br />
       {images.length >= 2 && (

@@ -39,9 +39,9 @@ export default async function SectionsHomeContainer({
   const sections = await getSections(type);
 
   return (
-    <section className="container" dir="ltr">
-      <div className="mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
-        <h2 className="text-md font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
+    <section className="my-4 sm:container" dir="ltr">
+      <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
+        <h2 className="text-sm font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
           {type === "brands" ? "العلامات التجارية" : "الفئات"}
         </h2>
         <Link
@@ -53,7 +53,16 @@ export default async function SectionsHomeContainer({
         </Link>
       </div>
 
-      <Carousel opts={{ align: "start", loop: true }} className="w-11/12">
+      <Carousel
+        opts={{
+          align: "center",
+          loop: true,
+          dragFree: true,
+          slidesToScroll: "auto",
+          duration: 1500,
+        }}
+        className="w-11/12"
+      >
         <CarouselContent>
           {sections.map(
             (section, index) =>
@@ -62,11 +71,7 @@ export default async function SectionsHomeContainer({
                   key={section.id}
                   className="basis-1/3 sm:basis-1/4 md:basis-1/6"
                 >
-                  <div className="p-1">
-                    <SectionCarouselCard
-                      section={section as SectionCardProps}
-                    />
-                  </div>
+                  <SectionCarouselCard section={section as SectionCardProps} />
                 </CarouselItem>
               ),
           )}

@@ -8,23 +8,19 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import SectionCarouselCard from "./SectionCarouselCard";
-import { SectionCardProps } from "../sections/_components/SectionCard";
-import {
-  ProductCard,
-  ProductCardProps,
-} from "../products/_components/ProductCard";
+import { ProductCardProps } from "../products/_components/ProductCard";
+import { ProductCarouselCard } from "./ProductCarouselCard";
 
 const getProducts = cache(
   (type: string) => {
     return db.product.findMany({
+      where: { isOffer: type === "newest offers" },
       orderBy:
         type === "views"
           ? { views: "desc" }
           : type === "purchases"
             ? { numberOfPurchases: "desc" }
             : { createdAt: "desc" },
-      take: 6,
       select: {
         id: true,
         name: true,
@@ -41,6 +37,7 @@ const getProducts = cache(
           },
         },
       },
+      take: 10,
     });
   },
   ["/", "getProducts"],
@@ -54,30 +51,42 @@ export default async function SectionsHomeContainer({
   const products = await getProducts(type);
 
   return (
-    <section className="container" dir="ltr">
-      <div className="mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
+    <section dir="ltr" className="my-6">
+      <hr className="my-2 border-slate-300" />
+      <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
         <h2 className="text-md font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
-          {type === "brands" ? "العلامات التجارية" : "الفئات"}
+          {type === "views"
+            ? "الأعلى زيارة"
+            : type === "purchases"
+              ? "الأعلى مبيعا"
+              : "آخر العروض"}
         </h2>
         <Link
           className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
-          href={`/sections/${type}`}
+          href={`/products${type === "views" || type === "purchases" ? `?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
         >
           <span>المزيد</span>
           <ArrowRightCircle />
         </Link>
       </div>
 
-      <Carousel opts={{ align: "start", loop: true }} className="w-11/12">
+      <Carousel
+        opts={{
+          align: "center",
+          loop: true,
+          dragFree: true,
+          slidesToScroll: "auto",
+          duration: 3000,
+        }}
+        className="w-11/12"
+      >
         <CarouselContent>
           {products.map((product) => (
             <CarouselItem
               key={product.id}
-              className="basis-1/3 sm:basis-1/4 md:basis-1/6"
+              className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
             >
-              <div className="p-1">
-                <ProductCard product={product as ProductCardProps} />
-              </div>
+              <ProductCarouselCard product={product as ProductCardProps} />
             </CarouselItem>
           ))}
         </CarouselContent>
