@@ -1,47 +1,31 @@
-'use server';
-import db from '@/db/db';
-import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
+"use server";
+import db from "@/db/db";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 export const checkUser = async () => {
-	const token = cookies().get('token');
+  const token = cookies().get("token");
 
-	if (token == null) return null;
+  if (token == null) return null;
 
-	const decoded: any = jwt.verify(
-		token?.value as string,
-		process.env.SECRET_1,
-	);
+  const decoded: any = jwt.verify(token?.value as string, process.env.SECRET_1);
 
-	const user = await db.user.findUnique({
-		where: { id: decoded.id },
-		select: {
-			id: true,
-			phone: true,
-			username: true,
-			role: true,
-			profileId: true,
-		},
-	});
+  const user = await db.user.findUnique({
+    where: { id: decoded.id },
+    select: {
+      id: true,
+      phone: true,
+      username: true,
+      role: true,
+      profile: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
 
-	if (user == null) return null;
+  if (user == null) return null;
 
-	if (user.profileId == null) {
-		const profile = await db.profile.create({
-			data: {
-				userId: user.id,
-			},
-		});
-
-		await db.user.update({
-			where: {
-				id: user.id,
-			},
-			data: {
-				profileId: profile.id,
-			},
-		});
-	}
-
-	return user;
+  return user;
 };

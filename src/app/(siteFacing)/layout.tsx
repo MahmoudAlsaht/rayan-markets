@@ -9,11 +9,16 @@ export default async function SiteFacingLayout({
 }: {
   children: ReactNode;
 }) {
-  const user = await checkUser();
+  const user = await checkUser() as {
+    id: string;
+    phone: string;
+    username: string;
+    role: string;
+    profile: { id: string };
+  };
   return (
     <main dir="rtl">
       <MainNavbar user={user} />
-      <div></div>
       {children}
       <main className="sm:hidden">
         <BottomNavbar />

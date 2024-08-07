@@ -98,7 +98,7 @@ export default async function BottomNavbar() {
 
         {user && (
           <BottomNavLink
-            href={`/account/${user.profileId}/orders`}
+            href={`/account/${user.profile?.id}/orders`}
             icon={<CiDeliveryTruck className="size-8" />}
             title="طلباتي"
           />

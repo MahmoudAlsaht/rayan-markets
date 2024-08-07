@@ -17,7 +17,17 @@ import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
 import { checkProductTypeExists } from "../_actions/checkProductsType";
 
-export default function MainNavbar({ user }: { user: Partial<User> | null }) {
+export default function MainNavbar({
+  user,
+}: {
+  user: {
+    id: string;
+    phone: string;
+    username: string;
+    role: string;
+    profile: { id: string };
+  };
+}) {
   const [offersExists, setOffersExists] = useState(false);
   const [forHomeExists, setForHomeExists] = useState(false);
 
@@ -25,7 +35,7 @@ export default function MainNavbar({ user }: { user: Partial<User> | null }) {
 
   const pathname = usePathname();
 
-  const isAccountPage = pathname === `/account/${user?.profileId}`;
+  const isAccountPage = pathname === `/account/${user?.profile?.id}`;
 
   useEffect(() => {
     const checkProductsLinks = async () => {
@@ -100,16 +110,16 @@ export default function MainNavbar({ user }: { user: Partial<User> | null }) {
                         <DropdownMenuCheckboxItem
                           className="hover:cursor-pointer hover:bg-gray-400 hover:text-white"
                           onClick={() => {
-                            user.role === "customer"
+                            user?.role === "customer"
                               ? router.push(
                                   `/account/${
-                                    user.profileId || "unRegisteredUser"
+                                    user?.profile?.id || "unRegisteredUser"
                                   }`,
                                 )
                               : router.push("/admin");
                           }}
                         >
-                          {user.role === "customer"
+                          {user?.role === "customer"
                             ? "الصفحة الشخصية"
                             : "لوحة التحكم"}
                         </DropdownMenuCheckboxItem>
