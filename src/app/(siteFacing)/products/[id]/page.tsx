@@ -151,17 +151,19 @@ export default async function ProductsTypePage({
         />
       </div>
 
-      <div>
-        <h2 className="text-center text-sm sm:text-2xl">منتجات مشابهة</h2>
-        {labels?.map((label) => (
-          <div key={label.id} className="p-4">
-            <h3 className="text-sm sm:text-2xl">{label.value}</h3>
-            <ProductsContainer
-              products={label?.products as ProductCardProps[]}
-            />
-          </div>
-        ))}
-      </div>
+      {labels && labels.length > 0 && (
+        <div>
+          <h2 className="text-center text-lg sm:text-3xl">منتجات مشابهة</h2>
+          {labels?.map((label) => (
+            <div key={label.id} className="p-3 sm:p-4">
+              <h3 className="text-md sm:text-2xl">{label.value}</h3>
+              <ProductsContainer
+                products={label?.products as ProductCardProps[]}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
