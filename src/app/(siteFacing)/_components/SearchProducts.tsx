@@ -43,7 +43,7 @@ export default function SearchProducts({
   const [searching, setSearching] = useState(false);
   const [open, setOpen] = useState(false);
   const queryRef = useRef<HTMLInputElement | null>(null);
-  const [snap, setSnap] = useState<number | string | null>("355px");
+  const [snap, setSnap] = useState<number | string | null>("500px");
 
   const [{ noProducts, products }, searchAction] = useFormState(
     searchProducts,
@@ -83,9 +83,10 @@ export default function SearchProducts({
 
   return (
     <Drawer
-      snapPoints={["355px", "100px", 1]}
+      snapPoints={["500px", 1]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
+      // shouldScaleBackground={false}
       open={open}
       onClose={handleClose}
     >
@@ -95,8 +96,8 @@ export default function SearchProducts({
       <DrawerContent
         dir="ltr"
         className={clsx("mx-auto flex w-full max-w-md flex-col p-4 pt-5", {
-          "overflow-y-auto": snap === 1,
-          "overflow-hidden": snap !== 1,
+          "overflow-y-auto": snap === "200px",
+          "overflow-hidden": snap !== "199px",
         })}
       >
         <div className="overflow-auto rounded-t-[10px] md:p-4">
