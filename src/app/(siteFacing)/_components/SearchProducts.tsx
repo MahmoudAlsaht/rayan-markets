@@ -81,15 +81,12 @@ export default function SearchProducts({
   };
 
   return (
-    <Drawer shouldScaleBackground={false} open={open} onClose={handleClose}>
+    <Drawer open={open} onClose={handleClose}>
       <DrawerTrigger className={className} onClick={handleOpen}>
         <Search />
       </DrawerTrigger>
-      <DrawerContent
-        dir="ltr"
-        className={"mx-auto flex w-full max-w-md flex-col p-4 pt-5"}
-      >
-        <div className="overflow-auto rounded-t-[10px] md:p-4">
+      <DrawerContent dir="ltr">
+        <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <DrawerTitle>
               <nav>
@@ -150,7 +147,6 @@ export default function SearchProducts({
             </DrawerTitle>
           </DrawerHeader>
           <DrawerDescription />
-
           <legend className="sm:hidden">
             {
               <MobileProductsContainer
@@ -176,7 +172,6 @@ export default function SearchProducts({
               />
             }
           </legend>
-
           <>
             <legend className="hidden sm:block">
               {!allProducts && noProducts && (
