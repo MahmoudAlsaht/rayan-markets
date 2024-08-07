@@ -8,8 +8,10 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { ProductCardProps } from "../products/_components/ProductCard";
-import { ProductCarouselCard } from "./ProductCarouselCard";
+import {
+  ProductCard,
+  ProductCardProps,
+} from "../products/_components/ProductCard";
 
 const getProducts = cache(
   (type: string) => {
@@ -86,7 +88,7 @@ export default async function SectionsHomeContainer({
               key={product.id}
               className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
             >
-              <ProductCarouselCard product={product as ProductCardProps} />
+              <ProductCard product={product as ProductCardProps} />
             </CarouselItem>
           ))}
         </CarouselContent>

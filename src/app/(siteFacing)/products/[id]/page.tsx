@@ -5,9 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
 import { addHours } from "date-fns";
-import { cache } from "@/lib/cache";
 import ProductsContainer from "../_components/ProductsContainer";
-import { Label } from "@prisma/client";
 
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({
@@ -144,7 +142,8 @@ export default async function ProductsTypePage({
           </Link>
         </Button>
       )}
-      <div className="container h-screen w-full p-0">
+
+      <div className="container w-full p-0">
         <ProductCard
           product={product as ProductCardProps}
           isProductDetailsPage
@@ -153,17 +152,19 @@ export default async function ProductsTypePage({
 
       {labels && labels.length > 0 && (
         <div>
-          <h2 className="text-center text-lg sm:text-3xl">منتجات مشابهة</h2>
+          <h2 className="mb-6 text-center text-lg sm:text-3xl">
+            منتجات مشابهة
+          </h2>
           {labels?.map((label) => (
-            <div key={label.id} className="p-3 sm:p-4">
-              <h3 className="text-md sm:text-2xl">{label.value}</h3>
-              <ProductsContainer
-                products={label?.products as ProductCardProps[]}
-              />
+            <div key={label.id}>
+              <h3 className="text-md text-center sm:text-2xl">{label.value}</h3>
+              <ProductsContainer products={label.products} />
             </div>
           ))}
         </div>
       )}
+
+      <div className="h-20"></div>
     </>
   );
 }
