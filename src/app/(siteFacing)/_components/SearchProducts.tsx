@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/drawer";
 import { useFormState } from "react-dom";
 import { searchProducts } from "../_actions/product";
-import SubmitButton from "@/components/SubmitButton";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import ProductsContainer from "../products/_components/ProductsContainer";
 import { ProductCardProps } from "../products/_components/ProductCard";

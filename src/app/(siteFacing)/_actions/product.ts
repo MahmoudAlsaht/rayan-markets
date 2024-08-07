@@ -61,7 +61,7 @@ export async function searchProducts(
     },
   });
 
-  const brands = await db.section.findFirst({
+  const brand = await db.section.findFirst({
     where: {
       AND: [
         {
@@ -94,10 +94,10 @@ export async function searchProducts(
     },
   });
 
-  if (brands && brands.brandProducts.length > 0)
-    return { products: brands.brandProducts };
+  if (brand && brand.brandProducts.length > 0)
+    return { products: brand.brandProducts };
 
-  const categories = await db.section.findFirst({
+  const category = await db.section.findFirst({
     where: {
       AND: [
         {
@@ -132,9 +132,42 @@ export async function searchProducts(
     },
   });
 
-  if (categories && categories.categoryProducts.length > 0)
+  if (category && category.categoryProducts.length > 0)
     return {
-      products: categories.categoryProducts,
+      products: category.categoryProducts,
+    };
+
+  const label = await db.label.findFirst({
+    where: {
+      value: {
+        contains: query,
+      },
+    },
+    select: {
+      products: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          body: true,
+          price: true,
+          newPrice: true,
+          productType: true,
+          weights: true,
+          isOffer: true,
+          image: {
+            select: {
+              path: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (label && label.products.length > 0)
+    return {
+      products: label.products,
     };
 
   const products = await db.product.findMany({
