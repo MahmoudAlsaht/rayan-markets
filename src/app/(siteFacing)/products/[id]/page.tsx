@@ -4,6 +4,94 @@ import { ProductCard, ProductCardProps } from "../_components/ProductCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
+import { addHours } from "date-fns";
+import { cache } from "@/lib/cache";
+import ProductsContainer from "../_components/ProductsContainer";
+import { Label } from "@prisma/client";
+
+const getLabels = async (labels: string[], id: string) => {
+  db.product.updateMany({
+    where: {
+      offerEndsAt: {
+        lt: addHours(new Date(), 3),
+      },
+    },
+    data: {
+      newPrice: null,
+      isOffer: false,
+      offerStartsAt: null,
+      offerEndsAt: null,
+    },
+  });
+
+  db.product.updateMany({
+    where: {
+      offerStartsAt: {
+        gt: addHours(new Date(), 3),
+      },
+    },
+    data: {
+      isOffer: false,
+    },
+  });
+
+  db.product.updateMany({
+    where: {
+      AND: [
+        {
+          offerStartsAt: {
+            lte: addHours(new Date(), 3),
+          },
+        },
+        {
+          offerEndsAt: {
+            gt: addHours(new Date(), 3),
+          },
+        },
+      ],
+    },
+    data: {
+      isOffer: true,
+    },
+  });
+
+  let allProductLabels: any[] = [];
+  for (const value of labels) {
+    const label = await db.label.findFirst({
+      where: { value },
+      select: {
+        id: true,
+        value: true,
+        products: {
+          where: { NOT: { id } },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            body: true,
+            price: true,
+            newPrice: true,
+            productType: true,
+            weights: true,
+            isOffer: true,
+            image: {
+              select: {
+                path: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (label && label.products.length > 0) {
+      allProductLabels.push(label);
+    }
+  }
+
+  return [
+    ...new Map(allProductLabels.map((label) => [label["id"], label])).values(),
+  ];
+};
 
 export default async function ProductsTypePage({
   params: { id },
@@ -23,6 +111,7 @@ export default async function ProductsTypePage({
       productType: true,
       weights: true,
       isOffer: true,
+      labels: { select: { value: true } },
       image: {
         select: {
           path: true,
@@ -30,6 +119,16 @@ export default async function ProductsTypePage({
       },
     },
   });
+
+  const labels = (await getLabels(
+    product?.labels?.map((label) => label.value) as string[],
+    id,
+  )) as {
+    id: string;
+    value: string;
+    products: any[];
+  }[];
+
   return (
     <>
       <div className="sm:hidden">
@@ -50,6 +149,18 @@ export default async function ProductsTypePage({
           product={product as ProductCardProps}
           isProductDetailsPage
         />
+      </div>
+
+      <div>
+        <h2 className="text-center text-sm sm:text-2xl">منتجات مشابهة</h2>
+        {labels?.map((label) => (
+          <div key={label.id} className="p-4">
+            <h3 className="text-sm sm:text-2xl">{label.value}</h3>
+            <ProductsContainer
+              products={label?.products as ProductCardProps[]}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
