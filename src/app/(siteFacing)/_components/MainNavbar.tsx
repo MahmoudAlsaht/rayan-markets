@@ -12,7 +12,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User } from "@prisma/client";
 import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
 import { checkProductTypeExists } from "../_actions/checkProductsType";
