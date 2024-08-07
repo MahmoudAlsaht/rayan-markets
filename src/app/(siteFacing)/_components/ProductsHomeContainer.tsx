@@ -56,9 +56,9 @@ export default async function SectionsHomeContainer({
       <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
         <h2 className="text-md font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
           {type === "views"
-            ? "الأعلى زيارة"
+            ? "الأكثر مشاهدة"
             : type === "purchases"
-              ? "الأعلى مبيعا"
+              ? "الأكثر مبيعا"
               : "آخر العروض"}
         </h2>
         <Link

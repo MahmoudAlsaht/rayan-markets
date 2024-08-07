@@ -10,7 +10,7 @@ export default async function Home() {
         <SectionsHomeContainer type="categories" />
 
         <ProductsHomeContainer type="purchases" />
-        <ProductsHomeContainer type="views" />
+        {/* <ProductsHomeContainer type="views" /> */}
         <ProductsHomeContainer type="newest offers" />
 
         <SectionsHomeContainer type="brands" />
