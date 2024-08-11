@@ -1,22 +1,20 @@
 import Banner from "./_components/Banner";
-import SectionsHomeContainer from "./_components/SectionsHomeContainer";
 import ProductsHomeContainer from "./_components/ProductsHomeContainer";
+import SectionsHomeContainer from "./_components/SectionsHomeContainer";
 
 export default async function Home() {
   return (
-    <main dir="rtl">
+    <main>
       <Banner type="main" />
-      <div>
-        <SectionsHomeContainer type="categories" />
+      <SectionsHomeContainer type="categories" />
 
-        <ProductsHomeContainer type="purchases" />
-        {/* <ProductsHomeContainer type="views" /> */}
-        <ProductsHomeContainer type="newest offers" />
+      <ProductsHomeContainer type="purchases" />
+      {/* <ProductsHomeContainer type="views" /> */}
+      <ProductsHomeContainer type="newest offers" />
 
-        <SectionsHomeContainer type="brands" />
-      </div>
+      <SectionsHomeContainer type="brands" />
 
-      <div className="h-24"></div>
+      <div className="h-20"></div>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import db from "@/db/db";
 import BackButtonNav from "@/components/BackButtonNav";
-import { ProductCard, ProductCardProps } from "../_components/ProductCard";
+import ProductCard, { ProductCardProps } from "../_components/ProductCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { checkUser } from "../../auth/_actions/isAuthenticated";

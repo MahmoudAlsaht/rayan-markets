@@ -1,77 +1,21 @@
 import Banner from "@/app/(siteFacing)/_components/Banner";
-import db from "@/db/db";
 import { cache } from "@/lib/cache";
-import { addHours } from "date-fns";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { ProductCardProps } from "../../_components/ProductCard";
+import { searchProducts } from "@/app/(siteFacing)/_actions/product";
 
-const getForHome = cache(() => {
-  db.product.updateMany({
-    where: {
-      offerEndsAt: {
-        lt: addHours(new Date(), 3),
-      },
-    },
-    data: {
-      newPrice: null,
-      isOffer: false,
-      offerStartsAt: null,
-      offerEndsAt: null,
-    },
-  });
+const getForHome = cache(
+  async (productType: string, orderBy?: string, search?: string) =>
+    await searchProducts(search, orderBy, productType),
+  ["/products/for-home", "getForHome"],
+);
 
-  db.product.updateMany({
-    where: {
-      offerStartsAt: {
-        gt: addHours(new Date(), 3),
-      },
-    },
-    data: {
-      isOffer: false,
-    },
-  });
-
-  db.product.updateMany({
-    where: {
-      AND: [
-        {
-          offerStartsAt: {
-            lte: addHours(new Date(), 3),
-          },
-        },
-        {
-          offerEndsAt: {
-            gt: addHours(new Date(), 3),
-          },
-        },
-      ],
-    },
-    data: {
-      isOffer: true,
-    },
-  });
-
-  return db.product.findMany({
-    where: { productType: "forHome" },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      newPrice: true,
-      weights: true,
-      isOffer: true,
-      productType: true,
-      image: {
-        select: {
-          path: true,
-        },
-      },
-    },
-  });
-}, ["/products/for-home", "getForHome"]);
-
-export default async function forHomePage() {
-  const forHome = await getForHome();
+export default async function forHomePage({
+  searchParams: { orderBy, search },
+}: {
+  searchParams: { orderBy?: string; search?: string };
+}) {
+  const forHome = await getForHome("for-home", orderBy, search);
 
   return (
     <div dir="rtl" className="h-screen">

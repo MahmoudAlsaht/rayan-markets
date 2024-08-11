@@ -1,85 +1,20 @@
 import Banner from "@/app/(siteFacing)/_components/Banner";
-import db from "@/db/db";
-import { cache } from "@/lib/cache";
-import { addHours } from "date-fns";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { ProductCardProps } from "../../_components/ProductCard";
+import { searchProducts } from "@/app/(siteFacing)/_actions/product";
 
-const getOffers = cache(
-  (orderBy?: string) => {
-    db.product.updateMany({
-      where: {
-        offerEndsAt: {
-          lt: addHours(new Date(), 3),
-        },
-      },
-      data: {
-        newPrice: null,
-        isOffer: false,
-        offerStartsAt: null,
-        offerEndsAt: null,
-      },
-    });
-
-    db.product.updateMany({
-      where: {
-        offerStartsAt: {
-          gt: addHours(new Date(), 3),
-        },
-      },
-      data: {
-        isOffer: false,
-      },
-    });
-
-    db.product.updateMany({
-      where: {
-        AND: [
-          {
-            offerStartsAt: {
-              lte: addHours(new Date(), 3),
-            },
-          },
-          {
-            offerEndsAt: {
-              gt: addHours(new Date(), 3),
-            },
-          },
-        ],
-      },
-      data: {
-        isOffer: true,
-      },
-    });
-
-    return db.product.findMany({
-      where: { isOffer: true },
-      orderBy: { createdAt: orderBy ? "desc" : "asc" },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        newPrice: true,
-        weights: true,
-        isOffer: true,
-        productType: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-  },
-  ["/products/offers", "getOffers"],
-);
+const getOffers = async (
+  productType: string,
+  orderBy?: string,
+  search?: string,
+) => await searchProducts(search, orderBy, productType);
 
 export default async function OffersPage({
-  searchParams: { orderBy },
+  searchParams: { orderBy, search },
 }: {
-  searchParams: { orderBy: string };
+  searchParams: { orderBy?: string; search?: string };
 }) {
-  const offers = await getOffers(orderBy);
+  const offers = await getOffers("offers", orderBy, search);
 
   return (
     <div dir="rtl" className="h-screen">

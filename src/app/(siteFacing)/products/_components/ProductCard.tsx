@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useStartLoading } from "@/context/LoadingContext";
 import { updateProductViews } from "../../_actions/product";
+import CartProvider, { CartProduct, useCart } from "@/context/cart/CartContext";
 
 export type ProductCardProps = {
   id: string | null;
@@ -29,16 +31,18 @@ export type ProductCardProps = {
   weights: number[] | null;
   isOffer: boolean | null;
 };
-export function ProductCard({
+
+export default function ProductCard({
   product,
   isProductDetailsPage = false,
-  handleSearchClose,
+  handleCloseSearch,
 }: {
   product: ProductCardProps;
   isProductDetailsPage?: boolean;
-  handleSearchClose?: () => void;
+  handleCloseSearch?: () => void;
 }) {
   const router = useRouter();
+  const { getProduct, addProduct, toggleProductCounter } = useCart();
 
   const {
     id,
@@ -47,127 +51,100 @@ export function ProductCard({
     price,
     newPrice,
     description,
+    productType,
     body,
     weights,
     isOffer,
   } = product;
 
-  const [addingToCart, setAddingToCart] = useState(false);
-  const [_pending, startTransition] = useTransition();
+  const { startLoading } = useStartLoading();
+  const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
+  const [isProductInCart, setIsProductInCart] = useState(false);
 
-  const handleAddView = () => {
-    startTransition(async () => {
-      await updateProductViews(product?.id as string);
-    });
-  };
-
-  const showPage = () => {
+  const showPage = (id: string) => {
     if (!isProductDetailsPage) {
       router.push(`/products/${id}`);
-      handleSearchClose && handleSearchClose();
-      handleAddView();
-      return;
+      startLoading(updateProductViews(id));
+      handleCloseSearch && handleCloseSearch();
     }
-    router.push(`/products/${id}`);
-    handleAddView();
   };
-  return isProductDetailsPage ? (
-    <div className="h-screen bg-inherit pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10">
-      <div className="relative mx-auto h-72 w-10/12 sm:h-96 sm:w-3/5 md:w-2/5">
-        <Image
-          fill
-          priority
-          className="rounded-3xl"
-          src={image?.path as string}
-          alt={`${name || "product"}'s image`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          onClick={showPage}
-        />
-        <div
-          className={`absolute ${`-bottom-6 ${addingToCart ? "right-0 w-full pr-6 sm:pr-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm`} rounded-2xl bg-white px-2 py-2`}
-        >
-          {!addingToCart && (
-            <ProductMenuPrice
-              weights={weights && weights.length ? weights : null}
-              handleClick={() => setAddingToCart(true)}
-            />
-          )}
-          {addingToCart && (
-            <div className="flex w-11/12 items-center justify-between px-4 sm:px-6 sm:pl-4">
-              <Button size="sm" variant="secondary">
-                <Plus className="size-6 text-rayanPrimary-dark" />
-              </Button>
-              <span>0</span>
-              <Button size="sm" variant="secondary">
-                <Minus className="size-6 text-rayanPrimary-dark" />
-              </Button>
-            </div>
-          )}
-        </div>
-        {isOffer && (
-          <div className="absolute right-0 top-0 rounded-2xl bg-destructive px-8 py-2 text-white">
-            خصم
-          </div>
-        )}
-      </div>
 
-      <div
-        className="mt-10 flex w-full flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start"
-        onClick={showPage}
-      >
-        <p
-          className={`text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl`}
-        >
-          {isProductDetailsPage ? body : name}
-        </p>
-        <div className="mt-4 flex items-center justify-center gap-6">
-          <p className="sm:text-md my-3 cursor-auto text-xl font-semibold text-rayanSecondary-dark sm:text-3xl">
-            {formatCurrency(newPrice ? newPrice : (price as number))}
-          </p>
-          {newPrice && (
-            <del>
-              <p className="sm:text-md cursor-auto text-xl text-gray-600 line-through sm:text-2xl">
-                {formatCurrency(price as number)}
-              </p>
-            </del>
-          )}
-        </div>
-        <div className="mt-6 text-xl sm:text-2xl md:text-3xl">
-          {description}
-        </div>
-      </div>
-      <div className="h-24"></div>
-    </div>
-  ) : (
+  const handleAddToCart = async (selectedWeight?: number) => {
+    const newProduct = await addProduct({ ...product, selectedWeight });
+    setIsProductInCart(productInCart !== null);
+  };
+
+  const handleAddToCounter = async () => {
+    const updatedProduct = await toggleProductCounter(id as string, "add");
+    setProductInCart(updatedProduct);
+    setIsProductInCart(updatedProduct !== null);
+  };
+
+  const handleTakeFromCounter = async () => {
+    const updatedProduct = await toggleProductCounter(id as string, "take");
+    setProductInCart(updatedProduct);
+    setIsProductInCart(updatedProduct !== null);
+  };
+
+  useEffect(() => {
+    const checkProduct = async () => {
+      const product = await getProduct(id as string);
+      setProductInCart(product);
+      setIsProductInCart(product !== null);
+    };
+    checkProduct();
+  }, [getProduct, id]);
+
+  return (
     <div
-      className={`cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl`}
+      className={`bg-inherit ${
+        isProductDetailsPage
+          ? "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"
+          : "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+      } `}
     >
-      <div className={`relative h-44`}>
+      <div
+        className={`relative ${
+          isProductDetailsPage
+            ? "mx-auto h-72 w-10/12 sm:h-96 sm:w-3/5 md:w-2/5"
+            : "h-44"
+        } `}
+      >
         <Image
           fill
           priority
-          className={`rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl`}
+          className={`rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${isProductDetailsPage && "rounded-3xl"} `}
           src={image?.path as string}
           alt={`${name || "product"}'s image`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          onClick={showPage}
+          onClick={() => showPage(product.id as string)}
         />
         <div
-          className={`absolute -bottom-4 rounded-2xl bg-white px-2 py-2 shadow-md shadow-slate-200 duration-500 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${addingToCart && "w-11/12 sm:w-full"} left-2 sm:left-0`}
+          className={`absolute duration-500 ${isProductDetailsPage ? `${`-bottom-6 ${isProductInCart ? "right-0 w-full pr-6 sm:pr-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm`} rounded-2xl bg-white px-2 py-2` : `-bottom-4 rounded-2xl bg-white px-2 py-2 shadow-md shadow-slate-200 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${isProductInCart && "w-11/12 pl-0 sm:w-full"} left-2 sm:left-0`} `}
         >
-          {!addingToCart && (
+          {!isProductInCart && (
             <ProductMenuPrice
               weights={weights && weights.length ? weights : null}
-              handleClick={() => setAddingToCart(true)}
+              handleAddToCart={handleAddToCart}
             />
           )}
-          {addingToCart && (
-            <div className="flex w-11/12 items-center justify-between px-4 sm:px-6 sm:pl-4">
-              <Button size="sm" variant="secondary">
+          {isProductInCart && (
+            <div className="flex w-11/12 items-center justify-between sm:px-6 sm:pl-4">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleAddToCounter}
+              >
                 <Plus className="size-6 text-rayanPrimary-dark" />
               </Button>
-              <span>0</span>
-              <Button size="sm" variant="secondary">
+              <span className="text-rayanPrimary-dark">
+                {productInCart?.counter || 0}
+              </span>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleTakeFromCounter}
+              >
                 <Minus className="size-6 text-rayanPrimary-dark" />
               </Button>
             </div>
@@ -182,18 +159,21 @@ export function ProductCard({
         )}
       </div>
 
-      <div className={`mt-2 w-full py-3 sm:px-4`} onClick={showPage}>
+      <div
+        className={`w-full ${isProductDetailsPage ? "mt-10 flex flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start" : "mt-2 py-3 sm:px-4"} `}
+        onClick={() => !isProductDetailsPage && showPage(product.id as string)}
+      >
         <p
-          className={`text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg`}
+          className={`${isProductDetailsPage ? "text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl" : "text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg"} `}
         >
-          {name}
+          {isProductDetailsPage ? body : name}
         </p>
         <div className={`mt-4 flex items-center justify-center gap-6`}>
           <div
             className={`flex items-center justify-around sm:gap-2 md:justify-start`}
           >
             <p
-              className={`sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark`}
+              className={`sm:text-md my-3 cursor-auto font-semibold text-rayanSecondary-dark ${isProductDetailsPage ? "text-xl sm:text-3xl" : "text-sm"}`}
             >
               {formatCurrency(newPrice ? newPrice : (price as number))}
             </p>
@@ -201,28 +181,36 @@ export function ProductCard({
           {newPrice && (
             <del>
               <p
-                className={`sm:text-md cursor-auto text-sm text-gray-600 line-through`}
+                className={`cursor-auto text-gray-600 line-through ${isProductDetailsPage ? "text-xl sm:text-2xl" : "sm:text-md text-sm"}`}
               >
                 {formatCurrency(price as number)}
               </p>
             </del>
           )}
         </div>
+        {isProductDetailsPage && (
+          <div className="mt-6 text-xl sm:text-2xl md:text-3xl">
+            {description}
+          </div>
+        )}
       </div>
+      {isProductDetailsPage && <div className="h-24"></div>}
     </div>
   );
 }
 
 function ProductMenuPrice({
   weights,
-  handleClick,
+  handleAddToCart,
 }: {
   weights?: number[] | null;
-  handleClick?: () => void;
+  handleAddToCart: (weight?: number) => void;
 }) {
+  const addProduct = () => handleAddToCart();
+
   if (!weights)
     return (
-      <ShoppingBag className={`size-6 w-full px-10`} onClick={handleClick} />
+      <ShoppingBag className={`size-6 w-full px-10`} onClick={addProduct} />
     );
 
   return (
@@ -234,7 +222,7 @@ function ProductMenuPrice({
         <DropdownMenuLabel>اختر الوزن</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {weights.map((price, index) => (
-          <DropdownMenuItem key={index} onClick={handleClick}>
+          <DropdownMenuItem key={index} onClick={() => handleAddToCart(price)}>
             {price} كيلو
           </DropdownMenuItem>
         ))}

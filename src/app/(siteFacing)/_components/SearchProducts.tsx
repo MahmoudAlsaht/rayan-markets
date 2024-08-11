@@ -11,59 +11,27 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useFormState } from "react-dom";
-import { searchProducts } from "../_actions/product";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { handleSearchInput, sortBasedOnPrice } from "../_actions/product";
+import { useEffect, useRef, useState } from "react";
 import ProductsContainer from "../products/_components/ProductsContainer";
 import { ProductCardProps } from "../products/_components/ProductCard";
-import MobileProductsContainer from "../(mobile)/_components/MobileProductsContainer";
 import {
   DropdownMenu,
   DropdownMenuContent,
-} from "@radix-ui/react-dropdown-menu";
-import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import clsx from "clsx";
 
-export default function SearchProducts({
-  allProducts,
-  className,
-  offersBanner,
-  forHomeBanner,
-}: {
-  allProducts?: ProductCardProps[];
-  className?: string;
-  offersBanner?: ReactNode;
-  forHomeBanner?: ReactNode;
-}) {
+export default function SearchProducts({ className }: { className?: string }) {
   const formRef = React.useRef<HTMLFormElement | null>(null);
-  const [type, setType] = useState("all");
   const [priceType, setPriceType] = useState("all");
-  const [searching, setSearching] = useState(false);
+  const [sortedProducts, setSortedProducts] = useState<
+    ProductCardProps[] | null | undefined
+  >(null);
   const [open, setOpen] = useState(false);
   const queryRef = useRef<HTMLInputElement | null>(null);
 
-  const [{ noProducts, products }, searchAction] = useFormState(
-    searchProducts,
-    {},
-  );
-
-  const sortBasedOnPrice = (products: ProductCardProps[], orderBy: string) => {
-    return orderBy === "highest"
-      ? products?.toSorted(
-          (a, b) =>
-            ((b?.newPrice as number) || (b?.price as number)) -
-            ((a.newPrice as number) || (a?.price as number)),
-        )
-      : orderBy === "lowest"
-        ? products?.toSorted(
-            (a, b) =>
-              ((a?.newPrice as number) || (a?.price as number)) -
-              ((b.newPrice as number) || (b?.price as number)),
-          )
-        : products;
-  };
+  const [products, searchAction] = useFormState(handleSearchInput, null);
 
   useEffect(() => {
     if (formRef.current) formRef.current.reset();
@@ -76,9 +44,16 @@ export default function SearchProducts({
     setOpen(false);
   };
 
-  const handleSetType = (type: string) => {
-    setType(type);
-  };
+  useEffect(() => {
+    const sortProducts = async () => {
+      const fetchedProducts = await sortBasedOnPrice(
+        products as ProductCardProps[],
+        priceType,
+      );
+      setSortedProducts(fetchedProducts);
+    };
+    sortProducts();
+  }, [products, priceType]);
 
   return (
     <Drawer open={open} onClose={handleClose}>
@@ -86,7 +61,7 @@ export default function SearchProducts({
         <Search />
       </DrawerTrigger>
       <DrawerContent dir="ltr">
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full overflow-auto">
           <DrawerHeader>
             <DrawerTitle>
               <nav>
@@ -119,13 +94,9 @@ export default function SearchProducts({
                             className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                             placeholder="...منتج،قسم،علامة تجارية"
                             ref={queryRef}
-                            onChange={(e) => {
-                              if (!e.target.value) setSearching(false);
-                            }}
                             onKeyDown={(e) => {
                               if (e.code === "Enter") {
                                 formRef.current?.requestSubmit();
-                                if (queryRef.current?.value) setSearching(true);
                               }
                             }}
                           />
@@ -147,50 +118,14 @@ export default function SearchProducts({
             </DrawerTitle>
           </DrawerHeader>
           <DrawerDescription />
-          <legend className="sm:hidden">
-            {
-              <MobileProductsContainer
-                banner={
-                  (type === "offers" && offersBanner) ||
-                  (type === "forHome" && forHomeBanner)
-                }
-                type={type}
-                setType={handleSetType}
-                handleSearchClose={handleClose}
-                products={
-                  searching
-                    ? sortBasedOnPrice(
-                        products as ProductCardProps[],
-                        priceType,
-                      )
-                    : sortBasedOnPrice(
-                        allProducts as ProductCardProps[],
-                        priceType,
-                      )
-                }
-                searching={searching}
-              />
-            }
-          </legend>
-          <>
-            <legend className="hidden sm:block">
-              {!allProducts && noProducts && (
-                <h1 className="text-center">لم يتم العثور على نتائج</h1>
-              )}
-              {!allProducts && noProducts && products && (
-                <h1 className="text-center">انظر منتجاتنا الأخرى</h1>
-              )}
 
-              {products && (
-                <ProductsContainer
-                  products={sortBasedOnPrice(
-                    products as ProductCardProps[],
-                    priceType,
-                  )}
-                  handleSearchClose={handleClose}
-                />
-              )}
-            </legend>
+          <>
+            {products && (
+              <ProductsContainer
+                handleCloseSearch={handleClose}
+                products={sortedProducts as ProductCardProps[]}
+              />
+            )}
           </>
           <div className="h-20"></div>
         </div>

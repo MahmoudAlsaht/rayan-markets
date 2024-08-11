@@ -1,6 +1,7 @@
 import { getUserPermission } from "@/app/admin/_components/UserPermissions";
 import BackButtonNav from "../../../../components/BackButtonNav";
 import OptionsList from "./_components/OptionsList";
+import CartProvider from "@/context/cart/CartContext";
 
 export default async function OptionsPage() {
   const user = await getUserPermission();
@@ -8,9 +9,11 @@ export default async function OptionsPage() {
   return (
     <>
       <BackButtonNav goHome />
-      <main dir="rtl" className="sm:hidden">
-        <OptionsList {...user} />
-      </main>
+      <CartProvider>
+        <main dir="rtl" className="sm:hidden">
+          <OptionsList {...user} />
+        </main>
+      </CartProvider>
     </>
   );
 }
