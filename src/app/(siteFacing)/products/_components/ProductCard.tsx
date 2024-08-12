@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useStartLoading } from "@/context/LoadingContext";
 import { updateProductViews } from "../../_actions/product";
-import CartProvider, { CartProduct, useCart } from "@/context/cart/CartContext";
+import { CartProduct, useCart } from "@/context/cart/CartContext";
 
 export type ProductCardProps = {
   id: string | null;
@@ -63,7 +63,7 @@ export default function ProductCard({
 
   const showPage = (id: string) => {
     if (!isProductDetailsPage) {
-      router.push(`/products/${id}`);
+      router.push(`/products/any/${id}`);
       startLoading(updateProductViews(id));
       handleCloseSearch && handleCloseSearch();
     }

@@ -1,11 +1,11 @@
 import db from "@/db/db";
 import BackButtonNav from "@/components/BackButtonNav";
-import ProductCard, { ProductCardProps } from "../_components/ProductCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { checkUser } from "../../auth/_actions/isAuthenticated";
 import { addHours } from "date-fns";
-import ProductsContainer from "../_components/ProductsContainer";
+import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
+import ProductCard, { ProductCardProps } from "../../_components/ProductCard";
+import ProductsContainer from "../../_components/ProductsContainer";
 
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({

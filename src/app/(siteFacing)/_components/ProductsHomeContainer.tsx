@@ -1,6 +1,4 @@
 import React from "react";
-import db from "@/db/db";
-import { cache } from "@/lib/cache";
 import { ArrowRightCircle } from "lucide-react";
 import Link from "next/link";
 import {
@@ -31,12 +29,12 @@ export default async function SectionsHomeContainer({
 
   return (
     products.length && (
-      <section className="my-6" dir="rtl">
+      <section className="my-6">
         <hr className="my-2 border-slate-300" />
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
           <Link
             className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
-            href={`/products${type === "views" || type === "purchases" ? `?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
+            href={`/products${type === "views" || type === "purchases" ? `/any?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
           >
             <ArrowRightCircle />
             <span>المزيد</span>
@@ -58,19 +56,16 @@ export default async function SectionsHomeContainer({
             slidesToScroll: "auto",
             duration: 3000,
           }}
-          dir="rtl"
+          dir="ltr"
           className="w-11/12"
         >
           <CarouselContent>
             {products.map((product) => (
               <CarouselItem
                 key={product.id}
-                className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
+                className="basis-3/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
               >
-                <ProductCard
-                  // handleAddView={handleAddView}
-                  product={product as ProductCardProps}
-                />
+                <ProductCard product={product as ProductCardProps} />
               </CarouselItem>
             ))}
           </CarouselContent>

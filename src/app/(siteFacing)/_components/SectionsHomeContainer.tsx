@@ -40,7 +40,7 @@ export default async function SectionsHomeContainer({
     sections.length && (
       <section className="my-4 sm:container" dir="ltr">
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
-          <h2 className="text-sm font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
+          <h2 className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
             {type === "brands" ? "العلامات التجارية" : "الفئات"}
           </h2>
           <Link

@@ -265,7 +265,7 @@ export async function searchProducts(
           ? { views: "desc" }
           : orderBy === "purchases"
             ? { numberOfPurchases: "desc" }
-            : {},
+            : { createdAt: "desc" },
       select: {
         id: true,
         name: true,

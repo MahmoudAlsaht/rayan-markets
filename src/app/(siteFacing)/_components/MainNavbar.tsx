@@ -65,7 +65,7 @@ export default function MainNavbar({
               <NavLink href="/">الرئيسية</NavLink>
             </li>
             <li>
-              <NavLink href="/products">المنتجات</NavLink>
+              <NavLink href="/products/any">المنتجات</NavLink>
             </li>
             {offersExists && (
               <li>

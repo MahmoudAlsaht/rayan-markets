@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentProps } from "react";
@@ -8,21 +8,9 @@ import { SlOptions } from "react-icons/sl";
 import { ImHome } from "react-icons/im";
 import { Search, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Cart, useCart } from "@/context/cart/CartContext";
 
-export default function BottomNavLinks({ user }: { user }) {
-  const [cart, setCart] = useState<Cart | null>(null);
-
-  const { fetchCart } = useCart();
+export default function BottomNavLinks({ user, cart }: { user; cart: null }) {
   const pathname = usePathname();
-
-  useEffect(() => {
-    const getCart = async () => {
-      const cart = await fetchCart();
-      setCart(cart);
-    };
-    getCart();
-  }, []);
 
   return (
     <div
@@ -33,7 +21,7 @@ export default function BottomNavLinks({ user }: { user }) {
         {pathname === "/" && <span className="text-xs">الرئيسية</span>}
       </NavLink>
 
-      <NavLink href="/products?search=all">
+      <NavLink href="/products/any?search=all">
         <Search className="size-6" />
         {pathname.match(/\/products*/) && (
           <span className="text-xs">المنتجات</span>
