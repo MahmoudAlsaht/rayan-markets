@@ -1,38 +1,36 @@
+"use client";
 import { formatCurrency } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Minus, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { CartProduct, useCart } from "@/context/cart/CartContext";
-import { useEffect, useState } from "react";
-import { getCart } from "@/context/cart/actions/checkCart";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { CartProduct } from "@/app/(siteFacing)/cart/_actions/checkCart";
+import {
+  addToProductCounter,
+  deleteCartProduct,
+  takeFromProductCounter,
+} from "../_actions/cartActions";
+import { useTransition } from "react";
 
-export default function CartCard({ productId }: { productId: string }) {
-  const router = useRouter();
-  const { getProduct, toggleProductCounter } = useCart();
-  const [product, setProduct] = useState<CartProduct | null>(null);
+export default function CartCard({ product }: { product: CartProduct }) {
+  const [_, startTransition] = useTransition();
 
   const handleAddToCounter = async () => {
-    const updatedProduct = await toggleProductCounter(productId, "add");
-    setProduct(updatedProduct);
+    startTransition(async () => {
+      await addToProductCounter(product.id);
+    });
   };
 
   const handleTakeFromCounter = async () => {
-    const updatedProduct = await toggleProductCounter(productId, "take");
-    if (updatedProduct == null) {
-      const cart = await getCart();
-      if (!cart || cart.products.length === 0) router.replace("/");
-    }
-    setProduct(updatedProduct);
+    startTransition(async () => {
+      await takeFromProductCounter(product.id);
+    });
   };
 
-  useEffect(() => {
-    const checkProduct = async () => {
-      const productInCart = await getProduct(productId);
-      setProduct(productInCart);
-    };
-    checkProduct();
-  }, [getProduct, productId]);
+  const removeProductFromCart = async () => {
+    startTransition(async () => {
+      await deleteCartProduct(product.id);
+    });
+  };
 
   return (
     <div className="cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl">
@@ -41,7 +39,7 @@ export default function CartCard({ productId }: { productId: string }) {
           fill
           priority
           className="rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
-          src={product?.image as string}
+          src={(product?.image as string) || ""}
           alt={`${product?.name}'s image`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
@@ -75,9 +73,20 @@ export default function CartCard({ productId }: { productId: string }) {
         <div className="mt-4 flex items-center justify-center gap-6">
           <div className="flex items-center justify-around sm:gap-2 md:justify-start">
             <p className="sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark">
-              {formatCurrency(product?.price as number)}
+              المجموع: {formatCurrency(product?.total as number)}
             </p>
           </div>
+        </div>
+
+        <div className="sm:scale-95 sm:duration-500 sm:hover:scale-105">
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={removeProductFromCart}
+            className="w-full"
+          >
+            <Trash2 />
+          </Button>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import Logo from "../../rayan.marketLogo.png";
 import { usePathname, useRouter } from "next/navigation";
 import { ComponentProps, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { UserCircle } from "lucide-react";
+import { ShoppingBag, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -15,9 +15,11 @@ import {
 import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
 import { checkProductTypeExists } from "../_actions/checkProductsType";
+import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
 
 export default function MainNavbar({
   user,
+  cart,
 }: {
   user: {
     id: string;
@@ -26,9 +28,10 @@ export default function MainNavbar({
     role: string;
     profile: { id: string };
   };
+  cart: Cart | null;
 }) {
-  const [offersExists, setOffersExists] = useState(false);
-  const [forHomeExists, setForHomeExists] = useState(false);
+  const [offersExists, setOffersExists] = useState(true);
+  const [forHomeExists, setForHomeExists] = useState(true);
 
   const router = useRouter();
 
@@ -81,6 +84,20 @@ export default function MainNavbar({
             <li className="hover:cursor-pointer">
               <SearchProducts />
             </li>
+
+            {cart != null && (
+              <li
+                className={
+                  `${pathname === "/cart" && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}` &&
+                  "cursor-pointer"
+                }
+                onClick={() => router.push("/cart")}
+              >
+                <ShoppingBag
+                  className={`${pathname === "/cart" && "size-6"}`}
+                />
+              </li>
+            )}
 
             <li className="hover:cursor-pointer">
               <DropdownMenu dir="rtl">
@@ -150,8 +167,12 @@ function NavLink(props: Omit<ComponentProps<typeof Link>, "className">) {
     <Link
       {...props}
       className={cn(
-        "group rounded-lg p-2 text-base font-normal transition duration-75 hover:bg-gray-700 hover:text-white",
-        pathname === props.href && "bg-gray-700 px-6 text-white",
+        `group rounded-lg text-base font-normal transition duration-75 ${
+          props.href !== "/cart" && "p-2 hover:bg-gray-700 hover:text-white"
+        }`,
+        props.href !== "/cart" &&
+          pathname === props.href &&
+          `bg-gray-700 px-6 text-white`,
       )}
     />
   );

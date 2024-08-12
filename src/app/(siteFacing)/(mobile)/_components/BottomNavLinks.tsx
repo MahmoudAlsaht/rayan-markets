@@ -8,8 +8,15 @@ import { SlOptions } from "react-icons/sl";
 import { ImHome } from "react-icons/im";
 import { Search, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
 
-export default function BottomNavLinks({ user, cart }: { user; cart: null }) {
+export default function BottomNavLinks({
+  user,
+  cart,
+}: {
+  user;
+  cart: Cart | null;
+}) {
   const pathname = usePathname();
 
   return (
@@ -28,7 +35,7 @@ export default function BottomNavLinks({ user, cart }: { user; cart: null }) {
         )}
       </NavLink>
 
-      {cart && (
+      {cart != null && (
         <NavLink href="/cart" className="relative">
           <ShoppingBag className="size-6" />
           {pathname === "/cart" && <span className="text-xs">السلة</span>}

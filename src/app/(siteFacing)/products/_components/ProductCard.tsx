@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useStartLoading } from "@/context/LoadingContext";
 import { updateProductViews } from "../../_actions/product";
-import { CartProduct, useCart } from "@/context/cart/CartContext";
+import { CartProduct, findProduct } from "../../cart/_actions/checkCart";
+import {
+  addProductToCart,
+  addToProductCounter,
+  takeFromProductCounter,
+} from "../../cart/_actions/cartActions";
 
 export type ProductCardProps = {
   id: string | null;
@@ -42,8 +47,7 @@ export default function ProductCard({
   handleCloseSearch?: () => void;
 }) {
   const router = useRouter();
-  const { getProduct, addProduct, toggleProductCounter } = useCart();
-
+  const [_, startTransition] = useTransition();
   const {
     id,
     image,
@@ -51,7 +55,6 @@ export default function ProductCard({
     price,
     newPrice,
     description,
-    productType,
     body,
     weights,
     isOffer,
@@ -61,7 +64,6 @@ export default function ProductCard({
   const { startLoading } = useStartLoading();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
   const [isProductInCart, setIsProductInCart] = useState(false);
-  const [isHomePage, setIsHomePage] = useState(pathname === "/");
 
   const showPage = (id: string) => {
     if (!isProductDetailsPage) {
@@ -71,33 +73,38 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToCart = async (selectedWeight?: number) => {
-    const newProduct = await addProduct({ ...product, selectedWeight });
-    setIsProductInCart(productInCart !== null);
+  const handleAddToCart = (selectedWeight?: number) => {
+    startTransition(async () => {
+      const newProduct = await addProductToCart({ ...product, selectedWeight });
+      setProductInCart(newProduct);
+      setIsProductInCart(newProduct !== null);
+    });
   };
 
-  const handleAddToCounter = async () => {
-    const updatedProduct = await toggleProductCounter(id as string, "add");
-    setProductInCart(updatedProduct);
-    setIsProductInCart(updatedProduct !== null);
+  const handleAddToCounter = () => {
+    startTransition(async () => {
+      const updatedProduct = await addToProductCounter(id as string);
+      setProductInCart(updatedProduct);
+      setIsProductInCart(updatedProduct !== null);
+    });
   };
 
-  const handleTakeFromCounter = async () => {
-    const updatedProduct = await toggleProductCounter(id as string, "take");
-    setProductInCart(updatedProduct);
-    setIsProductInCart(updatedProduct !== null);
+  const handleTakeFromCounter = () => {
+    startTransition(async () => {
+      const updatedProduct = await takeFromProductCounter(id as string);
+      setProductInCart(updatedProduct);
+      setIsProductInCart(updatedProduct !== null);
+    });
   };
 
   useEffect(() => {
     const checkProduct = async () => {
-      const product = await getProduct(id as string);
+      const product = await findProduct(id as string);
       setProductInCart(product);
       setIsProductInCart(product !== null);
     };
     checkProduct();
-
-    setIsHomePage(pathname === "/");
-  }, [getProduct, id, pathname]);
+  }, [id, pathname]);
 
   return (
     <div

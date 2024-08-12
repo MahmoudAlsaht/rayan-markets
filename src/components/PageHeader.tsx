@@ -1,11 +1,13 @@
 export default function PageHeader({
-	title,
+  title,
+  mt,
 }: {
-	title: string;
+  title: string;
+  mt?: string | undefined;
 }) {
-	return (
-		<h1 className='text-center mt-16 text-4xl mb-4'>
-			{title}
-		</h1>
-	);
+  return (
+    <h1 className={`text-center ${mt ? mt : "mt-16"} mb-4 text-4xl`}>
+      {title}
+    </h1>
+  );
 }

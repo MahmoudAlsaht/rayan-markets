@@ -1,11 +1,25 @@
 "use server";
 import { cookies } from "next/headers";
-import { Cart, CartProduct } from "../CartContext";
+
+export type CartProduct = {
+  id: string;
+  name: string;
+  weight?: number | null;
+  price: number;
+  total: number;
+  counter: number;
+  image: string;
+};
+
+export type Cart = {
+  products: CartProduct[];
+  total: number;
+};
 
 export async function getCart() {
   const checkCookies = cookies().get("cart");
 
-  if (checkCookies == null) return null;
+  if (!checkCookies?.value) return null;
 
   const cart = JSON.parse(checkCookies.value);
 

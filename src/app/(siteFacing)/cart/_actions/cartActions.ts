@@ -1,31 +1,31 @@
 "use server";
 import { cookies } from "next/headers";
-import { getCart } from "./checkCart";
-import { Cart, CartProduct } from "../CartContext";
+import { Cart, CartProduct, getCart } from "./checkCart";
+import { ProductCardProps } from "../../products/_components/ProductCard";
 
-export async function addProductToCart({
-  name,
-  id,
-  price,
-  image,
-  weight,
-}: {
-  id: string;
-  name: string;
-  weight?: number | null;
-  price: number;
-  image: string;
-}) {
+export async function addProductToCart(
+  product: ProductCardProps & { selectedWeight?: number },
+) {
+  const priceOrNewPrice = product.isOffer
+    ? (product.newPrice as number)
+    : (product.price as number);
+  const cartProductPrice =
+    product.productType === "weight" && product.selectedWeight
+      ? priceOrNewPrice * product.selectedWeight
+      : priceOrNewPrice;
+  const cartProductName = product.name;
+  const cartProductWeight = product.selectedWeight || null;
+
   const cart = await getCart();
 
   const newProduct: CartProduct = {
-    id,
-    name,
-    price,
-    image,
-    weight,
+    id: product.id as string,
+    name: cartProductName as string,
+    price: cartProductPrice,
+    image: product.image?.path as string,
+    weight: cartProductWeight,
     counter: 1,
-    total: price,
+    total: cartProductPrice,
   };
 
   if (cart == null) {
@@ -91,7 +91,7 @@ export async function takeFromProductCounter(id: string) {
   if (!currentCartProduct) return null;
 
   if (currentCartProduct?.counter - 1 === 0) {
-    deleteCartProduct(cart, id);
+    deleteCartProduct(id);
     return null;
   }
 
@@ -110,7 +110,7 @@ export async function takeFromProductCounter(id: string) {
   };
 
   if (updatedProduct?.counter === 0) {
-    deleteCartProduct(cart, id);
+    deleteCartProduct(id);
     return null;
   }
 
@@ -122,14 +122,17 @@ function deleteCart() {
   cookies().delete("cart");
 }
 
-function deleteCartProduct(cart: Cart, id: string) {
+export async function deleteCartProduct(id: string) {
+  const cart = await getCart();
+  if (!cart) return;
+
   const currentCartProduct = cart.products.find((product) => product.id === id);
 
   if (!currentCartProduct) return null;
 
   const updatedCart: Cart = {
     ...cart,
-    total: cart.total - currentCartProduct.price,
+    total: cart.total - currentCartProduct.total,
     products: cart.products.filter((product) => product.id !== id && product),
   };
 

@@ -3,7 +3,7 @@ import MainNavbar from "./_components/MainNavbar";
 import { checkUser } from "./auth/_actions/isAuthenticated";
 import BottomNavbar from "./(mobile)/_components/BottomNavbar";
 import LoadingProvider from "@/context/LoadingContext";
-import CartProvider from "@/context/cart/CartContext";
+import { getCart } from "./cart/_actions/checkCart";
 
 export default async function SiteFacingLayout({
   children,
@@ -17,15 +17,15 @@ export default async function SiteFacingLayout({
     role: string;
     profile: { id: string };
   };
+  const cart = await getCart();
+
   return (
     <main dir="rtl">
-      <CartProvider>
-        <MainNavbar user={user} />
-        <LoadingProvider>{children}</LoadingProvider>
-        <legend className="sm:hidden">
-          <BottomNavbar />
-        </legend>
-      </CartProvider>
+      <MainNavbar user={user} cart={cart} />
+      <LoadingProvider>{children}</LoadingProvider>
+      <legend className="sm:hidden">
+        <BottomNavbar />
+      </legend>
     </main>
   );
 }

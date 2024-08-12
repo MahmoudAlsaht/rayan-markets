@@ -1,21 +1,18 @@
-// import CartContainer from "./_components/CartContainer";
-// import { redirect } from "next/navigation";
-// import { cookies } from "next/headers";
-// import { Cart } from "@/context/cart/CartContext";
+import BackButtonNav from "@/components/BackButtonNav";
+import PageHeader from "@/components/PageHeader";
+import { getCart } from "./_actions/checkCart";
+import CartContainer from "./_components/CartContainer";
 
 export default async function CartPage() {
-  // const checkCookies = cookies().get("cart");
-
-  // if (checkCookies == null) redirect("/");
-
-  // const cart: Cart = JSON.parse(checkCookies.value);
-
-  // if (!cart) redirect("/");
-
+  const cart = await getCart();
   return (
-    <div className="mt-64 flex flex-col items-center text-3xl">السلة فارغة</div>
-    // <div className="">
-    //   <CartContainer cart={cart} />
-    // </div>
+    <main className="sm:mt-10">
+      <div className="sm:hidden">
+        <BackButtonNav bg={false} />
+      </div>
+      <PageHeader title="السلة" mt="10" />
+      <CartContainer cart={cart} />
+      <div className="h-20" />
+    </main>
   );
 }
