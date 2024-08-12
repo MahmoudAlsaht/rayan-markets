@@ -62,7 +62,7 @@ export default function RootLayout({
     <html lang="ar" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-slate-50 text-rayanPrimary-dark antialiased dark:bg-slate-200 dark:text-rayanPrimary-dark",
+          "min-h-screen bg-slate-200 text-rayanPrimary-dark antialiased",
           Alexandria.className,
         )}
         dir="rtl"
