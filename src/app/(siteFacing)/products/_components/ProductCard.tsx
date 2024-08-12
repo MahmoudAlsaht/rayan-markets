@@ -3,7 +3,7 @@ import { formatCurrency } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
@@ -57,9 +57,11 @@ export default function ProductCard({
     isOffer,
   } = product;
 
+  const pathname = usePathname();
   const { startLoading } = useStartLoading();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
   const [isProductInCart, setIsProductInCart] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(pathname === "/");
 
   const showPage = (id: string) => {
     if (!isProductDetailsPage) {
@@ -93,10 +95,13 @@ export default function ProductCard({
       setIsProductInCart(product !== null);
     };
     checkProduct();
-  }, [getProduct, id]);
+
+    setIsHomePage(pathname === "/");
+  }, [getProduct, id, pathname]);
 
   return (
     <div
+      dir="rtl"
       className={`bg-inherit ${
         isProductDetailsPage
           ? "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"
@@ -120,7 +125,7 @@ export default function ProductCard({
           onClick={() => showPage(product.id as string)}
         />
         <div
-          className={`absolute duration-500 ${isProductDetailsPage ? `${`-bottom-6 ${isProductInCart ? "right-0 w-full pr-6 sm:pl-0 md:right-1/4 md:w-1/2" : "right-1/4 w-1/2"} shadow-sm`} rounded-2xl bg-white px-2 py-2` : `-bottom-4 rounded-2xl bg-white px-2 py-2 shadow-md shadow-slate-200 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${isProductInCart && "w-11/12 pl-5 sm:w-full"} left-2 sm:left-0`} `}
+          className={`absolute -bottom-6 rounded-2xl bg-white py-2 shadow-sm duration-500 ${isProductDetailsPage ? (isProductInCart ? "right-0 w-full" : "right-1/4 w-1/2") : "-bottom-4 left-2 w-full rounded-2xl bg-white py-2 shadow-md shadow-slate-200 sm:left-0 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl" && isProductInCart && "w-full"}`}
         >
           {!isProductInCart && (
             <ProductMenuPrice
@@ -129,7 +134,7 @@ export default function ProductCard({
             />
           )}
           {isProductInCart && (
-            <div className="flex w-11/12 items-center justify-between sm:px-6 sm:pl-4">
+            <div className="flex items-center justify-around">
               <Button
                 size="sm"
                 variant="secondary"
@@ -210,7 +215,10 @@ function ProductMenuPrice({
 
   if (!weights)
     return (
-      <ShoppingBag className={`size-6 w-full px-10`} onClick={addProduct} />
+      <ShoppingBag
+        className={`size-6 w-full cursor-pointer px-10`}
+        onClick={addProduct}
+      />
     );
 
   return (
