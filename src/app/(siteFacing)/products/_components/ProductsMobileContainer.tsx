@@ -27,8 +27,8 @@ export default function ProductsMobileContainer({
 }) {
   const pathname = usePathname();
 
-  const [offersExists, setOffersExists] = useState(false);
-  const [forHomeExists, setForHomeExists] = useState(false);
+  const [offersExists, setOffersExists] = useState(true);
+  const [forHomeExists, setForHomeExists] = useState(true);
   const [queryValue, setQueryValue] = useState<string>(
     query === "all" ? "" : query,
   );

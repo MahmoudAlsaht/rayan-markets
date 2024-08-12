@@ -15,7 +15,7 @@ const getProducts = async (
   productType: string,
   orderBy?: string,
   search?: string,
-) => await searchProducts(search, orderBy, productType);
+) => await searchProducts(search, orderBy, productType, 10);
 
 export default async function SectionsHomeContainer({
   type,

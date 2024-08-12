@@ -204,6 +204,7 @@ export async function searchProducts(
   inputQuery = "all",
   orderBy = "",
   productType = "any",
+  productCount: number | undefined = undefined,
 ) {
   const query = escapeRegExp(inputQuery);
 
@@ -282,6 +283,7 @@ export async function searchProducts(
           },
         },
       },
+      take: productCount,
     });
   }
 
@@ -326,6 +328,7 @@ export async function searchProducts(
             },
           },
         },
+        take: productCount,
       },
     },
   });
@@ -375,6 +378,7 @@ export async function searchProducts(
             },
           },
         },
+        take: productCount,
       },
     },
   });
@@ -418,6 +422,7 @@ export async function searchProducts(
             },
           },
         },
+        take: productCount,
       },
     },
   });
@@ -470,6 +475,7 @@ export async function searchProducts(
         },
       },
     },
+    take: productCount,
   });
 
   if (products.length === 0) {
@@ -502,6 +508,7 @@ export async function searchProducts(
           },
         },
       },
+      take: productCount,
     });
   }
 

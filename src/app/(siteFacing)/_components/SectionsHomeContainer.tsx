@@ -24,6 +24,7 @@ const getSections = cache(
           },
         },
       },
+      take: 10,
     });
   },
   ["/", "getSections"],
