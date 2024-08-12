@@ -84,7 +84,7 @@ export default function ProductsMobileContainer({
             )}
           </TabsList>
           <div className="mb-2 flex items-center gap-2">
-            <legend className="relative flex basis-10/12">
+            <legend className="relative flex basis-10/12 items-center">
               <input
                 type="text"
                 id="search-navbar"
@@ -96,11 +96,9 @@ export default function ProductsMobileContainer({
               />
               <Link
                 href={`${pathname}?search=${queryValue}`}
-                className="absolute"
+                className="absolute mr-2"
               >
-                <Button size="sm" variant="outline">
-                  <Search />
-                </Button>
+                <Search />
               </Link>
             </legend>
 
