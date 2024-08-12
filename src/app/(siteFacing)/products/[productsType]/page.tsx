@@ -36,7 +36,9 @@ export default async function Products({
         }
       />
 
-      <ProductsContainer products={products as ProductCardProps[]} />
+      <legend className="hidden sm:block">
+        <ProductsContainer products={products as ProductCardProps[]} />
+      </legend>
 
       <div className="h-20"></div>
     </div>
