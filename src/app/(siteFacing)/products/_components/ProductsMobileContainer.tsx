@@ -4,7 +4,7 @@ import { Tabs, TabsList } from "@/components/ui/tabs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { checkProductTypeExists } from "../../_actions/checkProductsType";
-import { Search } from "lucide-react";
+import { ArrowDownUpIcon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCard, { ProductCardProps } from "./ProductCard";
 import { sortBasedOnPrice } from "../../_actions/product";
@@ -58,8 +58,8 @@ export default function ProductsMobileContainer({
   return (
     <>
       <div className="sm:hidden">
-        <Tabs className="text-center" dir="rtl">
-          <TabsList className="w-full">
+        <Tabs className="bg-inherit p-2 text-center" dir="rtl">
+          <TabsList className="w-full bg-inherit">
             <TabLink
               className={`${pathname === "/products/any" && "bg-background text-rayanPrimary-dark shadow-sm"}`}
               href={`/products/any?search=${query}`}
@@ -83,37 +83,43 @@ export default function ProductsMobileContainer({
               </TabLink>
             )}
           </TabsList>
-        </Tabs>
+          <div className="mb-2 flex items-center gap-2">
+            <legend className="relative flex basis-10/12">
+              <input
+                type="text"
+                id="search-navbar"
+                name="query"
+                className="order-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-14 text-sm text-gray-900 focus:outline-none"
+                placeholder="ابحث عن منتج، فئة، علامة تجارية..."
+                value={queryValue}
+                onChange={(e) => setQueryValue(e.target.value)}
+              />
+              <Link
+                href={`${pathname}?search=${queryValue}`}
+                className="absolute"
+              >
+                <Button size="sm" variant="outline">
+                  <Search />
+                </Button>
+              </Link>
+            </legend>
 
-        <div className="mb-2 flex items-center gap-2">
-          <input
-            type="text"
-            id="search-navbar"
-            name="query"
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-10 text-sm text-gray-900 focus:outline-none"
-            placeholder="ابحث عن منتج، فئة، علامة تجارية..."
-            value={queryValue}
-            onChange={(e) => setQueryValue(e.target.value)}
-          />
-          <Link href={`${pathname}?search=${queryValue}`} className="ml-2">
-            <Button size="icon" variant="outline">
-              <Search />
-            </Button>
-          </Link>
-          <DropdownMenu dir="rtl">
-            <DropdownMenuTrigger className="m-6 sm:hidden">
-              <Filter />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setPriceType("highest")}>
-                الأعلى سعرا
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setPriceType("lowest")}>
-                الأقل سعرا
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            <DropdownMenu dir="rtl">
+              <DropdownMenuTrigger className="hover flex rounded-lg border border-rayanPrimary-dark px-2 py-1">
+                <Filter />
+                <ArrowDownUpIcon className="size-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => setPriceType("highest")}>
+                  الأعلى سعرا
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPriceType("lowest")}>
+                  الأقل سعرا
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </Tabs>
       </div>
       {banner}
       <section className="mb-5 grid w-full grid-cols-2 gap-x-0 gap-y-5 bg-inherit py-6 sm:hidden">
