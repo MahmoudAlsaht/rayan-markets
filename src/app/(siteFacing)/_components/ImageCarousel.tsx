@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type ImageCarouselProps = {
@@ -13,6 +14,7 @@ type ImageCarouselProps = {
 };
 
 export default function ImageCarousel({ images }: ImageCarouselProps) {
+  const router = useRouter();
   const [targetedIndex, setTargetedIndex] = useState(0);
   const [showNavigation, setShowNavigation] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -70,14 +72,15 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
   }, [images.length]);
 
   return (
-    <div
-      className="container mb-6 mt-4 sm:mt-8"
-      onMouseOver={() => images.length >= 2 && setShowNavigation(true)}
-      onMouseLeave={() => images.length >= 2 && setShowNavigation(false)}
-    >
-      <div className="relative">
+    <div className="container mb-6 mt-4 sm:mt-8">
+      <div
+        className="relative"
+        onMouseOver={() => setShowNavigation(true)}
+        onMouseLeave={() => setShowNavigation(false)}
+      >
         {images.map((image, index) => (
           <div
+            onClick={() => router.push(image.link || "#")}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -96,13 +99,13 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
           </div>
         ))}
 
-        {showNavigation && (
-          <legend className="sm:black hidden">
+        {images.length > 1 && showNavigation && (
+          <legend className="hidden sm:block">
             <CarouselNavButton next onClick={nextImage} />
             <CarouselNavButton prev onClick={prevImage} />
           </legend>
         )}
-        {images.length >= 2 && (
+        {images.length > 1 && (
           <legend className="sm:hidden">
             <CarouselNavButton next onClick={nextImage} />
             <CarouselNavButton prev onClick={prevImage} />

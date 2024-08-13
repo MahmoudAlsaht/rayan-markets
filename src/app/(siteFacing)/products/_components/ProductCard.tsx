@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useStartLoading } from "@/context/LoadingContext";
 import { updateProductViews } from "../../_actions/product";
 import { CartProduct, findProduct } from "../../cart/_actions/checkCart";
 import {
@@ -61,14 +60,13 @@ export default function ProductCard({
   } = product;
 
   const pathname = usePathname();
-  const { startLoading } = useStartLoading();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
   const [isProductInCart, setIsProductInCart] = useState(false);
 
-  const showPage = (id: string) => {
+  const showPage = async (id: string) => {
     if (!isProductDetailsPage) {
       router.push(`/products/any/${id}`);
-      startLoading(updateProductViews(id));
+      updateProductViews(id);
       handleCloseSearch && handleCloseSearch();
     }
   };

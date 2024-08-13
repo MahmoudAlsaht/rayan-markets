@@ -6,6 +6,8 @@ import { addHours } from "date-fns";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
 import ProductCard, { ProductCardProps } from "../../_components/ProductCard";
 import ProductsContainer from "../../_components/ProductsContainer";
+import { Suspense } from "react";
+import ProductCardLoading from "../../ProductsLoading";
 
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({
@@ -96,6 +98,24 @@ export default async function ProductsTypePage({
 }: {
   params: { id: string };
 }) {
+  return (
+    <>
+      <div className="sm:hidden">
+        <BackButtonNav />
+      </div>
+      <div className="hidden sm:block">
+        <BackButtonNav bg={false} />
+      </div>
+
+      <Suspense fallback={<ProductCardLoading />}>
+        <ProductDetailsPageSuspense id={id} />
+      </Suspense>
+      <div className="h-20"></div>
+    </>
+  );
+}
+
+async function ProductDetailsPageSuspense({ id }: { id: string }) {
   const user = await checkUser();
   const product = await db.product.findUnique({
     where: { id },
@@ -129,12 +149,6 @@ export default async function ProductsTypePage({
 
   return (
     <>
-      <div className="sm:hidden">
-        <BackButtonNav />
-      </div>
-      <div className="hidden sm:block">
-        <BackButtonNav bg={false} />
-      </div>
       {user && (user.role === "admin" || user.role === "editor") && (
         <Button className="w-full">
           <Link href={`/admin/settings/products/${product?.id as string}`}>
@@ -163,8 +177,6 @@ export default async function ProductsTypePage({
           ))}
         </div>
       )}
-
-      <div className="h-20"></div>
     </>
   );
 }
