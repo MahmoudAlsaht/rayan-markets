@@ -8,8 +8,10 @@ import {
 } from "@/components/ui/carousel";
 import ProductCard, {
   ProductCardProps,
+  ProductCardSkeleton,
 } from "../products/_components/ProductCard";
 import { searchProducts } from "../_actions/product";
+import { Button } from "@/components/ui/button";
 
 const getProducts = async (
   productType: string,
@@ -29,7 +31,7 @@ export default async function SectionsHomeContainer({
 
   return (
     products.length && (
-      <section className="my-6">
+      <section className="my-6 sm:container">
         <hr className="my-2 border-slate-300" />
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
           <Link
@@ -72,5 +74,34 @@ export default async function SectionsHomeContainer({
         </Carousel>
       </section>
     )
+  );
+}
+
+export function HomeProductSkeleton() {
+  return (
+    <section className="flex h-96 w-full flex-col p-2">
+      <div className="flex justify-between px-8">
+        <Button
+          disabled
+          className="h-4 w-1/6 animate-pulse rounded-xl bg-gray-400"
+        ></Button>
+        <Button
+          disabled
+          className="h-4 w-1/6 animate-pulse rounded-xl bg-gray-400"
+        ></Button>
+      </div>
+      <div className="mt-4 flex h-full w-full basis-3/4 gap-2 p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6">
+        <div className="h-72 w-1/12 animate-pulse rounded-lg bg-gray-400 sm:hidden" />
+
+        <div className="mx-auto h-72 w-9/12 animate-pulse rounded-2xl bg-gray-400 sm:h-80 sm:w-full" />
+
+        <div className="h-72 w-1/12 animate-pulse rounded-lg bg-gray-400 sm:h-80 sm:w-full sm:rounded-2xl" />
+
+        <div className="hidden h-80 w-full animate-pulse rounded-2xl bg-gray-400 md:block" />
+        <div className="hidden h-80 w-full animate-pulse rounded-2xl bg-gray-400 lg:block" />
+        <div className="hidden h-80 w-full animate-pulse rounded-2xl bg-gray-400 xl:block" />
+        <div className="hidden h-80 w-full animate-pulse rounded-2xl bg-gray-400 lg:block" />
+      </div>
+    </section>
   );
 }

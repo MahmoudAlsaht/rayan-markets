@@ -1,12 +1,11 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, Suspense, useEffect, useState } from "react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { checkProductTypeExists } from "../../_actions/checkProductsType";
 import { ArrowDownUpIcon, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ProductCard, { ProductCardProps } from "./ProductCard";
+import { ProductCardProps } from "./ProductCard";
 import { sortBasedOnPrice } from "../../_actions/product";
 import {
   DropdownMenu,
@@ -15,6 +14,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
+import ProductsContainer, {
+  ProductsContainerSkeleton,
+} from "./ProductsContainer";
 
 export default function ProductsMobileContainer({
   query = "all",
@@ -119,11 +121,13 @@ export default function ProductsMobileContainer({
           </div>
         </Tabs>
       </div>
-      {banner}
-      <section className="mb-5 grid w-full grid-cols-2 gap-x-0 gap-y-5 bg-inherit py-6 sm:hidden">
-        {sortedProducts?.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+
+      <Suspense>{banner}</Suspense>
+
+      <section className="sm:hidden">
+        <Suspense fallback={<ProductsContainerSkeleton />}>
+          <ProductsContainer products={sortedProducts as ProductCardProps[]} />
+        </Suspense>
       </section>
     </>
   );

@@ -64,6 +64,7 @@ export async function createNewSection(
 
   revalidatePath("/");
   revalidatePath(`/sections/${newSection.type}`);
+  revalidatePath(`/sections/${newSection.type}/${newSection.id}`);
 
   redirect("/admin/settings/sections");
 }

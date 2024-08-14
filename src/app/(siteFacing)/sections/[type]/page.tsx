@@ -1,9 +1,12 @@
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
-import SectionsContainer from "../_components/SectionsContainer";
 import { notFound } from "next/navigation";
 import { SectionCardProps } from "../_components/SectionCard";
 import BackButtonNav from "@/components/BackButtonNav";
+import SectionsContainer, {
+  SectionsContainerSkeleton,
+} from "../_components/SectionsContainer";
+import { Suspense } from "react";
 
 const getSections = cache(
   (type: string) => {
@@ -24,14 +27,12 @@ const getSections = cache(
   ["/sections", "getSections"],
 );
 
-export default async function SectionsPage({
+export default function SectionsPage({
   params: { type },
 }: {
   params: { type: string };
 }) {
   if (type !== "categories" && type !== "brands") return notFound();
-
-  const sections = await getSections(type);
 
   return (
     <div dir="rtl" className="h-screen pb-16 sm:px-6">
@@ -41,8 +42,15 @@ export default async function SectionsPage({
       <h1 className="mb-4 mt-10 text-center text-4xl">
         {type === "categories" ? "الفئات" : "العلامات التجارية"}
       </h1>
-      <SectionsContainer sections={sections as SectionCardProps[]} />
+      <Suspense fallback={<SectionsContainerSkeleton />}>
+        <SectionsPageSuspense type={type} />
+      </Suspense>
       <div className="h-20"></div>
     </div>
   );
+}
+
+async function SectionsPageSuspense({ type }: { type: string }) {
+  const sections = await getSections(type);
+  return <SectionsContainer sections={sections as SectionCardProps[]} />;
 }

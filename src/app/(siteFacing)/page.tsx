@@ -1,19 +1,33 @@
+import { Suspense } from "react";
 import Banner from "./_components/Banner";
-import ProductsHomeContainer from "./_components/ProductsHomeContainer";
+import ProductsHomeContainer, {
+  HomeProductSkeleton,
+} from "./_components/ProductsHomeContainer";
 import SectionsHomeContainer from "./_components/SectionsHomeContainer";
+import { SectionsContainerSkeleton } from "./sections/_components/SectionsContainer";
 
-export default async function Home() {
+export default function Home() {
   return (
     <main>
-      <Banner type="main" />
-      <SectionsHomeContainer type="categories" />
+      <Suspense>
+        <Banner type="main" />
+      </Suspense>
 
-      <ProductsHomeContainer type="purchases" />
-      {/* <ProductsHomeContainer type="views" /> */}
-      <ProductsHomeContainer type="newest offers" />
+      <Suspense fallback={<SectionsContainerSkeleton count={4} />}>
+        <SectionsHomeContainer type="categories" />
+      </Suspense>
 
-      <SectionsHomeContainer type="brands" />
+      <Suspense fallback={<HomeProductSkeleton />}>
+        <ProductsHomeContainer type="purchases" />
+      </Suspense>
 
+      <Suspense fallback={<HomeProductSkeleton />}>
+        <ProductsHomeContainer type="newest offers" />
+      </Suspense>
+
+      <Suspense fallback={<SectionsContainerSkeleton count={4} />}>
+        <SectionsHomeContainer type="brands" />
+      </Suspense>
       <div className="h-20"></div>
     </main>
   );

@@ -41,9 +41,9 @@ export default async function SectionsHomeContainer({
     sections.length && (
       <section className="my-4 sm:container" dir="ltr">
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
-          <h2 className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
+          <small className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
             {type === "brands" ? "العلامات التجارية" : "الفئات"}
-          </h2>
+          </small>
           <Link
             className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
             href={`/sections/${type}`}
@@ -52,7 +52,6 @@ export default async function SectionsHomeContainer({
             <ArrowRightCircle />
           </Link>
         </div>
-
         <Carousel
           opts={{
             align: "center",

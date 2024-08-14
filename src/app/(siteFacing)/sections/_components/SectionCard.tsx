@@ -33,3 +33,9 @@ export default function SectionCard({
     </div>
   );
 }
+
+export function SectionCardSkeleton() {
+  return (
+    <div className="h-24 animate-pulse rounded-3xl bg-gray-400 object-cover sm:h-44"></div>
+  );
+}

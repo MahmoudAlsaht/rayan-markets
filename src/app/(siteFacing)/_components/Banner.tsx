@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { checkUser } from "../auth/_actions/isAuthenticated";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import ImageCarousel from "./ImageCarousel";
 
 const getBanner = cache(
@@ -41,11 +40,7 @@ export default function Banner({
   }[];
 }) {
   return (
-    <Suspense
-      fallback={
-        <Skeleton className="h-44 w-full max-w-[1481.6px] rounded-xl sm:h-56 md:h-72" />
-      }
-    >
+    <Suspense fallback={<BannerSkeleton />}>
       <BannerSuspense
         type={type}
         sectionBanners={sectionBanners}
@@ -78,7 +73,7 @@ async function BannerSuspense({
 
   return (
     images && (
-      <div className="">
+      <div>
         {user && (user.role === "admin" || user.role === "editor") && (
           <Link
             href={`/admin/settings/${
@@ -102,5 +97,15 @@ async function BannerSuspense({
         />
       </div>
     )
+  );
+}
+
+function BannerSkeleton() {
+  return (
+    <div className="container">
+      <div className="mb-6 mt-4 animate-pulse rounded-3xl bg-gray-400 sm:mt-8">
+        <div className="h-32 w-full cursor-pointer object-cover opacity-100 transition-opacity duration-700 ease-in sm:h-52 md:h-80" />
+      </div>
+    </div>
   );
 }

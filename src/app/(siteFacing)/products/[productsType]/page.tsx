@@ -1,11 +1,12 @@
-import ProductsContainer from "../_components/ProductsContainer";
+import ProductsContainer, {
+  ProductsContainerSkeleton,
+} from "../_components/ProductsContainer";
 import { ProductCardProps } from "../_components/ProductCard";
 import { searchProducts } from "../../_actions/product";
 import BackButtonNav from "@/components/BackButtonNav";
 import Banner from "../../_components/Banner";
 import ProductsMobileContainer from "../_components/ProductsMobileContainer";
 import { Suspense } from "react";
-import ProductsLoading from "../ProductsLoading";
 
 const getProducts = async (
   productsType: string,
@@ -26,7 +27,13 @@ export default async function Products({
         <BackButtonNav goHome />
       </div>
 
-      <Suspense fallback={<ProductsLoading />}>
+      <ProductsMobileSuspense
+        productsType={productsType}
+        orderBy={orderBy}
+        search={search}
+      />
+
+      <Suspense fallback={<ProductsContainerSkeleton />}>
         <ProductsSuspense
           productsType={productsType}
           orderBy={orderBy}
@@ -39,7 +46,7 @@ export default async function Products({
   );
 }
 
-async function ProductsSuspense({
+async function ProductsMobileSuspense({
   productsType = "any",
   orderBy,
   search,
@@ -60,7 +67,22 @@ async function ProductsSuspense({
           )
         }
       />
+    </>
+  );
+}
 
+async function ProductsSuspense({
+  productsType = "any",
+  orderBy,
+  search,
+}: {
+  productsType: string;
+  orderBy?: string;
+  search?: string;
+}) {
+  const products = await getProducts(productsType, orderBy, search);
+  return (
+    <>
       <legend className="hidden sm:block">
         <ProductsContainer products={products as ProductCardProps[]} />
       </legend>

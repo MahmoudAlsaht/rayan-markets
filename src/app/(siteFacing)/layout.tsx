@@ -4,6 +4,9 @@ import { checkUser } from "./auth/_actions/isAuthenticated";
 import BottomNavbar from "./(mobile)/_components/BottomNavbar";
 import { getCart } from "./cart/_actions/checkCart";
 
+export const dynamic =
+  process.env.NODE_ENV === "development" && "force-dynamic";
+
 export default async function SiteFacingLayout({
   children,
 }: {

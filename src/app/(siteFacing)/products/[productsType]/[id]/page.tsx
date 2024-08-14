@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { addHours } from "date-fns";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
-import ProductCard, { ProductCardProps } from "../../_components/ProductCard";
+import ProductCard, {
+  ProductCardProps,
+  ProductCardSkeleton,
+} from "../../_components/ProductCard";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { Suspense } from "react";
-import ProductCardLoading from "../../ProductsLoading";
 
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({
@@ -93,7 +95,7 @@ const getLabels = async (labels: string[], id: string) => {
   ];
 };
 
-export default async function ProductsTypePage({
+export default function ProductsTypePage({
   params: { id },
 }: {
   params: { id: string };
@@ -107,7 +109,8 @@ export default async function ProductsTypePage({
         <BackButtonNav bg={false} />
       </div>
 
-      <Suspense fallback={<ProductCardLoading />}>
+      {/* <ProductCardSkeleton isProductDetailsPage /> */}
+      <Suspense fallback={<ProductCardSkeleton isProductDetailsPage />}>
         <ProductDetailsPageSuspense id={id} />
       </Suspense>
       <div className="h-20"></div>
