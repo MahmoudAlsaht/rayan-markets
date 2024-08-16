@@ -97,11 +97,13 @@ export async function handleSearchInput(
         {
           name: {
             contains: query as string,
+            mode: "insensitive",
           },
         },
         {
           body: {
             contains: query as string,
+            mode: "insensitive",
           },
         },
       ],
@@ -293,6 +295,7 @@ export async function searchProducts(
         {
           name: {
             contains: query as string,
+            mode: "insensitive",
           },
           type: {
             equals: "brands",
@@ -390,6 +393,7 @@ export async function searchProducts(
     where: {
       value: {
         contains: query,
+        mode: "insensitive",
       },
     },
     select: {
@@ -442,11 +446,13 @@ export async function searchProducts(
             {
               name: {
                 contains: query as string,
+                mode: "insensitive",
               },
             },
             {
               body: {
                 contains: query as string,
+                mode: "insensitive",
               },
             },
           ],
