@@ -4,6 +4,7 @@ import InstallApp from "../components/InstallApp";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
+import LoadingProvider from "@/context/LoadingContext";
 
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",
@@ -68,8 +69,7 @@ export default function RootLayout({
         dir="rtl"
       >
         <ThemeProvider attribute="class">
-          <main className="z-0"></main>
-          {children}
+          <LoadingProvider>{children}</LoadingProvider>
 
           <InstallApp />
         </ThemeProvider>

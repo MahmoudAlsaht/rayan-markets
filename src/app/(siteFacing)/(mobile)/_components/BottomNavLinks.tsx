@@ -1,11 +1,12 @@
 "use client";
 import React, { ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { SlOptions } from "react-icons/sl";
 import { ImHome } from "react-icons/im";
 import { Search, ShoppingBag } from "lucide-react";
 import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export default function BottomNavLinks({
   user,
@@ -61,11 +62,9 @@ function NavLink({
 }) {
   const pathname = usePathname();
 
-  const router = useRouter();
-
   return (
-    <div
-      onClick={() => router.push(href)}
+    <LoadingLink
+      href={href}
       className={`group inline-flex cursor-pointer flex-col items-center justify-center px-5 ${
         (href === pathname ||
           ((href as string).match(/\/products*/) &&
@@ -87,6 +86,6 @@ function NavLink({
           pathname.match(/\/products*/))) && (
         <span className="text-xs">{title}</span>
       )}
-    </div>
+    </LoadingLink>
   );
 }

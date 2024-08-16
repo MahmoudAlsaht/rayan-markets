@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LogOut, Menu, X } from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { ComponentProps, useState } from "react";
+import { usePathname } from "next/navigation";
+import { ReactNode, useState } from "react";
 import logout from "@/app/(siteFacing)/auth/_actions/logout";
 import {
   adminPermissions,
@@ -12,6 +11,7 @@ import {
   staffPermissions,
   UserPermission,
 } from "./UserPermissions";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export default function AdminSideBar({
   admin,
@@ -22,8 +22,6 @@ export default function AdminSideBar({
   const [show, setShow] = useState(false);
 
   const toggleShow = () => setShow(!show);
-
-  const router = useRouter();
 
   return (
     <>
@@ -99,13 +97,7 @@ export default function AdminSideBar({
           </ul>
 
           <ul className="mt-5 space-y-2 border-t border-gray-700 pt-5">
-            <SideLink
-              href="#"
-              onClick={async () => {
-                await logout();
-                router.refresh();
-              }}
-            >
+            <SideLink href={logout}>
               <LogOut className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
 
               <span className="ml-3 mr-2">تسجيل الخروج</span>
@@ -117,18 +109,26 @@ export default function AdminSideBar({
   );
 }
 
-function SideLink(props: Omit<ComponentProps<typeof Link>, "className">) {
+function SideLink({
+  href,
+  children,
+}: {
+  href: string | (() => void);
+  children: ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
     <li>
-      <Link
-        {...props}
+      <LoadingLink
+        href={href}
         className={cn(
           "group flex items-center rounded-lg p-2 text-base font-normal transition duration-75 hover:bg-gray-700 hover:text-white",
-          pathname === props.href && "bg-gray-700 text-white",
+          pathname === href && "bg-gray-700 text-white",
         )}
-      />
+      >
+        {children}
+      </LoadingLink>
     </li>
   );
 }

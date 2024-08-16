@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/table";
 import { useState, useTransition } from "react";
 import { Banner } from "@prisma/client";
-import Link from "next/link";
 import Image from "next/image";
 import {
   Dialog,
@@ -47,6 +46,7 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { deleteBanner } from "../_actions/deleteBanner";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -113,11 +113,11 @@ export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <Link href={`/admin/settings/banners/${banner.id}`}>
+                <LoadingLink href={`/admin/settings/banners/${banner.id}`}>
                   <DropdownMenuItem className="text-rayanWarning-dark">
                     تعديل
                   </DropdownMenuItem>
-                </Link>
+                </LoadingLink>
                 <DropdownMenuSeparator />
 
                 <DialogTrigger asChild>
@@ -188,11 +188,11 @@ export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
           className="ml-2 max-w-sm"
         />
 
-        <Link href="/admin/settings/banners/new">
+        <LoadingLink href="/admin/settings/banners/new">
           <Button variant="outline">
             <Plus className="ml-2 h-4 w-4" />
           </Button>
-        </Link>
+        </LoadingLink>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

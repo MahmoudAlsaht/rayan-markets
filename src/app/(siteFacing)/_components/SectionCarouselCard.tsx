@@ -1,9 +1,9 @@
 "use client";
 import { SectionCardProps } from "../sections/_components/SectionCard";
-import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export default function SectionCarouselCard({
   section,
@@ -21,7 +21,7 @@ export default function SectionCarouselCard({
       onMouseOver={handleShowName}
       onMouseLeave={handleHideName}
     >
-      <Link href={`/sections/${section.type}/${section.id}`}>
+      <LoadingLink href={`/sections/${section.type}/${section.id}`}>
         <CardContent className="relative flex aspect-square w-full items-center justify-center p-6">
           <Image
             fill
@@ -35,7 +35,7 @@ export default function SectionCarouselCard({
             </span>
           )}
         </CardContent>
-      </Link>
+      </LoadingLink>
     </Card>
   );
 }

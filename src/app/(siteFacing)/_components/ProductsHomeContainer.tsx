@@ -1,6 +1,5 @@
 import React from "react";
 import { ArrowRightCircle } from "lucide-react";
-import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
@@ -8,10 +7,10 @@ import {
 } from "@/components/ui/carousel";
 import ProductCard, {
   ProductCardProps,
-  ProductCardSkeleton,
 } from "../products/_components/ProductCard";
 import { searchProducts } from "../_actions/product";
 import { Button } from "@/components/ui/button";
+import { LoadingLink } from "@/context/LoadingContext";
 
 const getProducts = async (
   productType: string,
@@ -34,13 +33,13 @@ export default async function SectionsHomeContainer({
       <section className="my-6 sm:container">
         <hr className="my-2 border-slate-300" />
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
-          <Link
+          <LoadingLink
             className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
             href={`/products${type === "views" || type === "purchases" ? `/any?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
           >
             <ArrowRightCircle />
             <span>المزيد</span>
-          </Link>
+          </LoadingLink>
           <h2 className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
             {type === "views"
               ? "الأكثر مشاهدة"
@@ -80,14 +79,14 @@ export default async function SectionsHomeContainer({
 export function HomeProductSkeleton() {
   return (
     <section className="flex h-96 w-full flex-col p-2">
-      <div className="flex justify-between px-8">
+      <div className="flex justify-between px-2">
         <Button
           disabled
-          className="h-4 w-1/6 animate-pulse rounded-xl bg-gray-400"
+          className="h-5 w-1/4 animate-pulse rounded-lg bg-gray-400"
         ></Button>
         <Button
           disabled
-          className="h-4 w-1/6 animate-pulse rounded-xl bg-gray-400"
+          className="h-5 w-1/4 animate-pulse rounded-lg bg-gray-400"
         ></Button>
       </div>
       <div className="mt-4 flex h-full w-full basis-3/4 gap-2 p-2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6">

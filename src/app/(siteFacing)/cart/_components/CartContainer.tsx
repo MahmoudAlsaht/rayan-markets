@@ -1,8 +1,8 @@
 import CartCard, { CartCardSkeleton } from "./CartCard";
 import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
 import { Button } from "@/components/ui/button";
+import { LoadingLink } from "@/context/LoadingContext";
 import { formatCurrency } from "@/lib/formatters";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const CART_MIN = 5;
@@ -33,7 +33,7 @@ export default function CartContainer({ cart }: { cart: Cart | null }) {
           disabled={cart.total < CART_MIN}
           className="w-full rounded-xl sm:w-1/5"
         >
-          <Link href={"#"}>أكمل للدفع</Link>
+          <LoadingLink href={"#"}>أكمل للدفع</LoadingLink>
         </Button>
       </div>
       <div className="order-10 h-20"></div>

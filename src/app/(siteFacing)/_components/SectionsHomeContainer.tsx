@@ -2,7 +2,6 @@ import React from "react";
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { ArrowRightCircle } from "lucide-react";
-import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import SectionCarouselCard from "./SectionCarouselCard";
 import { SectionCardProps } from "../sections/_components/SectionCard";
+import { LoadingLink } from "@/context/LoadingContext";
 
 const getSections = cache(
   (type: string) => {
@@ -44,13 +44,13 @@ export default async function SectionsHomeContainer({
           <small className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
             {type === "brands" ? "العلامات التجارية" : "الفئات"}
           </small>
-          <Link
+          <LoadingLink
             className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
             href={`/sections/${type}`}
           >
             <span>المزيد</span>
             <ArrowRightCircle />
-          </Link>
+          </LoadingLink>
         </div>
         <Carousel
           opts={{

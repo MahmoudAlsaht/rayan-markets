@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export type SectionCardProps = {
   id: string;
@@ -17,7 +17,7 @@ export default function SectionCard({
 }) {
   return (
     <div className="cursor-pointer rounded-3xl duration-500 sm:w-full sm:hover:scale-105 sm:hover:shadow-xl">
-      <Link href={`/sections/${section.type}/${section.id}`}>
+      <LoadingLink href={`/sections/${section.type}/${section.id}`}>
         <div className="relative h-24 sm:h-44">
           <Image
             fill
@@ -29,7 +29,7 @@ export default function SectionCard({
           />
         </div>
         <h3 className="text-center text-lg sm:text-2xl">{section.name}</h3>
-      </Link>
+      </LoadingLink>
     </div>
   );
 }

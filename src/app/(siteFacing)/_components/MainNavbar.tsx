@@ -15,7 +15,7 @@ import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
 import { checkProductTypeExists } from "../_actions/checkProductsType";
 import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
-import Link from "next/link";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export default function MainNavbar({
   user,
@@ -49,37 +49,34 @@ export default function MainNavbar({
     checkProductsLinks();
   }, []);
 
-  const menuList: { handler: (cb: any) => void; title: string }[] = !user
+  const menuList: { href: string | (() => void); title: string }[] = !user
     ? [
         {
-          handler: () => router.push("/auth/register"),
+          href: "/auth/register",
           title: "التسجيل",
         },
         {
-          handler: () => router.push("/auth/login"),
+          href: "/auth/login",
           title: "تسجيل الدخول",
         },
       ]
     : !isAccountPage
       ? [
           {
-            handler:
+            href:
               user?.role === "customer"
-                ? () =>
-                    router.push(
-                      `/account/${user?.profile?.id || "unRegisteredUser"}`,
-                    )
-                : () => router.push("/admin"),
+                ? `/account/${user?.profile?.id || "unRegisteredUser"}`
+                : "/admin",
             title: user?.role === "customer" ? "الصفحة الشخصية" : "لوحة التحكم",
           },
           {
-            handler: () => logout(),
+            href: logout,
             title: "تسجيل الخروج",
           },
         ]
       : [
           {
-            handler: () => logout(),
+            href: logout,
             title: "تسجيل الخروج",
           },
         ];
@@ -91,7 +88,7 @@ export default function MainNavbar({
         dir="rtl"
       >
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
-          <Link
+          <LoadingLink
             href="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
@@ -100,7 +97,7 @@ export default function MainNavbar({
               className="h-[50px] w-[80px]"
               alt="Al Rayan Logo"
             />
-          </Link>
+          </LoadingLink>
 
           <div id="navbar-default">
             <ul className="mt-4 flex flex-row rounded-lg p-4 font-medium text-rayanSecondary-dark sm:space-x-8 md:p-0 rtl:space-x-reverse">
@@ -126,24 +123,21 @@ export default function MainNavbar({
               </li>
 
               {cart != null && (
-                <>
-                  <div className="relative">
-                    <li
-                      className={
-                        `${pathname === "/cart" && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}` &&
-                        "cursor-pointer"
-                      }
-                      onClick={() => router.push("/cart")}
-                    >
-                      <ShoppingBag
-                        className={`${pathname === "/cart" && "size-6"}`}
-                      />
-                    </li>
-                    <small className="absolute -top-2 end-3 inline-flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white">
-                      {cart.products.length}
-                    </small>
-                  </div>
-                </>
+                <LoadingLink href="/cart" className="relative">
+                  <li
+                    className={
+                      `${pathname === "/cart" && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}` &&
+                      "cursor-pointer"
+                    }
+                  >
+                    <ShoppingBag
+                      className={`${pathname === "/cart" && "size-6"}`}
+                    />
+                  </li>
+                  <small className="absolute -top-2 end-3 inline-flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white">
+                    {cart.products.length}
+                  </small>
+                </LoadingLink>
               )}
 
               <li className="hover:cursor-pointer">
@@ -153,8 +147,8 @@ export default function MainNavbar({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-50">
                     {menuList.map((item, index) => (
-                      <DropdownMenuItem onClick={item.handler} key={index}>
-                        {item.title}
+                      <DropdownMenuItem key={index}>
+                        <LoadingLink href={item.href}>{item.title}</LoadingLink>
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
@@ -172,7 +166,7 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <Link
+    <LoadingLink
       href={href}
       className={cn(
         `group rounded-lg text-base font-normal transition duration-75 ${
@@ -182,6 +176,6 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
       )}
     >
       {children}
-    </Link>
+    </LoadingLink>
   );
 }

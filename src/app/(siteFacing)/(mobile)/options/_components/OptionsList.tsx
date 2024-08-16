@@ -46,8 +46,7 @@ export default function OptionsList({
 
         {!unRegisteredUser && (
           <OptionLink
-            href="#"
-            handleClick={logout}
+            href={logout}
             icon={<LogOut />}
             displayName="تسجيل الخروج"
           />

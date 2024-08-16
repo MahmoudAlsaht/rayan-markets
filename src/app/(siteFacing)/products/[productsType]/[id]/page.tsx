@@ -1,6 +1,5 @@
 import db from "@/db/db";
 import BackButtonNav from "@/components/BackButtonNav";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { addHours } from "date-fns";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
@@ -10,6 +9,7 @@ import ProductCard, {
 } from "../../_components/ProductCard";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { Suspense } from "react";
+import { LoadingLink } from "@/context/LoadingContext";
 
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({
@@ -154,9 +154,11 @@ async function ProductDetailsPageSuspense({ id }: { id: string }) {
     <>
       {user && (user.role === "admin" || user.role === "editor") && (
         <Button className="w-full">
-          <Link href={`/admin/settings/products/${product?.id as string}`}>
+          <LoadingLink
+            href={`/admin/settings/products/${product?.id as string}`}
+          >
             تعديل المنتج
-          </Link>
+          </LoadingLink>
         </Button>
       )}
 

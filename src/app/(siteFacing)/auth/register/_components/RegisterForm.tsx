@@ -1,111 +1,96 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormState } from "react-dom";
 
-import { register } from '../../_actions/register';
-import Link from 'next/link';
-import SubmitButton from '@/components/SubmitButton';
+import { register } from "../../_actions/register";
+import SubmitButton from "@/components/SubmitButton";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export function RegisterForm() {
-	const [error, action] = useFormState(register, {});
+  const [error, action] = useFormState(register, {});
 
-	return (
-		<form
-			action={action}
-			className='max-w-sm mx-4 sm:mx-auto'
-		>
-			<div className='relative z-0 w-full mb-5 group'>
-				<input
-					type='tel'
-					name='phone'
-					id='phone'
-					className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-					placeholder=''
-				/>
-				<label
-					htmlFor='phone'
-					className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-				>
-					الهاتف
-				</label>
-				{error?.phone && (
-					<div className='text-destructive'>
-						{error.phone}
-					</div>
-				)}
-			</div>
+  return (
+    <form action={action} className="mx-4 max-w-sm sm:mx-auto">
+      <div className="group relative z-0 mb-5 w-full">
+        <input
+          type="tel"
+          name="phone"
+          id="phone"
+          className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
+          placeholder=""
+        />
+        <label
+          htmlFor="phone"
+          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+        >
+          الهاتف
+        </label>
+        {error?.phone && <div className="text-destructive">{error.phone}</div>}
+      </div>
 
-			<div className='relative z-0 w-full mb-5 group'>
-				<input
-					type='text'
-					name='username'
-					id='username'
-					className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-					placeholder=''
-				/>
-				<label
-					htmlFor='username'
-					className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-				>
-					الاسم
-				</label>
-				{error?.username && (
-					<div className='text-destructive'>
-						{error?.username}
-					</div>
-				)}
-			</div>
+      <div className="group relative z-0 mb-5 w-full">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
+          placeholder=""
+        />
+        <label
+          htmlFor="username"
+          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+        >
+          الاسم
+        </label>
+        {error?.username && (
+          <div className="text-destructive">{error?.username}</div>
+        )}
+      </div>
 
-			<div className='relative z-0 w-full mb-5 group'>
-				<input
-					type='password'
-					name='password'
-					id='password'
-					className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-					placeholder=''
-				/>
-				<label
-					htmlFor='password'
-					className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-				>
-					كلمة المرور
-				</label>
-				{error?.password && (
-					<div className='text-destructive'>
-						{error?.password}
-					</div>
-				)}
-			</div>
+      <div className="group relative z-0 mb-5 w-full">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
+          placeholder=""
+        />
+        <label
+          htmlFor="password"
+          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+        >
+          كلمة المرور
+        </label>
+        {error?.password && (
+          <div className="text-destructive">{error?.password}</div>
+        )}
+      </div>
 
-			<div className='relative z-0 w-full mb-5 group'>
-				<input
-					type='password'
-					name='confirmPassword'
-					id='confirmPassword'
-					className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-					placeholder=''
-				/>
-				<label
-					htmlFor='confirmPassword'
-					className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-				>
-					تأكيد كلمة المرور
-				</label>
-				{error?.confirmPassword && (
-					<div className='text-destructive'>
-						{error?.confirmPassword}
-					</div>
-				)}
-			</div>
-			<div className='mb-4 text-sm'>
-				هل أنت مسجل بالفعل؟
-				<Link href='/auth/login' className='underline'>
-					تسجيل الدخول
-				</Link>
-			</div>
-			<SubmitButton body={'التسجيل'} />
-		</form>
-	);
+      <div className="group relative z-0 mb-5 w-full">
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
+          placeholder=""
+        />
+        <label
+          htmlFor="confirmPassword"
+          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+        >
+          تأكيد كلمة المرور
+        </label>
+        {error?.confirmPassword && (
+          <div className="text-destructive">{error?.confirmPassword}</div>
+        )}
+      </div>
+      <div className="mb-4 text-sm">
+        هل أنت مسجل بالفعل؟
+        <LoadingLink href="/auth/login" className="underline">
+          تسجيل الدخول
+        </LoadingLink>
+      </div>
+      <SubmitButton body={"التسجيل"} />
+    </form>
+  );
 }

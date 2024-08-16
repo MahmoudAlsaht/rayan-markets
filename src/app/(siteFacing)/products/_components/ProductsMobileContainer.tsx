@@ -1,8 +1,7 @@
 "use client";
-import { ReactNode, Suspense, useEffect, useState } from "react";
+import { FormEvent, ReactNode, Suspense, useEffect, useState } from "react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { checkProductTypeExists } from "../../_actions/checkProductsType";
 import { ArrowDownUpIcon, Search } from "lucide-react";
 import { ProductCardProps } from "./ProductCard";
@@ -17,6 +16,7 @@ import { Filter } from "lucide-react";
 import ProductsContainer, {
   ProductsContainerSkeleton,
 } from "./ProductsContainer";
+import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
 
 export default function ProductsMobileContainer({
   query = "all",
@@ -28,7 +28,8 @@ export default function ProductsMobileContainer({
   banner?: ReactNode;
 }) {
   const pathname = usePathname();
-
+  const router = useRouter();
+  const { startLoading } = useStartLoading();
   const [offersExists, setOffersExists] = useState(true);
   const [forHomeExists, setForHomeExists] = useState(true);
   const [queryValue, setQueryValue] = useState<string>(
@@ -57,6 +58,10 @@ export default function ProductsMobileContainer({
     sortProducts();
   }, [products, priceType]);
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    startLoading(() => router.push(`${pathname}?search=${queryValue}`));
+  };
   return (
     <>
       <div className="sm:hidden">
@@ -86,7 +91,10 @@ export default function ProductsMobileContainer({
             )}
           </TabsList>
           <div className="mb-2 flex items-center gap-2">
-            <legend className="relative flex basis-10/12 items-center">
+            <form
+              onSubmit={handleSubmit}
+              className="relative flex basis-10/12 items-center"
+            >
               <input
                 type="text"
                 id="search-navbar"
@@ -96,13 +104,14 @@ export default function ProductsMobileContainer({
                 value={queryValue}
                 onChange={(e) => setQueryValue(e.target.value)}
               />
-              <Link
-                href={`${pathname}?search=${queryValue}`}
-                className="absolute mr-2"
+              <LoadingLink
+                href="#"
+                type="submit"
+                className="absolute mr-2 bg-inherit text-rayanPrimary-dark hover:bg-slate-50"
               >
                 <Search />
-              </Link>
-            </legend>
+              </LoadingLink>
+            </form>
 
             <DropdownMenu dir="rtl">
               <DropdownMenuTrigger className="hover flex rounded-lg border border-rayanPrimary-dark px-2 py-1">
@@ -124,6 +133,7 @@ export default function ProductsMobileContainer({
 
       <Suspense>{banner}</Suspense>
 
+      <ProductsContainerSkeleton />
       <section className="sm:hidden">
         <Suspense fallback={<ProductsContainerSkeleton />}>
           <ProductsContainer products={sortedProducts as ProductCardProps[]} />
@@ -144,11 +154,11 @@ function TabLink({
 }) {
   const pathname = usePathname();
   return (
-    <Link
+    <LoadingLink
       href={href}
       className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${className}`}
     >
       {children}
-    </Link>
+    </LoadingLink>
   );
 }

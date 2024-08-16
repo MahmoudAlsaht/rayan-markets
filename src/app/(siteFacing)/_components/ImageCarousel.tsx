@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { LoadingLink } from "@/context/LoadingContext";
 import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type ImageCarouselProps = {
@@ -14,7 +14,6 @@ type ImageCarouselProps = {
 };
 
 export default function ImageCarousel({ images }: ImageCarouselProps) {
-  const router = useRouter();
   const [targetedIndex, setTargetedIndex] = useState(0);
   const [showNavigation, setShowNavigation] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -79,24 +78,24 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
         onMouseLeave={() => setShowNavigation(false)}
       >
         {images.map((image, index) => (
-          <div
-            onClick={() => router.push(image.link || "#")}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            key={image.id}
-            className={`${
-              index !== targetedIndex && "hidden"
-            } relative h-32 w-full opacity-100 transition-opacity duration-700 ease-in sm:h-52 md:h-80`}
-          >
-            <Image
-              src={image.path || ""}
-              fill
-              alt={`banner's image`}
-              className="cursor-pointer rounded-2xl object-cover"
-              priority
-            />
-          </div>
+          <LoadingLink href={image.link || "#"} key={image.id}>
+            <div
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              className={`${
+                index !== targetedIndex && "hidden"
+              } relative h-32 w-full opacity-100 transition-opacity duration-700 ease-in sm:h-52 md:h-80`}
+            >
+              <Image
+                src={image.path || ""}
+                fill
+                alt={`banner's image`}
+                className="cursor-pointer rounded-2xl object-cover"
+                priority
+              />
+            </div>
+          </LoadingLink>
         ))}
 
         {images.length > 1 && showNavigation && (

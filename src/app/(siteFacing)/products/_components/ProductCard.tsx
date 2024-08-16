@@ -20,6 +20,7 @@ import {
   addToProductCounter,
   takeFromProductCounter,
 } from "../../cart/_actions/cartActions";
+import { LoadingLink } from "@/context/LoadingContext";
 
 export type ProductCardProps = {
   id: string | null;
@@ -113,7 +114,8 @@ export default function ProductCard({
           : "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
       } `}
     >
-      <div
+      <LoadingLink
+        href={() => showPage(product.id as string)}
         className={`relative ${
           isProductDetailsPage
             ? "mx-auto h-72 w-10/12 sm:h-96 sm:w-3/5 md:w-2/5"
@@ -127,7 +129,6 @@ export default function ProductCard({
           src={image?.path as string}
           alt={`${name || "product"}'s image`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          onClick={() => showPage(product.id as string)}
         />
         <div
           className={`absolute -bottom-6 rounded-2xl bg-white py-2 shadow-sm duration-500 ${isProductDetailsPage ? (isProductInCart ? "right-0 w-full" : "right-1/4 w-1/2") : "-bottom-4 left-2 w-full rounded-2xl bg-white py-2 shadow-md shadow-slate-200 sm:left-0 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl" && isProductInCart && "w-full"}`}
@@ -167,11 +168,11 @@ export default function ProductCard({
             خصم
           </div>
         )}
-      </div>
+      </LoadingLink>
 
-      <div
+      <LoadingLink
         className={`w-full ${isProductDetailsPage ? "mt-10 flex flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start" : "mt-2 py-3 sm:px-4"} `}
-        onClick={() => !isProductDetailsPage && showPage(product.id as string)}
+        href={() => showPage(product.id as string)}
       >
         <p
           className={`${isProductDetailsPage ? "text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl" : "text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg"} `}
@@ -203,7 +204,7 @@ export default function ProductCard({
             {description}
           </div>
         )}
-      </div>
+      </LoadingLink>
       {isProductDetailsPage && <div className="h-24"></div>}
     </div>
   );
