@@ -96,14 +96,35 @@ export default function CartCard({ product }: { product: CartProduct }) {
       </div>
 
       <div className="flex gap-4 p-2 sm:hidden">
-        <Image
-          width={160}
-          height={160}
-          className="rounded-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
-          src={(product?.image as string) || ""}
-          alt={`${product?.name}'s image`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        <div className="relative h-40 w-40">
+          <Image
+            fill
+            priority
+            className="rounded-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+            src={(product?.image as string) || ""}
+            alt={`${product?.name}'s image`}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          <div className="absolute bottom-0 mt-4 flex h-11 w-full items-center justify-around rounded-xl bg-slate-100">
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={handleAddToCounter}
+              className="h-6 w-8 rounded-md bg-white"
+            >
+              <Plus className="text-rayanPrimary-dark" />
+            </Button>
+            <span className="text-rayanPrimary-dark">{product?.counter}</span>
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={handleTakeFromCounter}
+              className="h-6 w-8 rounded-md bg-white"
+            >
+              <Minus className="text-rayanPrimary-dark" />
+            </Button>
+          </div>
+        </div>
         <div>
           <p className="text-md mt-2 block truncate font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
             {product?.name}
@@ -118,41 +139,15 @@ export default function CartCard({ product }: { product: CartProduct }) {
           </div>
         </div>
       </div>
-
-      <div className="mt-0 flex w-full justify-between gap-1 p-0 sm:hidden">
-        <div className="mt-4 flex h-11 w-1/2 items-center justify-around rounded-xl bg-slate-100">
-          <Button
-            size="icon"
-            variant="secondary"
-            onClick={handleAddToCounter}
-            className="h-6 w-8 rounded-md bg-white"
-          >
-            <Plus className="text-rayanPrimary-dark" />
-          </Button>
-          <span className="text-rayanPrimary-dark">{product?.counter}</span>
-          <Button
-            size="icon"
-            variant="secondary"
-            onClick={handleTakeFromCounter}
-            className="h-6 w-8 rounded-md bg-white"
-          >
-            <Minus className="text-rayanPrimary-dark" />
-          </Button>
-        </div>
-
-        <div className="mt-2 w-1/2 py-3 sm:px-4">
-          <div className="sm:scale-95 sm:duration-500 sm:hover:scale-105">
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={removeProductFromCart}
-              className="w-full"
-            >
-              <Trash2 />
-            </Button>
-          </div>
-          <div></div>
-        </div>
+      <div className="flex justify-center sm:hidden">
+        <Button
+          size="sm"
+          variant="destructive"
+          onClick={removeProductFromCart}
+          className="w-4/5"
+        >
+          <Trash2 />
+        </Button>
       </div>
       <hr className="mb-5 mt-0 h-1 bg-slate-300 sm:hidden" />
     </>
