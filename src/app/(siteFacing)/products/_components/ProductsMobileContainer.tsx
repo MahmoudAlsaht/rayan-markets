@@ -133,7 +133,6 @@ export default function ProductsMobileContainer({
 
       <Suspense>{banner}</Suspense>
 
-      <ProductsContainerSkeleton />
       <section className="sm:hidden">
         <Suspense fallback={<ProductsContainerSkeleton />}>
           <ProductsContainer products={sortedProducts as ProductCardProps[]} />
