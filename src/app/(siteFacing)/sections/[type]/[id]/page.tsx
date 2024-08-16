@@ -67,7 +67,7 @@ export default function SectionProducts({
 }) {
   return (
     <section>
-      <BackButtonNav bg={false} />
+      <BackButtonNav />
       <Suspense>
         <SectionBannersSuspense id={id} type={type} />
       </Suspense>

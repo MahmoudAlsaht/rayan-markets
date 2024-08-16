@@ -10,7 +10,7 @@ export default async function AdminNavbar() {
   return (
     <>
       <nav
-        className="mx-auto max-w-[1320.6px] border-gray-200 dark:bg-white"
+        className="z-50 mx-auto max-w-[1481.6px] border-gray-200 bg-slate-100"
         dir="rtl"
       >
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">

@@ -14,7 +14,7 @@ export default function Widget({
 }) {
   return (
     <>
-      <Card dir="rtl" className="border-none">
+      <Card dir="rtl" className="border-none opacity-70">
         <CardHeader>
           <CardTitle
             className={danger ? "text-destructive" : "text-rayanPrimary-dark"}

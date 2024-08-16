@@ -106,7 +106,7 @@ export default function ProductsTypePage({
         <BackButtonNav />
       </div>
       <div className="hidden sm:block">
-        <BackButtonNav bg={false} />
+        <BackButtonNav />
       </div>
 
       {/* <ProductCardSkeleton isProductDetailsPage /> */}

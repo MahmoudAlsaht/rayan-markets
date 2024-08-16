@@ -1,29 +1,33 @@
 "use client";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 
 export default function BackButtonNav({
-  bg = true,
   goHome,
   href = "",
 }: {
   goHome?: boolean;
-  bg?: boolean;
   href?: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isOptionsPage = pathname === "/options";
+  const isProductsPage = pathname.includes("/products");
 
   return (
     <>
-      <nav className={`pb-2 ${bg ? "bg-rayanPrimary-dark" : "bg-inherit"}`}>
+      <nav
+        className={`pb-2 ${isOptionsPage || isProductsPage ? "bg-rayanPrimary-dark" : "bg-inherit"}`}
+      >
         <div className="mx-auto flex h-14 max-w-screen-xl flex-wrap items-center justify-between p-4">
           <Button
             data-collapse-toggle="navbar-default"
             type="button"
             variant="outline"
             className={`${
-              bg
+              isOptionsPage || isProductsPage
                 ? "border-none bg-inherit text-white hover:bg-inherit"
                 : "bg-inherit text-rayanPrimary-dark"
             } inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm`}

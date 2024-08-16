@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, ReactNode, useTransition } from "react";
 
 type LoadingContextType = {
@@ -18,10 +18,19 @@ export function useStartLoading() {
 
 type LoadingProviderProps = {
   children: ReactNode;
+  AdminNavbar: ReactNode;
+  SiteFacingNavbar: ReactNode;
+  MobileNavBar: ReactNode;
 };
 
-export default function LoadingProvider({ children }: LoadingProviderProps) {
+export default function LoadingProvider({
+  children,
+  AdminNavbar,
+  SiteFacingNavbar,
+  MobileNavBar,
+}: LoadingProviderProps) {
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   const value = {
     startLoading: (cb: () => any) => {
@@ -35,16 +44,20 @@ export default function LoadingProvider({ children }: LoadingProviderProps) {
     <LoadingContext.Provider value={value}>
       {
         <>
-          {isPending ? (
-            <section className="flex flex-col">
-              <div className="fixed inset-0 z-50 flex h-screen items-center justify-center bg-white opacity-80">
+          <main className="flex flex-col">
+            <div className="z-50 hidden sm:block">
+              {pathname.includes("/admin") && AdminNavbar}
+              {!pathname.includes("/admin") && SiteFacingNavbar}
+            </div>
+            {isPending && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-200">
                 <Loader2 className="size-24 animate-spin text-rayanPrimary-dark" />
               </div>
-              <main>{children}</main>
-            </section>
-          ) : (
-            children
-          )}
+            )}
+            {!isPending && <main>{children}</main>}
+
+            <main className="sm:hidden">{MobileNavBar}</main>
+          </main>
         </>
       }
     </LoadingContext.Provider>

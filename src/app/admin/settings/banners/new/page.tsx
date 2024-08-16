@@ -1,14 +1,14 @@
-import BackButtonNav from '@/components/BackButtonNav';
-import PageHeader from '@/components/PageHeader';
-import { BannerForm } from '../_components/BannerForm';
+import BackButtonNav from "@/components/BackButtonNav";
+import PageHeader from "@/components/PageHeader";
+import { BannerForm } from "../_components/BannerForm";
 
 export default function NewBanner() {
-	return (
-		<main dir='rtl'>
-			<BackButtonNav bg={false} />
-			<PageHeader title='إضافة لافتة جديدة' />
+  return (
+    <main dir="rtl">
+      <BackButtonNav />
+      <PageHeader title="إضافة لافتة جديدة" />
 
-			<BannerForm />
-		</main>
-	);
+      <BannerForm />
+    </main>
+  );
 }

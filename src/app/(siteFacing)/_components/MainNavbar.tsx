@@ -4,7 +4,7 @@ import Logo from "../../rayan.marketLogo.png";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
-import { Loader2, ShoppingBag, UserCircle } from "lucide-react";
+import { ShoppingBag, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -84,7 +84,7 @@ export default function MainNavbar({
   return (
     <>
       <nav
-        className="relative top-auto z-50 mx-auto hidden max-w-[1481.6px] border-gray-200 dark:bg-[#C7E7E2] sm:block"
+        className="relative top-auto z-50 mx-auto max-w-[1481.6px] border-gray-200 dark:bg-[#C7E7E2]"
         dir="rtl"
       >
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">

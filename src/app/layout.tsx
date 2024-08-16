@@ -5,6 +5,11 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import LoadingProvider from "@/context/LoadingContext";
+import AdminNavbar from "./admin/_components/AdminNavbar";
+import MainNavbar from "./(siteFacing)/_components/MainNavbar";
+import { checkUser } from "./(siteFacing)/auth/_actions/isAuthenticated";
+import { getCart } from "./(siteFacing)/cart/_actions/checkCart";
+import BottomNavbar from "./(siteFacing)/(mobile)/_components/BottomNavbar";
 
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",
@@ -54,11 +59,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = (await checkUser()) as {
+    id: string;
+    phone: string;
+    username: string;
+    role: string;
+    profile: { id: string };
+  };
+  const cart = await getCart();
   return (
     <html lang="ar" suppressHydrationWarning>
       <body
@@ -69,7 +82,13 @@ export default function RootLayout({
         dir="rtl"
       >
         <ThemeProvider attribute="class">
-          <LoadingProvider>{children}</LoadingProvider>
+          <LoadingProvider
+            AdminNavbar={<AdminNavbar />}
+            SiteFacingNavbar={<MainNavbar user={user} cart={cart} />}
+            MobileNavBar={<BottomNavbar />}
+          >
+            {children}
+          </LoadingProvider>
 
           <InstallApp />
         </ThemeProvider>

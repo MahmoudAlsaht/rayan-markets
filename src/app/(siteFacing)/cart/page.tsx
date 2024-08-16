@@ -10,7 +10,7 @@ export default function CartPage() {
   return (
     <main className="sm:mt-10">
       <div className="sm:hidden">
-        <BackButtonNav bg={false} />
+        <BackButtonNav />
       </div>
       <PageHeader title="السلة" mt="10" />
 

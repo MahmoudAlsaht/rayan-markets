@@ -1,14 +1,14 @@
-import BackButtonNav from '@/components/BackButtonNav';
-import { NewUserForm } from './_components/NewUserForm';
-import PageHeader from '@/components/PageHeader';
+import BackButtonNav from "@/components/BackButtonNav";
+import { NewUserForm } from "./_components/NewUserForm";
+import PageHeader from "@/components/PageHeader";
 
 export default function NewUser() {
-	return (
-		<main dir='rtl'>
-			<BackButtonNav bg={false} />
-			<PageHeader title='إضافة مستخدم جديد' />
+  return (
+    <main dir="rtl">
+      <BackButtonNav />
+      <PageHeader title="إضافة مستخدم جديد" />
 
-			<NewUserForm />
-		</main>
-	);
+      <NewUserForm />
+    </main>
+  );
 }
