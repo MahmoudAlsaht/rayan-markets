@@ -8,7 +8,7 @@ export default function CustomBackButtonNav() {
   return pathname === "/admin/settings/sections" ||
     pathname === "/admin/settings/sections/categories" ||
     pathname === "/admin/settings/sections/brands" ? (
-    <BackButtonNav bg={false} href="/admin" />
+    <BackButtonNav href="/admin" />
   ) : (
     <BackButtonNav />
   );
