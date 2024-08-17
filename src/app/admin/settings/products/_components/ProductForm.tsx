@@ -17,6 +17,7 @@ export function ProductForm({
   product?: {
     name: string;
     weights: number[] | null;
+    flavors: string[] | null;
     category: {
       id: string;
       name: string;
@@ -144,7 +145,9 @@ export function ProductForm({
                 ? "عادي"
                 : product.productType === "forHome"
                   ? "منزلية"
-                  : "منتج بالوزن"}
+                  : product.productType === "weights"
+                    ? "منتج بالوزن"
+                    : "نكهات"}
             </option>
           ) : (
             <option value="">اختر نوع المنتج</option>
@@ -154,6 +157,9 @@ export function ProductForm({
           )}
           {product?.productType !== "weight" && (
             <option value="weight">منتج بالوزن</option>
+          )}
+          {product?.productType !== "flavor" && (
+            <option value="flavor">نكهات</option>
           )}
           {product?.productType !== "forHome" && (
             <option value="forHome">منزلية</option>
@@ -219,25 +225,31 @@ export function ProductForm({
         {error?.price && <div className="text-destructive">{error.price}</div>}
       </div>
 
-      {productType === "weight" && (
+      {(productType === "weight" || productType === "flavor") && (
         <div className="group relative z-0 mb-5 w-full">
           <input
             type="text"
-            name="weights"
-            id="weights"
+            name="options"
+            id="options"
             className="no-arrows peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
             placeholder=""
-            defaultValue={product?.weights?.join(" ")}
+            defaultValue={
+              productType === "weight"
+                ? product?.weights?.join(" ")
+                : productType === "flavor"
+                  ? product?.flavors?.join(" ")
+                  : ""
+            }
             step="any"
           />
           <label
-            htmlFor="weights"
+            htmlFor="options"
             className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
           >
             الأوزان
           </label>
-          {error?.weights && (
-            <div className="text-destructive">{error.weights}</div>
+          {error?.options && (
+            <div className="text-destructive">{error.options}</div>
           )}
         </div>
       )}

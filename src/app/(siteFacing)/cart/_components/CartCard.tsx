@@ -71,7 +71,29 @@ export default function CartCard({ product }: { product: CartProduct }) {
 
         <div className="mt-2 w-full py-3 sm:px-4">
           <p className="text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
-            {product?.name}
+            {product.flavor ? (
+              <>
+                {product.name} <span>({product.flavor})</span>
+              </>
+            ) : product.weight ? (
+              <>
+                (
+                <span>
+                  {product.weight === 0.25
+                    ? "ربع كيلو"
+                    : product.weight === 0.5
+                      ? "نصف كيلو"
+                      : product.weight === 0.75
+                        ? "كيلو الا ربع"
+                        : product.weight === 1
+                          ? "كيلو"
+                          : `${product.weight} كيلو`}
+                </span>
+                ) {product.name}
+              </>
+            ) : (
+              product?.name
+            )}
           </p>
           <div className="mb-6 mt-4 gap-6">
             <p className="sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark">

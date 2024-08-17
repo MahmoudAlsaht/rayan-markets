@@ -25,7 +25,7 @@ const editProductSchema = z.object({
     .regex(/^[1-9]\d*$/),
   productType: z.string().min(1, "الرجاء اختيار نوع المنتج"),
   description: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
-  weights: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
+  options: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
   isOffer: z.string().optional(),
   newPrice: z
     .string()
@@ -69,7 +69,7 @@ export async function editProduct(
     });
   }
 
-  const weights = data.weights?.split(" ");
+  const options = data.options?.split(" ");
 
   await db.product.update({
     where: { id },
@@ -85,8 +85,10 @@ export async function editProduct(
         : currentProduct?.productType,
       weights:
         data.productType === "weight"
-          ? weights?.map((w) => parseFloat(w)) || currentProduct?.weights
+          ? options?.map((w) => parseFloat(w)) || currentProduct?.weights
           : [],
+      flavors:
+        data.productType === "flavor" ? options || currentProduct?.flavors : [],
       isOffer: data.isOffer === "on" ? true : false,
       description:
         data.productType === "forHome"

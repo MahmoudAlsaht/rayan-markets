@@ -35,6 +35,7 @@ export default async function EditProductPage({
       offerStartsAt: true,
       offerEndsAt: true,
       weights: true,
+      flavors: true,
       image: { select: { path: true } },
     },
   });

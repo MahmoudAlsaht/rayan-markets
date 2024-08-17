@@ -14,202 +14,14 @@ export async function handleSearchInput(
 ): Promise<ProductCardProps[] | null> {
   const query = escapeRegExp(formData.get("query") as string);
 
-  if (query === "" || query == null) {
-    const mostViewedProducts = await db.product.findMany({
-      orderBy: { views: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-    const mostPurchasedProducts = await db.product.findMany({
-      orderBy: { numberOfPurchases: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-    const mostResentProducts = await db.product.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
+  if (query === "" || query == null) return await getMostProducts();
 
-    return [
-      ...new Map(
-        [
-          ...mostPurchasedProducts,
-          ...mostViewedProducts,
-          ...mostResentProducts,
-        ].map((product) => [product["id"], product]),
-      ).values(),
-    ];
-  }
-
-  const result = await searchProducts(query);
-
-  if (result.length === 0) return result;
-
-  const products = await db.product.findMany({
-    where: {
-      OR: [
-        {
-          name: {
-            contains: query as string,
-            mode: "insensitive",
-          },
-        },
-        {
-          body: {
-            contains: query as string,
-            mode: "insensitive",
-          },
-        },
-      ],
-    },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      body: true,
-      price: true,
-      newPrice: true,
-      productType: true,
-      weights: true,
-      isOffer: true,
-      image: {
-        select: {
-          path: true,
-        },
-      },
-    },
-  });
-
-  if (products.length === 0) {
-    const mostViewedProducts = await db.product.findMany({
-      orderBy: { views: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-    const mostPurchasedProducts = await db.product.findMany({
-      orderBy: { numberOfPurchases: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-    const mostResentProducts = await db.product.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-    });
-
-    return [
-      ...new Map(
-        [
-          ...mostPurchasedProducts,
-          ...mostViewedProducts,
-          ...mostResentProducts,
-        ].map((product) => [product["id"], product]),
-      ).values(),
-    ];
-  }
+  const products = await searchProducts(query);
 
   return products;
 }
 
-export async function searchProducts(
-  inputQuery = "all",
-  orderBy = "",
-  productType = "any",
-  productCount: number | undefined = undefined,
-) {
-  const query = escapeRegExp(inputQuery);
-
+async function checkProductsOffer() {
   await db.product.updateMany({
     where: {
       offerEndsAt: {
@@ -254,42 +66,127 @@ export async function searchProducts(
       isOffer: true,
     },
   });
+}
 
-  if (!query || query == "all" || query === "") {
-    return await db.product.findMany({
-      where:
-        productType === "for-home"
-          ? { productType: "forHome" }
-          : productType === "offers"
-            ? { isOffer: true }
-            : {},
-      orderBy:
-        orderBy === "views"
-          ? { views: "desc" }
-          : orderBy === "purchases"
-            ? { numberOfPurchases: "desc" }
-            : { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
+async function getMostProducts() {
+  const mostViewedProducts = await db.product.findMany({
+    orderBy: { views: "desc" },
+    take: 6,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      body: true,
+      price: true,
+      newPrice: true,
+      productType: true,
+      flavors: true,
+      weights: true,
+      isOffer: true,
+      image: {
+        select: {
+          path: true,
         },
       },
-      take: productCount,
-    });
-  }
+    },
+  });
+  const mostPurchasedProducts = await db.product.findMany({
+    orderBy: { numberOfPurchases: "desc" },
+    take: 6,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      body: true,
+      price: true,
+      newPrice: true,
+      productType: true,
+      weights: true,
+      flavors: true,
+      isOffer: true,
+      image: {
+        select: {
+          path: true,
+        },
+      },
+    },
+  });
+  const mostResentProducts = await db.product.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 6,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      body: true,
+      price: true,
+      newPrice: true,
+      productType: true,
+      weights: true,
+      flavors: true,
+      isOffer: true,
+      image: {
+        select: {
+          path: true,
+        },
+      },
+    },
+  });
 
-  const brand = await db.section.findFirst({
+  return [
+    ...new Map(
+      [
+        ...mostPurchasedProducts,
+        ...mostViewedProducts,
+        ...mostResentProducts,
+      ].map((product) => [product["id"], product]),
+    ).values(),
+  ] as ProductCardProps[];
+}
+
+async function getAllProducts(orderBy, productType, productCount) {
+  return (await db.product.findMany({
+    where:
+      productType === "for-home"
+        ? { productType: "forHome" }
+        : productType === "offers"
+          ? { isOffer: true }
+          : {},
+    orderBy:
+      orderBy === "views"
+        ? { views: "desc" }
+        : orderBy === "purchases"
+          ? { numberOfPurchases: "desc" }
+          : { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      body: true,
+      price: true,
+      newPrice: true,
+      productType: true,
+      weights: true,
+      flavors: true,
+      isOffer: true,
+      image: {
+        select: {
+          path: true,
+        },
+      },
+    },
+    take: productCount,
+  })) as ProductCardProps[];
+}
+
+async function getSectionProducts(
+  query: string,
+  orderBy,
+  productType,
+  productCount,
+  sectionType: string,
+) {
+  const section = await db.section.findFirst({
     where: {
       AND: [
         {
@@ -298,98 +195,219 @@ export async function searchProducts(
             mode: "insensitive",
           },
           type: {
-            equals: "brands",
+            equals: sectionType,
           },
         },
       ],
     },
     select: {
-      brandProducts: {
-        where:
-          productType === "for-home"
-            ? { productType: "forHome" }
-            : productType === "offers"
-              ? { isOffer: true }
-              : {},
-        orderBy:
-          orderBy === "views"
-            ? { views: "desc" }
-            : orderBy === "purchases"
-              ? { numberOfPurchases: "desc" }
-              : {},
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          productType: true,
-          newPrice: true,
-          weights: true,
-          isOffer: true,
-          image: {
-            select: {
-              path: true,
-            },
-          },
-        },
-        take: productCount,
-      },
+      brandProducts:
+        sectionType === "brands"
+          ? {
+              where:
+                productType === "for-home"
+                  ? { productType: "forHome" }
+                  : productType === "offers"
+                    ? { isOffer: true }
+                    : {},
+              orderBy:
+                orderBy === "views"
+                  ? { views: "desc" }
+                  : orderBy === "purchases"
+                    ? { numberOfPurchases: "desc" }
+                    : {},
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                productType: true,
+                newPrice: true,
+                flavors: true,
+                weights: true,
+                isOffer: true,
+                image: {
+                  select: {
+                    path: true,
+                  },
+                },
+              },
+              take: productCount,
+            }
+          : false,
+
+      categoryProducts:
+        sectionType === "categories"
+          ? {
+              where:
+                productType === "for-home"
+                  ? { productType: "forHome" }
+                  : productType === "offers"
+                    ? { isOffer: true }
+                    : {},
+              orderBy:
+                orderBy === "views"
+                  ? { views: "desc" }
+                  : orderBy === "purchases"
+                    ? { numberOfPurchases: "desc" }
+                    : {},
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                productType: true,
+                newPrice: true,
+                flavors: true,
+                weights: true,
+                isOffer: true,
+                image: {
+                  select: {
+                    path: true,
+                  },
+                },
+              },
+              take: productCount,
+            }
+          : false,
     },
   });
-
-  if (brand && brand.brandProducts.length > 0) return brand.brandProducts;
-
-  const category = await db.section.findFirst({
-    where: {
-      AND: [
-        {
-          name: {
-            contains: query as string,
-          },
-          type: {
-            equals: "categories",
-          },
-        },
-      ],
-    },
-    select: {
-      categoryProducts: {
-        where:
-          productType === "for-home"
-            ? { productType: "forHome" }
-            : productType === "offers"
-              ? { isOffer: true }
-              : {},
-        orderBy:
-          orderBy === "views"
-            ? { views: "desc" }
-            : orderBy === "purchases"
-              ? { numberOfPurchases: "desc" }
-              : {},
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          body: true,
-          price: true,
-          newPrice: true,
-          productType: true,
-          weights: true,
-          isOffer: true,
-          image: {
-            select: {
-              path: true,
+  const sectionProducts =
+    sectionType === "categories"
+      ? ((
+          await db.section.findFirst({
+            where: {
+              AND: [
+                {
+                  name: {
+                    contains: query as string,
+                    mode: "insensitive",
+                  },
+                  type: {
+                    equals: sectionType,
+                  },
+                },
+              ],
             },
-          },
-        },
-        take: productCount,
-      },
-    },
-  });
+            select: {
+              categoryProducts: {
+                where:
+                  productType === "for-home"
+                    ? { productType: "forHome" }
+                    : productType === "offers"
+                      ? { isOffer: true }
+                      : {},
+                orderBy:
+                  orderBy === "views"
+                    ? { views: "desc" }
+                    : orderBy === "purchases"
+                      ? { numberOfPurchases: "desc" }
+                      : {},
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                  productType: true,
+                  newPrice: true,
+                  flavors: true,
+                  weights: true,
+                  isOffer: true,
+                  image: {
+                    select: {
+                      path: true,
+                    },
+                  },
+                },
+                take: productCount,
+              },
+            },
+          })
+        )?.categoryProducts as ProductCardProps[])
+      : ((
+          await db.section.findFirst({
+            where: {
+              AND: [
+                {
+                  name: {
+                    contains: query as string,
+                    mode: "insensitive",
+                  },
+                  type: {
+                    equals: sectionType,
+                  },
+                },
+              ],
+            },
+            select: {
+              brandProducts: {
+                where:
+                  productType === "for-home"
+                    ? { productType: "forHome" }
+                    : productType === "offers"
+                      ? { isOffer: true }
+                      : {},
+                orderBy:
+                  orderBy === "views"
+                    ? { views: "desc" }
+                    : orderBy === "purchases"
+                      ? { numberOfPurchases: "desc" }
+                      : {},
+                select: {
+                  id: true,
+                  name: true,
+                  price: true,
+                  productType: true,
+                  newPrice: true,
+                  flavors: true,
+                  weights: true,
+                  isOffer: true,
+                  image: {
+                    select: {
+                      path: true,
+                    },
+                  },
+                },
+                take: productCount,
+              },
+            },
+          })
+        )?.brandProducts as ProductCardProps[]);
+  return sectionProducts;
+}
 
-  if (category && category.categoryProducts.length > 0)
-    return category.categoryProducts;
+export async function searchProducts(
+  inputQuery = "all",
+  orderBy = "",
+  productType = "any",
+  productCount: number | undefined = undefined,
+) {
+  const query = escapeRegExp(inputQuery);
 
-  const label = await db.label.findFirst({
+  await checkProductsOffer();
+
+  if (!query || query == "all" || query === "")
+    return await getAllProducts(orderBy, productType, productCount);
+
+  const brandProducts = await getSectionProducts(
+    query,
+    orderBy,
+    productType,
+    productCount,
+    "brands",
+  );
+
+  if (brandProducts && brandProducts.length > 0)
+    return brandProducts as ProductCardProps[];
+
+  const categoryProducts = await getSectionProducts(
+    query,
+    orderBy,
+    productType,
+    productCount,
+    "categories",
+  );
+
+  if (categoryProducts && categoryProducts.length > 0) return categoryProducts;
+
+  const labels = await db.label.findMany({
     where: {
       value: {
         contains: query,
@@ -419,6 +437,7 @@ export async function searchProducts(
           newPrice: true,
           productType: true,
           weights: true,
+          flavors: true,
           isOffer: true,
           image: {
             select: {
@@ -431,92 +450,22 @@ export async function searchProducts(
     },
   });
 
-  if (label && label.products.length > 0) return label.products;
+  let labelsProducts: ProductCardProps[] = [];
 
-  const products = await db.product.findMany({
-    where: {
-      AND: [
-        productType === "for-home"
-          ? { productType: "forHome" }
-          : productType === "offers"
-            ? { isOffer: true }
-            : {},
-        {
-          OR: [
-            {
-              name: {
-                contains: query as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              body: {
-                contains: query as string,
-                mode: "insensitive",
-              },
-            },
-          ],
-        },
-      ],
-    },
-    orderBy:
-      orderBy === "views"
-        ? { views: "desc" }
-        : orderBy === "purchases"
-          ? { numberOfPurchases: "desc" }
-          : {},
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      body: true,
-      price: true,
-      newPrice: true,
-      productType: true,
-      weights: true,
-      isOffer: true,
-      image: {
-        select: {
-          path: true,
-        },
-      },
-    },
-    take: productCount,
-  });
-
-  if (products.length === 0) {
-    return await db.product.findMany({
-      where:
-        productType === "for-home"
-          ? { productType: "forHome" }
-          : productType === "offers"
-            ? { isOffer: true }
-            : {},
-      orderBy:
-        orderBy === "views"
-          ? { views: "desc" }
-          : orderBy === "purchases"
-            ? { numberOfPurchases: "desc" }
-            : {},
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        body: true,
-        price: true,
-        newPrice: true,
-        productType: true,
-        weights: true,
-        isOffer: true,
-        image: {
-          select: {
-            path: true,
-          },
-        },
-      },
-      take: productCount,
-    });
+  for (const label of labels) {
+    labelsProducts = [...labelsProducts, ...label.products];
   }
+
+  if (labels && labelsProducts.length > 0)
+    return [
+      ...new Map(
+        labelsProducts.map((product) => [product["id"], product]),
+      ).values(),
+    ] as ProductCardProps[];
+
+  const products = await getAllProducts(orderBy, productType, productCount);
+
+  if (products?.length === 0) return products;
 
   return products;
 }

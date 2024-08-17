@@ -34,6 +34,7 @@ export type ProductCardProps = {
   description?: string | null;
   body?: string | null;
   weights: number[] | null;
+  flavors: string[] | null;
   isOffer: boolean | null;
 };
 
@@ -48,17 +49,6 @@ export default function ProductCard({
 }) {
   const router = useRouter();
   const [_, startTransition] = useTransition();
-  const {
-    id,
-    image,
-    name,
-    price,
-    newPrice,
-    description,
-    body,
-    weights,
-    isOffer,
-  } = product;
 
   const pathname = usePathname();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
@@ -72,17 +62,18 @@ export default function ProductCard({
     }
   };
 
-  const handleAddToCart = (selectedWeight?: number) => {
+  const handleAddToCart = (selectedOption?: number | string) => {
     startTransition(async () => {
-      const newProduct = await addProductToCart({ ...product, selectedWeight });
+      const newProduct = await addProductToCart({ ...product, selectedOption });
       setProductInCart(newProduct);
       setIsProductInCart(newProduct !== null);
+      console.log(newProduct);
     });
   };
 
   const handleAddToCounter = () => {
     startTransition(async () => {
-      const updatedProduct = await addToProductCounter(id as string);
+      const updatedProduct = await addToProductCounter(product?.id as string);
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -90,7 +81,9 @@ export default function ProductCard({
 
   const handleTakeFromCounter = () => {
     startTransition(async () => {
-      const updatedProduct = await takeFromProductCounter(id as string);
+      const updatedProduct = await takeFromProductCounter(
+        product?.id as string,
+      );
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -98,12 +91,12 @@ export default function ProductCard({
 
   useEffect(() => {
     const checkProduct = async () => {
-      const product = await findProduct(id as string);
-      setProductInCart(product);
-      setIsProductInCart(product !== null);
+      const fetchedProduct = await findProduct(product?.id as string);
+      setProductInCart(fetchedProduct);
+      setIsProductInCart(fetchedProduct !== null);
     };
     checkProduct();
-  }, [id, pathname]);
+  }, [pathname, product.id]);
 
   return (
     <div
@@ -129,8 +122,8 @@ export default function ProductCard({
             fill
             priority
             className={`rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${isProductDetailsPage && "rounded-3xl"} `}
-            src={image?.path as string}
-            alt={`${name || "product"}'s image`}
+            src={product.image?.path as string}
+            alt={`${product?.name || "product"}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </LoadingLink>
@@ -139,7 +132,16 @@ export default function ProductCard({
         >
           {!isProductInCart && (
             <ProductMenuPrice
-              weights={weights && weights.length ? weights : null}
+              flavors={
+                product.flavors && product.flavors.length
+                  ? product.flavors
+                  : null
+              }
+              weights={
+                product?.weights && product?.weights.length
+                  ? product?.weights
+                  : null
+              }
               handleAddToCart={handleAddToCart}
             />
           )}
@@ -165,7 +167,7 @@ export default function ProductCard({
             </div>
           )}
         </div>
-        {isOffer && (
+        {product?.isOffer && (
           <div
             className={`absolute right-0 top-0 rounded-2xl bg-destructive px-4 py-0 text-white`}
           >
@@ -181,7 +183,7 @@ export default function ProductCard({
         <p
           className={`${isProductDetailsPage ? "text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl" : "text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg"} `}
         >
-          {isProductDetailsPage ? body : name}
+          {isProductDetailsPage ? product?.body : product?.name}
         </p>
         <div className={`mt-4 flex items-center justify-center gap-6`}>
           <div
@@ -190,22 +192,26 @@ export default function ProductCard({
             <p
               className={`sm:text-md my-3 cursor-auto font-semibold text-rayanSecondary-dark ${isProductDetailsPage ? "text-xl sm:text-3xl" : "text-sm"}`}
             >
-              {formatCurrency(newPrice ? newPrice : (price as number))}
+              {formatCurrency(
+                product?.newPrice
+                  ? product?.newPrice
+                  : (product?.price as number),
+              )}
             </p>
           </div>
-          {newPrice && (
+          {product?.newPrice && (
             <del>
               <p
                 className={`cursor-auto text-gray-600 line-through ${isProductDetailsPage ? "text-xl sm:text-2xl" : "sm:text-md text-sm"}`}
               >
-                {formatCurrency(price as number)}
+                {formatCurrency(product?.price as number)}
               </p>
             </del>
           )}
         </div>
         {isProductDetailsPage && (
           <div className="mt-6 text-xl sm:text-2xl md:text-3xl">
-            {description}
+            {product?.description}
           </div>
         )}
       </LoadingLink>
@@ -216,14 +222,16 @@ export default function ProductCard({
 
 function ProductMenuPrice({
   weights,
+  flavors,
   handleAddToCart,
 }: {
   weights?: number[] | null;
-  handleAddToCart: (weight?: number) => void;
+  flavors?: string[] | null;
+  handleAddToCart: (weight?: number | string) => void;
 }) {
   const addProduct = () => handleAddToCart();
 
-  if (!weights)
+  if (!weights && !flavors)
     return (
       <ShoppingBag
         className={`size-6 w-full cursor-pointer px-10`}
@@ -239,9 +247,14 @@ function ProductMenuPrice({
       <DropdownMenuContent>
         <DropdownMenuLabel>اختر الوزن</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {weights.map((price, index) => (
+        {weights?.map((price, index) => (
           <DropdownMenuItem key={index} onClick={() => handleAddToCart(price)}>
             {price} كيلو
+          </DropdownMenuItem>
+        ))}
+        {flavors?.map((flavor, index) => (
+          <DropdownMenuItem key={index} onClick={() => handleAddToCart(flavor)}>
+            {flavor}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

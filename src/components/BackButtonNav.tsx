@@ -14,7 +14,8 @@ export default function BackButtonNav({
   const pathname = usePathname();
 
   const isOptionsPage = pathname === "/options";
-  const isProductsPage = pathname.includes("/products");
+  const isProductsPage =
+    pathname.includes("/products") && !pathname.includes("/admin");
 
   return (
     <>

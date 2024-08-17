@@ -5,6 +5,7 @@ export type CartProduct = {
   id: string;
   name: string;
   weight?: number | null;
+  flavor?: string | null;
   price: number;
   total: number;
   counter: number;

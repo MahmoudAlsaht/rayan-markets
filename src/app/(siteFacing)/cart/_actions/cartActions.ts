@@ -4,17 +4,19 @@ import { Cart, CartProduct, getCart } from "./checkCart";
 import { ProductCardProps } from "../../products/_components/ProductCard";
 
 export async function addProductToCart(
-  product: ProductCardProps & { selectedWeight?: number },
+  product: ProductCardProps & { selectedOption?: number | string },
 ) {
   const priceOrNewPrice = product.isOffer
     ? (product.newPrice as number)
     : (product.price as number);
   const cartProductPrice =
-    product.productType === "weight" && product.selectedWeight
-      ? priceOrNewPrice * product.selectedWeight
+    product.productType === "weight" || product.productType === "flavor"
+      ? typeof product.selectedOption === "number"
+        ? priceOrNewPrice * product.selectedOption
+        : priceOrNewPrice
       : priceOrNewPrice;
   const cartProductName = product.name;
-  const cartProductWeight = product.selectedWeight || null;
+  const cartProductWeight = product.selectedOption || null;
 
   const cart = await getCart();
 
@@ -23,7 +25,14 @@ export async function addProductToCart(
     name: cartProductName as string,
     price: cartProductPrice,
     image: product.image?.path as string,
-    weight: cartProductWeight,
+    weight:
+      typeof product.selectedOption === "number"
+        ? (cartProductWeight as number)
+        : null,
+    flavor:
+      typeof product.selectedOption === "string"
+        ? (cartProductWeight as string)
+        : null,
     counter: 1,
     total: cartProductPrice,
   };

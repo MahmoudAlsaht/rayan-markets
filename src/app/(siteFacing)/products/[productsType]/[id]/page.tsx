@@ -75,6 +75,7 @@ const getLabels = async (labels: string[], id: string) => {
             newPrice: true,
             productType: true,
             weights: true,
+            flavors: true,
             isOffer: true,
             image: {
               select: {
@@ -131,6 +132,7 @@ async function ProductDetailsPageSuspense({ id }: { id: string }) {
       newPrice: true,
       productType: true,
       weights: true,
+      flavors: true,
       isOffer: true,
       labels: { select: { value: true } },
       image: {
