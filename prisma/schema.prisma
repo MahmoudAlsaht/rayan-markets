@@ -23,7 +23,6 @@ model User {
   updatedAt        DateTime @updatedAt
   verificationCode String?
 
-  orders    Order[]
   profileId String?  @db.ObjectId
   profile   Profile?
 }
@@ -33,51 +32,10 @@ model Profile {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   contacts  Contact[]
+  orders    Order[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique @db.ObjectId
-}
-
-model OrderProduct {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  price    Int
-  imageUrl String
-  quantity Int
-  counter  Int    @default(0)
-  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId  String @db.ObjectId
-}
-
-model OrderContact {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  phone String
-
-  order   Order  @relation(fields: [orderId], references: [id])
-  orderId String @unique @db.ObjectId
-}
-
-model Order {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  shippingFee       Int
-  productTotalPrice Int
-  orderId           String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  status            String
-  isUserRegistered  Boolean
-  promoCodeId       String?  @db.ObjectId
-  paymentMethod     String
-  OrderTotalPrice   Int
-
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @db.ObjectId
-
-  anonymous   Anonymous? @relation(fields: [anonymousId], references: [id])
-  anonymousId String?    @db.ObjectId
-
-  products OrderProduct[]
-  contact  OrderContact?
 }
 
 model Product {
@@ -122,6 +80,8 @@ model PromoCode {
   expired   Boolean
   startDate DateTime?
   endDate   DateTime?
+
+  orders Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -175,31 +135,6 @@ model Section {
   brandProducts Product[] @relation(name: "brand")
 }
 
-model District {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String @unique
-  shippingFees Float
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Contact {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  phone String
-
-  profileId String  @db.ObjectId
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  districtName         String
-  districtShippingFees Float
-
-  anonymous Anonymous?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Banner {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   bannerType String   @unique
@@ -210,11 +145,75 @@ model Banner {
 }
 
 model Anonymous {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  username         String
-  phone            String
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  order   Order?
+  contact Contact[]
+}
+
+model District {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String    @unique
+  shippingFees Float
+  contacts     Contact[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  contactNumber    String?
   verificationCode String?
-  orders           Order[]
-  contactId        String?  @unique @db.ObjectId
-  contact          Contact? @relation(fields: [contactId], references: [id])
+
+  profileId String?  @db.ObjectId
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  districtId String?   @db.ObjectId
+  district   District? @relation(fields: [districtId], references: [id])
+
+  anonymousId String?    @db.ObjectId
+  anonymous   Anonymous? @relation(fields: [anonymousId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
+}
+
+model OrderProduct {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  price    Float
+  total    Float
+  image    String
+  quantity Int
+  counter  Int    @default(1)
+  order    Order  @relation(fields: [orderId], references: [id])
+  orderId  String @db.ObjectId
+}
+
+model Order {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  billTotal     Float
+  orderId       String
+  status        String
+  paymentMethod String
+  orderTotal    Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  promoCode   PromoCode? @relation(fields: [promoCodeId], references: [id])
+  promoCodeId String?    @db.ObjectId
+
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId String?  @db.ObjectId
+
+  anonymous   Anonymous? @relation(fields: [anonymousId], references: [id])
+  anonymousId String?    @unique @db.ObjectId
+
+  products  OrderProduct[]
+  contact   Contact?       @relation(fields: [contactId], references: [id])
+  contactId String?        @db.ObjectId
 }
