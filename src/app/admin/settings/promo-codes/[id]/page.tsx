@@ -13,11 +13,12 @@ export default async function EditPromoPage({
     select: {
       id: true,
       code: true,
-      expired: true,
+      active: true,
       discount: true,
       startDate: true,
       endDate: true,
       promoType: true,
+      minPrice: true,
     },
   });
 

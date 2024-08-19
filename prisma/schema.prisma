@@ -77,11 +77,11 @@ model PromoCode {
   promoType String
   code      String
   discount  Int
-  expired   Boolean
+  active    Boolean   @default(true)
   startDate DateTime?
   endDate   DateTime?
-
-  orders Order[]
+  minPrice  Float?
+  orders    Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

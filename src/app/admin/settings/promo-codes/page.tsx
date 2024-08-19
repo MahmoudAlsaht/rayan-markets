@@ -4,14 +4,14 @@ import { getAllPromos } from "./_actions/getAllPromos";
 import PromosTable from "./_components/PromosTable";
 
 export default async function PromosSettingsPage() {
-  const brands = await getAllPromos();
+  const promos = await getAllPromos();
 
   return (
     <main dir="rtl">
       <BackButtonNav href="/admin" />
       <PageHeader title="إعدادات كوبونات الخصم" />
 
-      <PromosTable data={brands} />
+      <PromosTable data={promos} />
       <div className="h-20"></div>
     </main>
   );

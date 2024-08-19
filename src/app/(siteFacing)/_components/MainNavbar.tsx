@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import Logo from "../../rayan.marketLogo.png";
-import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState, useTransition } from "react";
+import { usePathname } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ShoppingBag, UserCircle } from "lucide-react";
 import {
@@ -32,8 +32,6 @@ export default function MainNavbar({
 }) {
   const [offersExists, setOffersExists] = useState(true);
   const [forHomeExists, setForHomeExists] = useState(true);
-
-  const router = useRouter();
 
   const pathname = usePathname();
 

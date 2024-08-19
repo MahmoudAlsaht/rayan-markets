@@ -72,14 +72,14 @@ export default function PromosTable({ data }: { data: Partial<PromoCode>[] }) {
       ),
     },
     {
-      accessorKey: "expired",
+      accessorKey: "active",
       header: () => <div className="text-right">الحالة</div>,
       cell: ({ row }) => (
         <div className="capitalize">
-          {row.getValue("expired") ? (
-            <span className="text-destructive">غير فعال</span>
-          ) : (
+          {row.getValue("active") ? (
             "فعال"
+          ) : (
+            <span className="text-destructive">غير فعال</span>
           )}
         </div>
       ),

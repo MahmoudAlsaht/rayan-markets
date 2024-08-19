@@ -137,7 +137,7 @@ export function ContactForm({
         )}
       </div>
 
-      <SubmitButton body={"اضافة"} />
+      <SubmitButton body={!contact ? "اضافة" : "حفظ"} />
     </form>
   );
 }
