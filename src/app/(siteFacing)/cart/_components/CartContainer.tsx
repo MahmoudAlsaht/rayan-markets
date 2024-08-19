@@ -7,7 +7,19 @@ import { redirect } from "next/navigation";
 
 const CART_MIN = 5;
 
-export default function CartContainer({ cart }: { cart: Cart | null }) {
+type CartContainerProps = {
+  cart: Cart | null;
+  user: {
+    id: string;
+    phone: string;
+    username: string;
+    role: string;
+    profile: {
+      id: string;
+    } | null;
+  } | null;
+};
+export default function CartContainer({ cart, user }: CartContainerProps) {
   if (!cart) redirect("/");
   return (
     <main dir="rtl" className="flex w-full flex-col gap-4">
@@ -33,7 +45,9 @@ export default function CartContainer({ cart }: { cart: Cart | null }) {
           disabled={cart.total < CART_MIN}
           className="w-full rounded-xl sm:w-1/5"
         >
-          <LoadingLink href={"#"}>أكمل للدفع</LoadingLink>
+          <LoadingLink href={`/account/${user?.profile?.id}/contacts`}>
+            تنفيذ الطلب
+          </LoadingLink>
         </Button>
       </div>
       <div className="order-10 h-20"></div>

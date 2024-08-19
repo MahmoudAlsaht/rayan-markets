@@ -2,29 +2,29 @@ import Widget from "@/app/admin/_components/Widget";
 import BackButtonNav from "@/components/BackButtonNav";
 import PageHeader from "@/components/PageHeader";
 
-const accountSettings = (id: string) => [
+const accountSettings = (profileId: string) => [
   {
     displayName: "اسم المستخدم",
-    href: `/account/${id}/account-settings/username`,
+    href: `/account/${profileId}/account-settings/username`,
   },
   {
     displayName: "الهاتف",
-    href: `/account/${id}/account-settings/phone`,
+    href: `/account/${profileId}/account-settings/phone`,
   },
   {
     displayName: "كلمة المرور",
-    href: `/account/${id}/account-settings/password`,
+    href: `/account/${profileId}/account-settings/password`,
   },
   {
     displayName: "حذف الحساب",
-    href: `/account/${id}/account-settings/account-deletion`,
+    href: `/account/${profileId}/account-settings/account-deletion`,
   },
 ];
 
 export default function AccountSettings({
-  params: { id },
+  params: { profileId },
 }: {
-  params: { id: string };
+  params: { profileId: string };
 }) {
   return (
     <main dir="rtl">
@@ -32,7 +32,7 @@ export default function AccountSettings({
       <PageHeader title="إعدادات الحساب" />
 
       <div className="mt-4 grid h-dvh grid-cols-1 gap-4 sm:mt-8 md:grid-cols-2 lg:grid-cols-3">
-        {accountSettings(id || "unRegisteredUser").map(
+        {accountSettings(profileId || "unRegisteredUser").map(
           (setting) =>
             setting &&
             setting.displayName !== "المتجر" && (

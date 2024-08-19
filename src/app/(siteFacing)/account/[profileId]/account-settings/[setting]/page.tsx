@@ -6,9 +6,9 @@ import DeleteAccountForm from "../_components/DeleteAccountForm";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
 
 export default async function page({
-  params: { id, setting },
+  params: { profileId, setting },
 }: {
-  params: { id: string; setting: string };
+  params: { profileId: string; setting: string };
 }) {
   const user = await checkUser();
 
@@ -16,13 +16,18 @@ export default async function page({
     <div dir="rtl">
       <BackButtonNav />
       {setting === "username" && (
-        <UsernameForm username={user?.username as string} profileId={id} />
+        <UsernameForm
+          username={user?.username as string}
+          profileId={profileId}
+        />
       )}
       {setting === "phone" && (
-        <PhoneForm phone={user?.phone as string} profileId={id} />
+        <PhoneForm phone={user?.phone as string} profileId={profileId} />
       )}
-      {setting === "password" && <PasswordForm profileId={id} />}
-      {setting === "account-deletion" && <DeleteAccountForm profileId={id} />}
+      {setting === "password" && <PasswordForm profileId={profileId} />}
+      {setting === "account-deletion" && (
+        <DeleteAccountForm profileId={profileId} />
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import CartContainer, {
   CartContainerSkeleton,
 } from "./_components/CartContainer";
 import { Suspense } from "react";
+import { checkUser } from "../auth/_actions/isAuthenticated";
 
 export default function CartPage() {
   return (
@@ -24,5 +25,6 @@ export default function CartPage() {
 
 async function CartSuspense() {
   const cart = await getCart();
-  return <CartContainer cart={cart} />;
+  const user = await checkUser();
+  return <CartContainer cart={cart} user={user} />;
 }

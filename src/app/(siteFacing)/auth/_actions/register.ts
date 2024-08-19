@@ -72,7 +72,7 @@ export const register = async (_pervState: unknown, formData: FormData) => {
     path: "/",
     expires: date,
   });
-  // await sendVerificationCode('546897');
+  await sendVerificationCode("546897");
 
   redirect("/");
 };
