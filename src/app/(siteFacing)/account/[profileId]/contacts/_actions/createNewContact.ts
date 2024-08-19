@@ -38,7 +38,7 @@ export const createNewContact = async (
 
   const data = result.data;
 
-  if (data.isNewContactNumber !== "on")
+  if (data.isNewContactNumber !== "on" && !data.contactNumber)
     return {
       isNewContactNumber: "رقم الهاتف المدخل غير صحيح!",
       contactNumber: "",
