@@ -36,6 +36,7 @@ export type ProductCardProps = {
   weights: number[] | null;
   flavors: string[] | null;
   isOffer: boolean | null;
+  quantity: number;
 };
 
 export default function ProductCard({
@@ -53,6 +54,7 @@ export default function ProductCard({
   const pathname = usePathname();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
   const [isProductInCart, setIsProductInCart] = useState(false);
+  const [cartLimit, setCartLimit] = useState(product.quantity);
 
   const showPage = async (id: string) => {
     if (!isProductDetailsPage) {
@@ -63,17 +65,20 @@ export default function ProductCard({
   };
 
   const handleAddToCart = (selectedOption?: number | string) => {
+    if (cartLimit < 1) return;
     startTransition(async () => {
       const newProduct = await addProductToCart({ ...product, selectedOption });
+      setCartLimit(product.quantity - newProduct.counter);
       setProductInCart(newProduct);
       setIsProductInCart(newProduct !== null);
-      console.log(newProduct);
     });
   };
 
   const handleAddToCounter = () => {
+    if (cartLimit < 1) return;
     startTransition(async () => {
       const updatedProduct = await addToProductCounter(product?.id as string);
+      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -84,6 +89,7 @@ export default function ProductCard({
       const updatedProduct = await takeFromProductCounter(
         product?.id as string,
       );
+      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -105,7 +111,7 @@ export default function ProductCard({
         isProductDetailsPage
           ? "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"
           : "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
-      } `}
+      } ${cartLimit < 1 && "text-muted"}`}
     >
       <div
         className={`relative ${
@@ -128,10 +134,11 @@ export default function ProductCard({
           />
         </LoadingLink>
         <div
-          className={`absolute -bottom-6 rounded-2xl bg-white py-2 shadow-sm duration-500 ${isProductDetailsPage ? (isProductInCart ? "right-0 w-full" : "right-1/4 w-1/2") : "-bottom-4 left-2 w-full rounded-2xl bg-white py-2 shadow-md shadow-slate-200 sm:left-0 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl" && isProductInCart && "w-full"}`}
+          className={`absolute -bottom-6 rounded-2xl ${cartLimit < 1 ? "bg-gray-400" : "bg-white"} py-2 shadow-sm duration-500 ${isProductDetailsPage ? (isProductInCart ? "right-0 w-full" : "right-1/4 w-1/2") : "-bottom-4 left-2 w-full rounded-2xl bg-white py-2 shadow-md shadow-slate-200 sm:left-0 sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl" && isProductInCart && "w-full"}`}
         >
           {!isProductInCart && (
             <ProductMenuPrice
+              disabled={cartLimit < 1}
               flavors={
                 product.flavors && product.flavors.length
                   ? product.flavors
@@ -151,6 +158,7 @@ export default function ProductCard({
                 size="sm"
                 variant="secondary"
                 onClick={handleAddToCounter}
+                disabled={cartLimit < 1}
               >
                 <Plus className="size-6 text-rayanPrimary-dark" />
               </Button>
@@ -160,6 +168,7 @@ export default function ProductCard({
               <Button
                 size="sm"
                 variant="secondary"
+                disabled={cartLimit < 1}
                 onClick={handleTakeFromCounter}
               >
                 <Minus className="size-6 text-rayanPrimary-dark" />
@@ -185,6 +194,13 @@ export default function ProductCard({
         >
           {isProductDetailsPage ? product?.body : product?.name}
         </p>
+        {cartLimit < 1 && (
+          <p
+            className={`${isProductDetailsPage && "mt-6 text-xl"} text-rayanWarning-dark`}
+          >
+            هذا المنتج غير متوفر حاليا
+          </p>
+        )}
         <div className={`mt-4 flex items-center justify-center gap-6`}>
           <div
             className={`flex items-center justify-around sm:gap-2 md:justify-start`}
@@ -223,8 +239,10 @@ export default function ProductCard({
 function ProductMenuPrice({
   weights,
   flavors,
+  disabled = false,
   handleAddToCart,
 }: {
+  disabled?: boolean;
   weights?: number[] | null;
   flavors?: string[] | null;
   handleAddToCart: (weight?: number | string) => void;
@@ -235,13 +253,13 @@ function ProductMenuPrice({
     return (
       <ShoppingBag
         className={`size-6 w-full cursor-pointer px-10`}
-        onClick={addProduct}
+        onClick={!disabled ? addProduct : () => null}
       />
     );
 
   return (
     <DropdownMenu dir="rtl">
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <ShoppingBag className="size-6 w-full px-10" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>

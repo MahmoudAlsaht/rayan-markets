@@ -8,6 +8,7 @@ export type CartProduct = {
   flavor?: string | null;
   price: number;
   total: number;
+  quantity: number;
   counter: number;
   image: string;
 };

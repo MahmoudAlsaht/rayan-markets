@@ -11,6 +11,26 @@ import ProductsContainer from "../../_components/ProductsContainer";
 import { Suspense } from "react";
 import { LoadingLink } from "@/context/LoadingContext";
 
+const selectProduct = {
+  id: true,
+  name: true,
+  labels: true,
+  description: true,
+  body: true,
+  price: true,
+  newPrice: true,
+  productType: true,
+  weights: true,
+  flavors: true,
+  isOffer: true,
+  quantity: true,
+  image: {
+    select: {
+      path: true,
+    },
+  },
+};
+
 const getLabels = async (labels: string[], id: string) => {
   db.product.updateMany({
     where: {
@@ -66,23 +86,7 @@ const getLabels = async (labels: string[], id: string) => {
         value: true,
         products: {
           where: { NOT: { id } },
-          select: {
-            id: true,
-            name: true,
-            description: true,
-            body: true,
-            price: true,
-            newPrice: true,
-            productType: true,
-            weights: true,
-            flavors: true,
-            isOffer: true,
-            image: {
-              select: {
-                path: true,
-              },
-            },
-          },
+          select: selectProduct,
         },
       },
     });
@@ -123,24 +127,7 @@ async function ProductDetailsPageSuspense({ id }: { id: string }) {
   const user = await checkUser();
   const product = await db.product.findUnique({
     where: { id },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      body: true,
-      price: true,
-      newPrice: true,
-      productType: true,
-      weights: true,
-      flavors: true,
-      isOffer: true,
-      labels: { select: { value: true } },
-      image: {
-        select: {
-          path: true,
-        },
-      },
-    },
+    select: selectProduct,
   });
 
   const labels = (await getLabels(

@@ -25,6 +25,7 @@ export async function addProductToCart(
     name: cartProductName as string,
     price: cartProductPrice,
     image: product.image?.path as string,
+    quantity: product.quantity,
     weight:
       typeof product.selectedOption === "number"
         ? (cartProductWeight as number)
