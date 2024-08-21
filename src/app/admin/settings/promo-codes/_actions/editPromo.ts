@@ -45,9 +45,11 @@ export async function editPromo(
           : parseInt(data.discount as string) || 0,
       promoType: data.promoType || currentPromo?.promoType,
       active: data.active === "on" ? true : false,
-      minPrice: data.isMinPrice
-        ? parseFloat(data.minPrice as string) || currentPromo?.minPrice
-        : null,
+      minPrice:
+        data.isMinPrice === "on"
+          ? parseFloat(data.minPrice as string) || currentPromo?.minPrice
+          : null,
+      isTerms: data.isMinPrice === "on",
       startDate:
         data.active === "on"
           ? (date?.from && addHours(date?.from, 3)) || currentPromo?.startDate

@@ -24,12 +24,16 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
   if (!cart) redirect("/");
   return (
     <main dir="rtl" className="flex w-full flex-col gap-4">
-      <CheckPromoForm />
       <section className="grid grid-cols-1 gap-2 pt-5 sm:container sm:order-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {cart?.products.map((product) => (
           <CartCard key={product.id} product={product} />
         ))}
       </section>
+
+      <div className="sm:mx-auto sm:w-6/12">
+        <CheckPromoForm cart={cart} />
+      </div>
+
       <div className="container flex flex-col items-center gap-2">
         {cart.total < CART_MIN ? (
           <div className="text-center text-lg text-destructive sm:order-1 sm:text-xl">
@@ -42,7 +46,6 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
             المبلغ الإجمالي: {formatCurrency(cart.total)}
           </p>
         )}
-
         <Button
           disabled={cart.total < CART_MIN}
           className="w-full rounded-xl sm:w-1/5"
@@ -52,6 +55,7 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
           </LoadingLink>
         </Button>
       </div>
+
       <div className="order-10 h-20"></div>
     </main>
   );

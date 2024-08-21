@@ -60,7 +60,8 @@ export async function createNewPromo(
           : parseInt(data.discount as string) || 0,
       promoType: data.promoType,
       active: data.active === "on" ? true : false,
-      minPrice: data.isMinPrice ? parseFloat(data.minPrice) : null,
+      minPrice: data.isMinPrice === "on" ? parseFloat(data.minPrice) : null,
+      isTerms: data.isMinPrice === "on",
       startDate:
         data.active === "on" ? date?.from && addHours(date?.from, 3) : null,
       endDate:

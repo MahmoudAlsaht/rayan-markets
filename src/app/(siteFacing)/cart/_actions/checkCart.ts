@@ -42,3 +42,7 @@ export async function findProduct(id: string) {
 
   return product as CartProduct;
 }
+
+export async function updateCart(updatedCart: Cart) {
+  cookies().set("cart", JSON.stringify(updatedCart));
+}

@@ -1,47 +1,79 @@
 "use client";
 import { PromoCode } from "@prisma/client";
-import { FormEvent, useRef, useState, useTransition } from "react";
+import { FormEvent, useState, useTransition } from "react";
 import { checkPromoAndAddToCart } from "../../_actions/checkPromo";
 import SubmitButton from "@/components/SubmitButton";
-import { CheckIcon } from "lucide-react";
+import { formatCurrency } from "@/lib/formatters";
+import { Cart, getCart, updateCart } from "../_actions/checkCart";
 
-export default function CheckPromoForm() {
+export default function CheckPromoForm({ cart }: { cart: Cart }) {
   const [_, startChecking] = useTransition();
   const [promo, setPromo] = useState<PromoCode | null>(null);
-  const codeRef = useRef<HTMLInputElement | null>(null);
+  const [code, setCode] = useState("");
+  const [isPromoExist, setIsPromoExist] = useState(true);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     startChecking(async () => {
-      const fetchedPromo = await checkPromoAndAddToCart(
-        codeRef.current?.value as string,
-      );
+      const fetchedPromo = await checkPromoAndAddToCart(code);
       setPromo(fetchedPromo);
+      setIsPromoExist(fetchedPromo != null);
+      if (fetchedPromo && fetchedPromo.active) {
+        const updatedCart = { ...cart, promo: fetchedPromo };
+        await updateCart(updatedCart);
+      }
     });
   };
 
   return (
-    <form className="flex" onSubmit={handleSubmit}>
-      <div className="group relative z-0 mb-5 w-full basis-11/12">
-        <input
-          type="text"
-          id="code"
-          className={`peer block w-full appearance-none border-0 border-b-2 border-gray-600 bg-transparent px-0 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-0 ${promo && promo.active ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark" : "border-destructive text-destructive focus:border-destructive"}`}
-          placeholder=""
-          ref={codeRef}
+    <>
+      <form className="sm:flex" onSubmit={handleSubmit}>
+        <div className="relative mb-2 sm:basis-11/12">
+          <input
+            type="text"
+            id="code"
+            className={`w-full rounded-lg border border-gray-600 bg-slate-100 px-0 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-0 sm:w-11/12 ${promo && `${promo?.active ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark" : !promo?.active && "border-destructive text-destructive focus:border-destructive"}`}`}
+            placeholder="كوبون الخصم"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </div>
+        <SubmitButton
+          disabled={code === ""}
+          size="sm"
+          body="تطبيق"
+          className="sm:basis-1/6"
         />
-        <label
-          htmlFor="code"
-          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+      </form>
+      {(promo || !isPromoExist) && (
+        <div
+          className={
+            (promo?.active && !promo.isTerms) ||
+            (promo?.active &&
+              promo?.isTerms &&
+              cart.total >= (promo?.minPrice || 0))
+              ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark"
+              : !promo?.active ||
+                  !isPromoExist ||
+                  (promo.isTerms && cart.total < (promo?.minPrice || 0))
+                ? "border-destructive text-destructive focus:border-destructive"
+                : ""
+          }
         >
-          كوبون الخصم
-        </label>
-      </div>
-      <SubmitButton
-        size="sm"
-        body={`${promo?.active ? "فعال" : promo ? promo?.active && "غير فعال" : "تطبيق"}`}
-        className={`basis-1/6 ${promo?.active ? "bg-rayanPrimary-dark" : promo ? !promo?.active && "bg-destructive" : ""}`}
-      />
-    </form>
+          {(promo?.active && !promo.isTerms) ||
+          (promo?.active &&
+            promo.isTerms &&
+            cart.total >= (promo?.minPrice || 0))
+            ? `لقد حصلت على ${promo.promoType === "shippingFees" ? " توصيل مجاني" : `على خصم بقيمة (${promo.discount}%) على مشترياتك `}`
+            : !promo?.active && isPromoExist
+              ? "هذا الكوبون غير فعال"
+              : isPromoExist &&
+                  promo?.isTerms &&
+                  cart.total < (promo?.minPrice || 0)
+                ? `يجب أن يكون إجمالي السلة (${formatCurrency(promo?.minPrice as number)}) لتحصل على الخصم. اضف مشتريات بقيمة (${formatCurrency((promo.minPrice as number) - cart.total)})`
+                : !isPromoExist && "لم يتم العثور على كوبون الخصم"}
+        </div>
+      )}
+    </>
   );
 }

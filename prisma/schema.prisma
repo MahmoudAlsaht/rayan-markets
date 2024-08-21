@@ -78,6 +78,7 @@ model PromoCode {
   code      String
   discount  Int
   active    Boolean   @default(true)
+  isTerms   Boolean?  @default(false)
   startDate DateTime?
   endDate   DateTime?
   minPrice  Float?
