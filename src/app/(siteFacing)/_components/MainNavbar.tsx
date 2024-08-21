@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Logo from "../../rayan.marketLogo.png";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { ShoppingBag, UserCircle } from "lucide-react";
 import {
@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
-import { checkProductTypeExists } from "../_actions/checkProductsType";
 import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
 import { LoadingLink } from "@/context/LoadingContext";
 
 export default function MainNavbar({
   user,
   cart,
+  offersExists = false,
+  forHomeExists = false,
 }: {
   user: {
     id: string;
@@ -29,23 +30,12 @@ export default function MainNavbar({
     profile: { id: string };
   };
   cart: Cart | null;
+  offersExists?: boolean;
+  forHomeExists?: boolean;
 }) {
-  const [offersExists, setOffersExists] = useState(true);
-  const [forHomeExists, setForHomeExists] = useState(true);
-
   const pathname = usePathname();
 
   const isAccountPage = pathname === `/account/${user?.profile?.id}`;
-
-  useEffect(() => {
-    const checkProductsLinks = async () => {
-      const isOffer = await checkProductTypeExists("offers");
-      const isForHome = await checkProductTypeExists("forHome");
-      setOffersExists(isOffer);
-      setForHomeExists(isForHome);
-    };
-    checkProductsLinks();
-  }, []);
 
   const menuList: { href: string | (() => void); title: string }[] = !user
     ? [

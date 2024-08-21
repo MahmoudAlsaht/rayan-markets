@@ -7,6 +7,7 @@ import BackButtonNav from "@/components/BackButtonNav";
 import Banner from "../../_components/Banner";
 import ProductsMobileContainer from "../_components/ProductsMobileContainer";
 import { Suspense } from "react";
+import db from "@/db/db";
 
 const getProducts = async (
   productsType: string,
@@ -56,9 +57,15 @@ async function ProductsMobileSuspense({
   search?: string;
 }) {
   const products = await getProducts(productsType, orderBy, search);
+  const forHomeProducts = await db.product.findFirst({
+    where: { productType: "forHome" },
+  });
+  const offers = await db.product.findFirst({ where: { isOffer: true } });
   return (
     <>
       <ProductsMobileContainer
+        offersExists={offers !== null}
+        forHomeExists={forHomeProducts !== null}
         products={products}
         query={search}
         banner={

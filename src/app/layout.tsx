@@ -10,6 +10,7 @@ import MainNavbar from "./(siteFacing)/_components/MainNavbar";
 import { checkUser } from "./(siteFacing)/auth/_actions/isAuthenticated";
 import { getCart } from "./(siteFacing)/cart/_actions/checkCart";
 import BottomNavbar from "./(siteFacing)/(mobile)/_components/BottomNavbar";
+import db from "@/db/db";
 
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",
@@ -72,6 +73,11 @@ export default async function RootLayout({
     profile: { id: string };
   };
   const cart = await getCart();
+  const offers = await db.product.findFirst({ where: { isOffer: true } });
+  const forHomeProducts = await db.product.findFirst({
+    where: { productType: "forHome" },
+  });
+
   return (
     <html lang="ar" suppressHydrationWarning>
       <body
@@ -84,7 +90,14 @@ export default async function RootLayout({
         <ThemeProvider attribute="class">
           <LoadingProvider
             AdminNavbar={<AdminNavbar />}
-            SiteFacingNavbar={<MainNavbar user={user} cart={cart} />}
+            SiteFacingNavbar={
+              <MainNavbar
+                offersExists={offers !== null}
+                forHomeExists={forHomeProducts !== null}
+                user={user}
+                cart={cart}
+              />
+            }
             MobileNavBar={<BottomNavbar />}
           >
             {children}

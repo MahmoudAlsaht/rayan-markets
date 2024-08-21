@@ -2,7 +2,6 @@
 import { FormEvent, ReactNode, Suspense, useEffect, useState } from "react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { usePathname, useRouter } from "next/navigation";
-import { checkProductTypeExists } from "../../_actions/checkProductsType";
 import { ArrowDownUpIcon, Search } from "lucide-react";
 import { ProductCardProps } from "./ProductCard";
 import { sortBasedOnPrice } from "../../_actions/product";
@@ -22,16 +21,18 @@ export default function ProductsMobileContainer({
   query = "all",
   products,
   banner,
+  offersExists = false,
+  forHomeExists = false,
 }: {
   query?: string;
   products: ProductCardProps[];
   banner?: ReactNode;
+  offersExists?: boolean;
+  forHomeExists?: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { startLoading } = useStartLoading();
-  const [offersExists, setOffersExists] = useState(true);
-  const [forHomeExists, setForHomeExists] = useState(true);
   const [queryValue, setQueryValue] = useState<string>(
     query === "all" ? "" : query,
   );
@@ -41,13 +42,6 @@ export default function ProductsMobileContainer({
   >(null);
 
   useEffect(() => {
-    const checkProductsType = async () => {
-      const checkedOffersProduct = await checkProductTypeExists("offers");
-      const checkedForHomeProduct = await checkProductTypeExists("forHome");
-      setOffersExists(checkedOffersProduct);
-      setForHomeExists(checkedForHomeProduct);
-    };
-    checkProductsType();
     const sortProducts = async () => {
       const fetchedProducts = await sortBasedOnPrice(
         products as ProductCardProps[],
