@@ -30,20 +30,16 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
         ))}
       </section>
 
-      <div className="sm:mx-auto sm:w-6/12">
-        <CheckPromoForm cart={cart} />
-      </div>
-
-      <Button
-        disabled={cart.total < CART_MIN}
-        className="w-full rounded-xl sm:w-1/5"
-      >
-        <LoadingLink href={`/account/${user?.profile?.id}/contacts`}>
-          تنفيذ الطلب
-        </LoadingLink>
-      </Button>
+      <div className="container sm:mx-auto sm:w-6/12"></div>
 
       <div className="container flex flex-col items-center gap-2">
+        <CheckPromoForm cart={cart} />
+        <Button
+          disabled={cart.total < CART_MIN}
+          className="w-full rounded-xl sm:w-1/5"
+        >
+          <LoadingLink href={`/checkout`}>متابعة</LoadingLink>
+        </Button>
         {cart.total < CART_MIN ? (
           <div className="text-center text-lg text-destructive sm:order-1 sm:text-xl">
             <p>المبلغ الإجمالي: ({formatCurrency(cart.total)}) </p>

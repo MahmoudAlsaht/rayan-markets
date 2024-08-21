@@ -27,12 +27,12 @@ export default function CheckPromoForm({ cart }: { cart: Cart }) {
 
   return (
     <>
-      <form className="sm:flex" onSubmit={handleSubmit}>
+      <form className="w-full sm:flex sm:w-1/3" onSubmit={handleSubmit}>
         <div className="relative mb-2 sm:basis-11/12">
           <input
             type="text"
             id="code"
-            className={`w-full rounded-lg border border-gray-600 bg-slate-100 px-0 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-0 sm:w-11/12 ${promo && `${promo?.active ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark" : !promo?.active && "border-destructive text-destructive focus:border-destructive"}`}`}
+            className={`w-full rounded-lg border border-gray-600 bg-slate-100 px-2 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-0 sm:w-11/12 ${promo && `${promo?.active ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark" : !promo?.active && "border-destructive text-destructive focus:border-destructive"}`}`}
             placeholder="كوبون الخصم"
             value={code}
             onChange={(e) => setCode(e.target.value)}
