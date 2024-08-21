@@ -30,13 +30,11 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
         ))}
       </section>
 
-      <div className="container sm:mx-auto sm:w-6/12"></div>
-
       <div className="container flex flex-col items-center gap-2">
         <CheckPromoForm cart={cart} />
         <Button
           disabled={cart.total < CART_MIN}
-          className="w-full rounded-xl sm:w-1/5"
+          className="w-full rounded-xl sm:w-1/3"
         >
           <LoadingLink href={`/checkout`}>متابعة</LoadingLink>
         </Button>
