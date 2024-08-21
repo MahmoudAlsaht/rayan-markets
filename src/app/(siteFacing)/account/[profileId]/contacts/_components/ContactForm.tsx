@@ -11,7 +11,7 @@ export function ContactForm({
   user,
   districts,
   contact,
-  prevRoute = "contacts",
+  prevRoute,
 }: {
   prevRoute?: string;
   user: {
@@ -39,12 +39,16 @@ export function ContactForm({
 
   const [error, contactAction] = useFormState(
     !contact
-      ? createNewContact.bind(null, user?.profile?.id as string, prevRoute)
+      ? createNewContact.bind(
+          null,
+          user?.profile?.id as string,
+          prevRoute as string,
+        )
       : editContact.bind(
           null,
           contact.id as string,
           user?.profile?.id as string,
-          prevRoute,
+          prevRoute as string,
         ),
     {},
   );

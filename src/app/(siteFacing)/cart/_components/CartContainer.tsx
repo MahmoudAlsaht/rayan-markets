@@ -36,7 +36,7 @@ export default function CartContainer({ cart, user }: CartContainerProps) {
           disabled={cart.total < CART_MIN}
           className="w-full rounded-xl sm:w-1/3"
         >
-          <LoadingLink href={`/checkout`}>متابعة</LoadingLink>
+          <LoadingLink href="/checkout/contact">تأكيد الاختيار</LoadingLink>
         </Button>
         {cart.total < CART_MIN ? (
           <div className="text-center text-lg text-destructive sm:order-1 sm:text-xl">

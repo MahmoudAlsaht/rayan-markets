@@ -24,4 +24,18 @@ export async function deleteContact(contactId: string) {
       },
     },
   });
+
+  const latestContact = await db.contact.findMany({
+    where: { profileId: contact?.profileId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (
+    latestContact.length &&
+    !latestContact.some((contact) => contact.defaultContact)
+  )
+    await db.contact.update({
+      where: { id: latestContact[0]?.id },
+      data: { defaultContact: true },
+    });
 }

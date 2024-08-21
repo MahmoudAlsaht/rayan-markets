@@ -263,7 +263,6 @@ function ProductMenuPrice({
         <ShoppingBag className="size-6 w-full px-10" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>اختر الوزن</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {weights?.map((price, index) => (
           <DropdownMenuItem key={index} onClick={() => handleAddToCart(price)}>

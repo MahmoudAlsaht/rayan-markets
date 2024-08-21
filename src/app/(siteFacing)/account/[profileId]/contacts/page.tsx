@@ -1,8 +1,8 @@
-import { LoadingLink } from "@/context/LoadingContext";
 import db from "@/db/db";
 import { Plus } from "lucide-react";
-import React, { ReactNode } from "react";
+import React from "react";
 import DeleteContact from "./_components/DeleteContact";
+import ContactCard from "./_components/ContactCard";
 
 export default async function ContactsPage({
   params: { profileId },
@@ -14,10 +14,26 @@ export default async function ContactsPage({
     select: {
       id: true,
       contactNumber: true,
+      defaultContact: true,
       district: { select: { name: true } },
     },
   });
 
+  return <ContactsContainer profileId={profileId} contacts={contacts} />;
+}
+
+export function ContactsContainer({
+  profileId,
+  contacts,
+}: {
+  profileId: string;
+  contacts: {
+    defaultContact: boolean;
+    id: string;
+    contactNumber: string | null;
+    district: { name: string } | null;
+  }[];
+}) {
   return (
     <div className="container mx-auto grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
       <ContactCard href={`/account/${profileId}/contacts/new`}>
@@ -25,31 +41,20 @@ export default async function ContactsPage({
       </ContactCard>
       {contacts.map((contact, index) => (
         <section key={contact.id}>
-          <ContactCard href={`/account/${profileId}/contacts/${contact.id}`}>
-            <div className="">العنوان - {index + 1}</div>
-            <div className="">{contact.district?.name}</div>
+          <ContactCard
+            profileId={profileId}
+            contactId={contact.id}
+            isEditable
+            href={`/account/${profileId}/contacts/${contact.id}`}
+            className={`${contact.defaultContact && "scale-105 bg-rayanPrimary-light bg-opacity-20 shadow-lg"}`}
+          >
+            <div>العنوان - {index + 1}</div>
+            <div>{contact.district?.name}</div>
             <div>{contact.contactNumber}</div>
           </ContactCard>
           <DeleteContact contactId={contact.id} />
         </section>
       ))}
     </div>
-  );
-}
-
-function ContactCard({
-  href,
-  children,
-}: {
-  href: string;
-  children: ReactNode;
-}) {
-  return (
-    <LoadingLink
-      href={href}
-      className="h-32 cursor-pointer rounded-2xl bg-white p-4 duration-500 hover:scale-105"
-    >
-      {children}
-    </LoadingLink>
   );
 }

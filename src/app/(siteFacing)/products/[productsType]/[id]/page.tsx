@@ -20,6 +20,8 @@ const selectProduct = {
   price: true,
   newPrice: true,
   productType: true,
+  offerStartsAt: true,
+  offerEndsAt: true,
   weights: true,
   flavors: true,
   isOffer: true,
@@ -114,7 +116,6 @@ export default function ProductsTypePage({
         <BackButtonNav />
       </div>
 
-      {/* <ProductCardSkeleton isProductDetailsPage /> */}
       <Suspense fallback={<ProductCardSkeleton isProductDetailsPage />}>
         <ProductDetailsPageSuspense id={id} />
       </Suspense>

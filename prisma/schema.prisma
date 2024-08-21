@@ -167,6 +167,7 @@ model Contact {
   id               String  @id @default(auto()) @map("_id") @db.ObjectId
   contactNumber    String?
   verificationCode String?
+  defaultContact   Boolean @default(true)
 
   profileId String?  @db.ObjectId
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)

@@ -51,7 +51,7 @@ export const createNewContact = async (
     select: { phone: true },
   });
 
-  await db.profile.update({
+  const { contacts } = await db.profile.update({
     where: { id: profileId },
     data: {
       contacts: {
@@ -62,7 +62,23 @@ export const createNewContact = async (
         },
       },
     },
+    select: {
+      contacts: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
   });
+
+  for (const contact of contacts) {
+    if (contacts[contacts.length - 1].id !== contact.id) {
+      await db.contact.update({
+        where: { id: contact.id },
+        data: { defaultContact: false },
+      });
+    }
+  }
 
   redirect(
     prevPath === "contacts" ? `/account/${profileId}/contacts` : prevPath,
