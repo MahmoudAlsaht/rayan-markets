@@ -17,7 +17,7 @@ const addContactSchema = z.object({
 
 export const createNewContact = async (
   profileId: string,
-  prevPath: string,
+  redirectUrl: string,
   _: unknown,
   formData: FormData,
 ) => {
@@ -80,7 +80,5 @@ export const createNewContact = async (
     }
   }
 
-  redirect(
-    prevPath === "contacts" ? `/account/${profileId}/contacts` : prevPath,
-  );
+  redirect(redirectUrl);
 };

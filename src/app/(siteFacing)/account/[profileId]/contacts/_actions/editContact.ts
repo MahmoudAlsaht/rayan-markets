@@ -18,7 +18,7 @@ const editContactSchema = z.object({
 export const editContact = async (
   contactId: string,
   profileId: string,
-  prevPath: string,
+  redirectUrl: string,
   _: unknown,
   formData: FormData,
 ) => {
@@ -63,7 +63,5 @@ export const editContact = async (
     },
   });
 
-  redirect(
-    prevPath === "contacts" ? `/account/${profileId}/contacts` : prevPath,
-  );
+  redirect(redirectUrl);
 };

@@ -20,7 +20,8 @@ type CartContainerProps = {
     } | null;
   } | null;
 };
-export default function CartContainer({ cart, user }: CartContainerProps) {
+
+export default function CartContainer({ cart }: CartContainerProps) {
   if (!cart) redirect("/");
   return (
     <main dir="rtl" className="flex w-full flex-col gap-4">

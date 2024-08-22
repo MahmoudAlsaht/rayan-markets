@@ -16,7 +16,11 @@ export default async function NewContactPage({
 
   return (
     <main dir="rtl">
-      <ContactForm user={user} districts={districts} />;
+      <ContactForm
+        redirectUrl={`/account/${profileId}/contacts`}
+        user={user}
+        districts={districts}
+      />
     </main>
   );
 }

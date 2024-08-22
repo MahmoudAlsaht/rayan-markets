@@ -1,13 +1,7 @@
 "use client";
 
 import { LoadingLink } from "@/context/LoadingContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ReactNode, useTransition } from "react";
+import { ReactNode, useState, useTransition } from "react";
 import { editDefaultContacts } from "../_actions/editDefaultContacts";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -16,26 +10,31 @@ export default function ContactCard({
   href,
   children,
   isEditable = false,
-  className,
+  isDefault = false,
   contactId,
   profileId,
 }: {
   href: string;
   children: ReactNode;
   isEditable?: boolean;
-  className?: string;
+  isDefault?: boolean;
   contactId?: string;
   profileId?: string;
 }) {
   const [pending, startTransition] = useTransition();
+  const [isOptionsCard, setIsOptionsCard] = useState(false);
+
   const router = useRouter();
+  const handleSetIsOptions = () => setIsOptionsCard(true);
+  const handleCloseIsOptions = () => setIsOptionsCard(false);
 
   const handleUpdate = () => {
+    if (isDefault) return;
     startTransition(async () => {
       profileId &&
         contactId &&
         (await editDefaultContacts(profileId, contactId));
-
+      handleCloseIsOptions();
       router.refresh();
     });
   };
@@ -47,27 +46,41 @@ export default function ContactCard({
     >
       {children}
     </LoadingLink>
+  ) : !isOptionsCard ? (
+    <div
+      className={`h-32 cursor-pointer rounded-2xl bg-white p-4 duration-500 hover:scale-105 ${isDefault && "scale-105 bg-slate-400 bg-opacity-30 shadow-lg"}`}
+      onClick={handleSetIsOptions}
+    >
+      {children}
+    </div>
   ) : (
-    <DropdownMenu dir="rtl">
-      <DropdownMenuTrigger asChild>
-        <div
-          className={`h-32 cursor-pointer rounded-2xl bg-white p-4 duration-500 hover:scale-105 ${className}`}
-        >
-          {!pending ? (
-            children
-          ) : (
-            <Loader2 className="mx-auto size-20 animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light" />
+    <div className={`flex h-32 items-center rounded-2xl bg-white`}>
+      {!pending ? (
+        <div className="mx-auto h-full cursor-pointer pt-6 text-center">
+          {!isDefault && (
+            <div
+              onClick={handleUpdate}
+              className={`h-8 rounded-lg px-2 pt-1 ${!isDefault ? "duration-200 hover:bg-rayanPrimary-dark hover:bg-opacity-20" : "cursor-text bg-rayanPrimary-dark bg-opacity-20"}`}
+            >
+              تعيين كافتراضي
+            </div>
           )}
+          <LoadingLink
+            href={href}
+            className="h-8 rounded-lg px-2 pt-1 duration-200 hover:bg-rayanPrimary-dark hover:bg-opacity-20"
+          >
+            تعديل العنوان
+          </LoadingLink>
+          <div
+            className="h-8 rounded-lg px-2 pt-1 duration-200 hover:bg-rayanPrimary-dark hover:bg-opacity-20"
+            onClick={handleCloseIsOptions}
+          >
+            إلغاء
+          </div>
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleUpdate}>
-          تعيين كعنوان افتراضي
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LoadingLink href={href}>تعديل</LoadingLink>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      ) : (
+        <Loader2 className="mx-auto size-20 animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light" />
+      )}
+    </div>
   );
 }

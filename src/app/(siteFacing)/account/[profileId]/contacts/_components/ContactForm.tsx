@@ -11,9 +11,9 @@ export function ContactForm({
   user,
   districts,
   contact,
-  prevRoute,
+  redirectUrl,
 }: {
-  prevRoute?: string;
+  redirectUrl: string;
   user: {
     profile: {
       id: string;
@@ -42,13 +42,13 @@ export function ContactForm({
       ? createNewContact.bind(
           null,
           user?.profile?.id as string,
-          prevRoute as string,
+          redirectUrl as string,
         )
       : editContact.bind(
           null,
           contact.id as string,
           user?.profile?.id as string,
-          prevRoute as string,
+          redirectUrl as string,
         ),
     {},
   );
