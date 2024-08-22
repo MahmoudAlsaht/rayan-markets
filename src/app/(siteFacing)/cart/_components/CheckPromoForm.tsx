@@ -4,7 +4,7 @@ import { FormEvent, useState, useTransition } from "react";
 import { checkPromoAndAddToCart } from "../../_actions/checkPromo";
 import SubmitButton from "@/components/SubmitButton";
 import { formatCurrency } from "@/lib/formatters";
-import { Cart, getCart, updateCart } from "../_actions/checkCart";
+import { Cart } from "../_actions/checkCart";
 
 export default function CheckPromoForm({ cart }: { cart: Cart }) {
   const [_, startChecking] = useTransition();
@@ -18,10 +18,6 @@ export default function CheckPromoForm({ cart }: { cart: Cart }) {
       const fetchedPromo = await checkPromoAndAddToCart(code);
       setPromo(fetchedPromo);
       setIsPromoExist(fetchedPromo != null);
-      if (fetchedPromo && fetchedPromo.active) {
-        const updatedCart = { ...cart, promo: fetchedPromo };
-        await updateCart(updatedCart);
-      }
     });
   };
 

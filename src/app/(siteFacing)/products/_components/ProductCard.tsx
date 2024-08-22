@@ -231,7 +231,6 @@ export default function ProductCard({
           </div>
         )}
       </LoadingLink>
-      {isProductDetailsPage && <div className="h-24"></div>}
     </div>
   );
 }

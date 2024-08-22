@@ -54,6 +54,10 @@ export async function searchProducts(
   if (!query || query == "all" || query === "")
     return await getAllProducts(orderBy, productType, productCount);
 
+  const products = await getMatchedProducts(query);
+
+  if (products?.length > 0) return products;
+
   const brandProducts = await getSectionProducts(
     query,
     orderBy,
@@ -132,11 +136,7 @@ export async function searchProducts(
       ).values(),
     ] as ProductCardProps[];
 
-  const products = await getAllProducts(orderBy, productType, productCount);
-
-  if (products?.length === 0) return products;
-
-  return products;
+  return await getAllProducts(orderBy, productType, productCount);
 }
 
 export async function updateProductViews(id: string) {
@@ -260,6 +260,18 @@ async function getAllProducts(orderBy, productType, productCount) {
           : { createdAt: "desc" },
     select: selectProduct,
     take: productCount,
+  })) as ProductCardProps[];
+}
+
+async function getMatchedProducts(query) {
+  return (await db.product.findMany({
+    where: {
+      OR: [
+        { name: { contains: query, mode: "insensitive" } },
+        { body: { contains: query, mode: "insensitive" } },
+      ],
+    },
+    select: selectProduct,
   })) as ProductCardProps[];
 }
 

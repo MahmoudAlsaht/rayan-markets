@@ -128,7 +128,7 @@ export async function takeFromProductCounter(id: string) {
   return updatedProduct;
 }
 
-function deleteCart() {
+export async function deleteCart() {
   cookies().delete("cart");
 }
 

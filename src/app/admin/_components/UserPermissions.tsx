@@ -71,13 +71,6 @@ export const authorizedUserPermissions = (profileId: string) =>
         <LayoutPanelTop className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
       ),
     },
-    // {
-    // 	displayName: 'العلامات التجارية',
-    // 	href: '/admin/settings/brands',
-    // 	icon: (
-    // 		<ShoppingBag className='flex-shrink-0 w-6 h-6 transition duration-75  group-hover:text-white' />
-    // 	),
-    // },
     {
       displayName: "المنتجات",
       href: "/admin/settings/products",
@@ -108,7 +101,8 @@ export const authorizedUserPermissions = (profileId: string) =>
     },
     {
       displayName: "الطلبات",
-      href: "/admin/settings/orders",
+      href: "/orders",
+      // href: "/admin/settings/orders",
       icon: (
         <Truck className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
       ),
@@ -133,7 +127,7 @@ export const customerPermissions = (profileId: string) =>
     },
     {
       displayName: "الطلبات",
-      href: `/account/${profileId}/orders`,
+      href: `/orders`,
       icon: (
         <Truck className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
       ),

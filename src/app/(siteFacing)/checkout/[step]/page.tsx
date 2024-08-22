@@ -1,3 +1,4 @@
+import db from "@/db/db";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
 import AnonymousForm from "../_components/AnonymousForm";
 import SelectContact from "../_components/SelectContact";
@@ -9,12 +10,15 @@ export default async function CheckoutPage({
   params: { step: string };
 }) {
   const user = await checkUser();
+  const districts = !user
+    ? await db.district.findMany({ select: { id: true, name: true } })
+    : null;
 
   return (
     <>
       {step === "contact" ? (
         !user ? (
-          <AnonymousForm />
+          <AnonymousForm districts={districts} />
         ) : (
           <SelectContact profileId={user.profile?.id as string} />
         )

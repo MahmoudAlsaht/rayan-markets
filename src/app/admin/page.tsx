@@ -11,7 +11,7 @@ export default async function AdminHome() {
 
   return (
     <div
-      className="mt-4 grid h-dvh grid-cols-1 gap-4 sm:mt-8 md:grid-cols-2 lg:grid-cols-3"
+      className="mt-4 grid h-full grid-cols-1 gap-4 sm:mt-8 md:grid-cols-2 lg:grid-cols-3"
       dir="rtl"
     >
       {admin &&

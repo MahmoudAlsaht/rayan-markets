@@ -1,5 +1,5 @@
 "use server";
-import { PromoCode } from "@prisma/client";
+import { Anonymous, PromoCode } from "@prisma/client";
 import { cookies } from "next/headers";
 
 export type CartProduct = {
@@ -17,6 +17,7 @@ export type CartProduct = {
 export type Cart = {
   products: CartProduct[];
   promoCode?: PromoCode;
+  anonymous?: Anonymous;
   total: number;
 };
 

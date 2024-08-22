@@ -8,7 +8,7 @@ import { SectionsContainerSkeleton } from "./sections/_components/SectionsContai
 
 export default function Home() {
   return (
-    <main>
+    <main className="h-full">
       <Suspense>
         <Banner type="main" />
       </Suspense>

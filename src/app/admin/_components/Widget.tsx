@@ -7,14 +7,16 @@ export default function Widget({
   title,
   href,
   danger,
+  className,
 }: {
+  className?: string;
   danger?: boolean;
   title: string;
   href: string;
 }) {
   return (
     <>
-      <Card dir="rtl" className="border-none opacity-70">
+      <Card dir="rtl" className={`border-none opacity-70 ${className}`}>
         <CardHeader>
           <CardTitle
             className={danger ? "text-destructive" : "text-rayanPrimary-dark"}

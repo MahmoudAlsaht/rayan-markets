@@ -10,9 +10,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { handleSearchInput, sortBasedOnPrice } from "../_actions/product";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductsContainer from "../products/_components/ProductsContainer";
 import { ProductCardProps } from "../products/_components/ProductCard";
 import {

@@ -149,7 +149,7 @@ model Anonymous {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
 
-  order   Order?
+  order   Order[]
   contact Contact[]
 }
 
@@ -172,8 +172,8 @@ model Contact {
   profileId String?  @db.ObjectId
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  districtId String?   @db.ObjectId
-  district   District? @relation(fields: [districtId], references: [id])
+  districtId String   @db.ObjectId
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
 
   anonymousId String?    @db.ObjectId
   anonymous   Anonymous? @relation(fields: [anonymousId], references: [id])
@@ -199,7 +199,7 @@ model Order {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   billTotal     Float
   orderId       String
-  status        String
+  status        String @default("pending")
   paymentMethod String
   orderTotal    Float
 
@@ -213,7 +213,7 @@ model Order {
   profileId String?  @db.ObjectId
 
   anonymous   Anonymous? @relation(fields: [anonymousId], references: [id])
-  anonymousId String?    @unique @db.ObjectId
+  anonymousId String?    @db.ObjectId
 
   products  OrderProduct[]
   contact   Contact?       @relation(fields: [contactId], references: [id])
