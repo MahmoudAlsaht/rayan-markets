@@ -37,7 +37,7 @@ export default function BottomNavLinks({
       )}
 
       {user && (
-        <NavLink href={`/account/${user?.profile?.id}/orders`} title="طلباتي">
+        <NavLink href="/orders" title="طلباتي">
           <CiDeliveryTruck className="size-7" />
         </NavLink>
       )}
