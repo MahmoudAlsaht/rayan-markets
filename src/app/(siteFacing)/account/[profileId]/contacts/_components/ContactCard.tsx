@@ -13,6 +13,7 @@ export default function ContactCard({
   isDefault = false,
   contactId,
   profileId,
+  className,
 }: {
   href: string;
   children: ReactNode;
@@ -20,6 +21,7 @@ export default function ContactCard({
   isDefault?: boolean;
   contactId?: string;
   profileId?: string;
+  className?: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [isOptionsCard, setIsOptionsCard] = useState(false);
@@ -48,13 +50,13 @@ export default function ContactCard({
     </LoadingLink>
   ) : !isOptionsCard ? (
     <div
-      className={`h-32 cursor-pointer rounded-2xl bg-white p-4 duration-500 hover:scale-105 ${isDefault && "scale-105 bg-slate-400 bg-opacity-30 shadow-lg"}`}
+      className={`flex h-32 cursor-pointer flex-col items-center justify-center rounded-2xl bg-white transition-all duration-500 ${isDefault && "scale-105 bg-slate-400 bg-opacity-30 shadow-lg"} ${className}`}
       onClick={handleSetIsOptions}
     >
-      {children}
+      <div className="">{children}</div>
     </div>
   ) : (
-    <div className={`flex h-32 items-center rounded-2xl bg-white`}>
+    <div className={`flex h-32 items-center rounded-2xl bg-white ${className}`}>
       {!pending ? (
         <div className="mx-auto h-full cursor-pointer pt-6 text-center">
           {!isDefault && (

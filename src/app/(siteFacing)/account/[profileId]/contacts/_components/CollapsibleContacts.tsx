@@ -55,6 +55,7 @@ export function CollapsibleContacts({
               !contact.defaultContact && (
                 <section key={contact.id}>
                   <ContactCard
+                    className="duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
                     profileId={profileId}
                     contactId={contact.id}
                     isEditable
