@@ -60,8 +60,22 @@ export async function createNewOrder(formData: FormData) {
 
   if (!contact) return notFound();
 
+  const productName = (product: CartProduct) =>
+    product.flavor
+      ? `${product.name} - ${product.flavor}`
+      : product.weight
+        ? product?.weight === 0.25
+          ? `ربع كيلو ${product.name} `
+          : product.weight === 0.5
+            ? `${product.name} نصف كيلو`
+            : product.weight === 0.75
+              ? `كيلو الا ربع ${product.name}`
+              : `${product.weight} كيلو`
+        : product.name;
+
   const newOrderProduct = (product: CartProduct) => ({
-    name: `${product.name} ${(product.weight || product.flavor) && ` - ${product.weight || product.flavor}`}`,
+    productLink: `/products/any/${product.id}`,
+    name: productName(product),
     price: product.price,
     total: product.total,
     image: product.image,
@@ -101,11 +115,18 @@ export async function createNewOrder(formData: FormData) {
     },
   });
 
+  for (const product of cart.products) {
+    await db.product.update({
+      where: { id: product.id },
+      data: { quantity: product.quantity - product.counter },
+    });
+  }
+
   if (!user) await addOrder(newOrder);
 
   await deleteCart();
 
-  redirect("/orders");
+  redirect("/orders/all");
 }
 
 function genOrderId() {

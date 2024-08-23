@@ -69,7 +69,9 @@ export function LoadingLink({
   className,
   children,
   type = "link",
+  target = false,
 }: {
+  target?: boolean;
   href: string | (() => void);
   className?: string;
   children: ReactNode;
@@ -81,7 +83,7 @@ export function LoadingLink({
   const handleStartLoading = () =>
     startLoading(() => {
       if (typeof href === "function") href();
-      else router.push(href);
+      else !target ? router.push(href) : window.open(href, "_blank");
     });
 
   return type === "link" ? (

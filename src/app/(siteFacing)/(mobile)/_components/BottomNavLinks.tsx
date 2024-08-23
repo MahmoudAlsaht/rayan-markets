@@ -37,7 +37,7 @@ export default function BottomNavLinks({
       )}
 
       {user && (
-        <NavLink href="/orders" title="طلباتي">
+        <NavLink href="/orders/all" title="طلباتي">
           <CiDeliveryTruck className="size-7" />
         </NavLink>
       )}
@@ -68,7 +68,9 @@ function NavLink({
       className={`group inline-flex cursor-pointer flex-col items-center justify-center px-5 ${
         (href === pathname ||
           ((href as string).match(/\/products*/) &&
-            pathname.match(/\/products*/))) &&
+            pathname.match(/\/products*/)) ||
+          ((href as string).match(/\/orders*/) &&
+            pathname.match(/\/orders*/))) &&
         "bg-slate-300 text-rayanPrimary-dark"
       }`}
     >

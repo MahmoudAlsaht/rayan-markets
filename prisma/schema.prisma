@@ -184,15 +184,16 @@ model Contact {
 }
 
 model OrderProduct {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  price    Float
-  total    Float
-  image    String
-  quantity Int
-  counter  Int    @default(1)
-  order    Order  @relation(fields: [orderId], references: [id])
-  orderId  String @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  productLink String
+  price       Float
+  total       Float
+  image       String
+  quantity    Int
+  counter     Int    @default(1)
+  order       Order  @relation(fields: [orderId], references: [id])
+  orderId     String @db.ObjectId
 }
 
 model Order {

@@ -9,20 +9,26 @@ import {
   deleteCartProduct,
   takeFromProductCounter,
 } from "../_actions/cartActions";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 
 export default function CartCard({ product }: { product: CartProduct }) {
   const [_, startTransition] = useTransition();
+  const [cartLimit, setCartLimit] = useState(
+    product.quantity - product.counter,
+  );
 
   const handleAddToCounter = async () => {
+    if (cartLimit < 1) return;
     startTransition(async () => {
-      await addToProductCounter(product.id);
+      const updatedProduct = await addToProductCounter(product.id);
+      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
     });
   };
 
   const handleTakeFromCounter = async () => {
     startTransition(async () => {
-      await takeFromProductCounter(product.id);
+      const updatedProduct = await takeFromProductCounter(product.id);
+      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
     });
   };
 
@@ -34,7 +40,9 @@ export default function CartCard({ product }: { product: CartProduct }) {
 
   return (
     <>
-      <div className="border-b-1 hidden w-full cursor-pointer rounded-xl border-x-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:block sm:hover:scale-105 sm:hover:shadow-xl">
+      <div
+        className={`border-b-1 hidden w-full cursor-pointer rounded-xl border-x-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:block sm:hover:scale-105 sm:hover:shadow-xl ${cartLimit < 1 || ((product?.counter as number) > cartLimit && "text-muted")}`}
+      >
         <div className="relative h-40 w-full">
           <Image
             fill
@@ -44,10 +52,13 @@ export default function CartCard({ product }: { product: CartProduct }) {
             alt={`${product?.name}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute -bottom-4 left-2 w-11/12 rounded-2xl bg-white px-2 py-2 pl-0 shadow-md shadow-slate-200 duration-500 sm:left-0 sm:w-full sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl">
+          <div
+            className={`absolute -bottom-4 left-2 w-11/12 rounded-2xl bg-white px-2 py-2 pl-0 shadow-md shadow-slate-200 duration-500 sm:left-0 sm:w-full sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${cartLimit < 1 ? "bg-gray-400" : "bg-white"}`}
+          >
             {
               <div className="flex w-11/12 items-center justify-between sm:px-6 sm:pl-4">
                 <Button
+                  disabled={cartLimit < 1}
                   size="sm"
                   variant="secondary"
                   onClick={handleAddToCounter}
@@ -58,6 +69,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
                   {product?.counter}
                 </span>
                 <Button
+                  disabled={cartLimit < 1}
                   size="sm"
                   variant="secondary"
                   onClick={handleTakeFromCounter}
@@ -117,7 +129,9 @@ export default function CartCard({ product }: { product: CartProduct }) {
         </div>
       </div>
 
-      <div className="flex gap-4 p-2 sm:hidden">
+      <div
+        className={`flex gap-4 p-2 sm:hidden ${cartLimit < 1 || ((product?.counter as number) > cartLimit && "text-muted")}`}
+      >
         <div className="relative h-40 w-40">
           <Image
             fill
@@ -127,9 +141,12 @@ export default function CartCard({ product }: { product: CartProduct }) {
             alt={`${product?.name}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute bottom-0 mt-4 flex h-11 w-full items-center justify-around rounded-xl bg-slate-100">
+          <div
+            className={`absolute bottom-0 mt-4 flex h-11 w-full items-center justify-around rounded-xl bg-slate-100 ${cartLimit < 1 ? "bg-gray-400" : "bg-white"}`}
+          >
             <Button
               size="icon"
+              disabled={cartLimit < 1}
               variant="secondary"
               onClick={handleAddToCounter}
               className="h-6 w-8 rounded-md bg-white"
@@ -139,6 +156,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
             <span className="text-rayanPrimary-dark">{product?.counter}</span>
             <Button
               size="icon"
+              disabled={cartLimit < 1}
               variant="secondary"
               onClick={handleTakeFromCounter}
               className="h-6 w-8 rounded-md bg-white"
@@ -163,9 +181,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
                       ? "نصف كيلو"
                       : product.weight === 0.75
                         ? "كيلو الا ربع"
-                        : product.weight === 1
-                          ? "كيلو"
-                          : `${product.weight} كيلو`}
+                        : `${product.weight} كيلو`}
                 </span>
                 ) {product.name}
               </>

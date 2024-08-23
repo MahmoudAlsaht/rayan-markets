@@ -9,7 +9,7 @@ import { checkUser } from "../auth/_actions/isAuthenticated";
 
 export default function CartPage() {
   return (
-    <main className="sm:mt-10">
+    <main className="h-screen sm:mt-10">
       <div className="sm:hidden">
         <BackButtonNav />
       </div>
@@ -18,7 +18,6 @@ export default function CartPage() {
       <Suspense fallback={<CartContainerSkeleton />}>
         <CartSuspense />
       </Suspense>
-      <div className="h-20" />
     </main>
   );
 }

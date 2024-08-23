@@ -54,7 +54,11 @@ export default function ProductCard({
   const pathname = usePathname();
   const [productInCart, setProductInCart] = useState<CartProduct | null>(null);
   const [isProductInCart, setIsProductInCart] = useState(false);
-  const [cartLimit, setCartLimit] = useState(product.quantity);
+  const [cartLimit, setCartLimit] = useState(
+    isProductInCart
+      ? product?.quantity - (productInCart?.counter as number) || 0
+      : product?.quantity,
+  );
 
   const showPage = async (id: string) => {
     if (!isProductDetailsPage) {
@@ -68,7 +72,7 @@ export default function ProductCard({
     if (cartLimit < 1) return;
     startTransition(async () => {
       const newProduct = await addProductToCart({ ...product, selectedOption });
-      setCartLimit(product.quantity - newProduct.counter);
+      setCartLimit(product?.quantity - newProduct?.counter);
       setProductInCart(newProduct);
       setIsProductInCart(newProduct !== null);
     });
@@ -78,7 +82,7 @@ export default function ProductCard({
     if (cartLimit < 1) return;
     startTransition(async () => {
       const updatedProduct = await addToProductCounter(product?.id as string);
-      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
+      setCartLimit(product?.quantity - (updatedProduct?.counter || 0));
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -89,7 +93,7 @@ export default function ProductCard({
       const updatedProduct = await takeFromProductCounter(
         product?.id as string,
       );
-      setCartLimit(product.quantity - (updatedProduct?.counter || 0));
+      setCartLimit(product?.quantity - (updatedProduct?.counter || 0));
       setProductInCart(updatedProduct);
       setIsProductInCart(updatedProduct !== null);
     });
@@ -102,7 +106,7 @@ export default function ProductCard({
       setIsProductInCart(fetchedProduct !== null);
     };
     checkProduct();
-  }, [pathname, product.id]);
+  }, [pathname, product?.id]);
 
   return (
     <div
@@ -111,7 +115,7 @@ export default function ProductCard({
         isProductDetailsPage
           ? "h-screen pr-2 pt-10 md:flex md:gap-2 lg:gap-16 lg:pr-10"
           : "cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
-      } ${cartLimit < 1 && "text-muted"}`}
+      } ${cartLimit < 1 || ((productInCart?.counter as number) > cartLimit && "text-muted")}`}
     >
       <div
         className={`relative ${
@@ -121,14 +125,14 @@ export default function ProductCard({
         } `}
       >
         <LoadingLink
-          href={() => showPage(product.id as string)}
+          href={() => showPage(product?.id as string)}
           className="relative h-full w-full"
         >
           <Image
             fill
             priority
             className={`rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${isProductDetailsPage && "rounded-3xl"} `}
-            src={product.image?.path as string}
+            src={product?.image?.path as string}
             alt={`${product?.name || "product"}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
@@ -140,8 +144,8 @@ export default function ProductCard({
             <ProductMenuPrice
               disabled={cartLimit < 1}
               flavors={
-                product.flavors && product.flavors.length
-                  ? product.flavors
+                product?.flavors && product?.flavors.length
+                  ? product?.flavors
                   : null
               }
               weights={
@@ -158,7 +162,10 @@ export default function ProductCard({
                 size="sm"
                 variant="secondary"
                 onClick={handleAddToCounter}
-                disabled={cartLimit < 1}
+                disabled={
+                  cartLimit < 1 ||
+                  (productInCart?.counter as number) > cartLimit
+                }
               >
                 <Plus className="size-6 text-rayanPrimary-dark" />
               </Button>
@@ -168,7 +175,10 @@ export default function ProductCard({
               <Button
                 size="sm"
                 variant="secondary"
-                disabled={cartLimit < 1}
+                disabled={
+                  cartLimit < 1 ||
+                  (productInCart?.counter as number) > cartLimit
+                }
                 onClick={handleTakeFromCounter}
               >
                 <Minus className="size-6 text-rayanPrimary-dark" />
@@ -187,20 +197,21 @@ export default function ProductCard({
 
       <LoadingLink
         className={`w-full ${isProductDetailsPage ? "mt-10 flex flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start" : "mt-2 py-3 sm:px-4"} `}
-        href={() => showPage(product.id as string)}
+        href={() => showPage(product?.id as string)}
       >
         <p
           className={`${isProductDetailsPage ? "text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl" : "text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg"} `}
         >
           {isProductDetailsPage ? product?.body : product?.name}
         </p>
-        {cartLimit < 1 && (
-          <p
-            className={`${isProductDetailsPage && "mt-6 text-xl"} text-rayanWarning-dark`}
-          >
-            هذا المنتج غير متوفر حاليا
-          </p>
-        )}
+        {cartLimit < 1 ||
+          ((productInCart?.counter as number) > cartLimit && (
+            <p
+              className={`${isProductDetailsPage && "mt-6 text-xl"} text-rayanWarning-dark`}
+            >
+              هذا المنتج غير متوفر حاليا
+            </p>
+          ))}
         <div className={`mt-4 flex items-center justify-center gap-6`}>
           <div
             className={`flex items-center justify-around sm:gap-2 md:justify-start`}

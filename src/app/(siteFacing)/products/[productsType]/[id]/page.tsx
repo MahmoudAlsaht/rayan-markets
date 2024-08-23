@@ -79,6 +79,7 @@ const getLabels = async (labels: string[], id: string) => {
     },
   });
 
+  if (!labels) return;
   let allProductLabels: any[] = [];
   for (const value of labels) {
     const label = await db.label.findFirst({
