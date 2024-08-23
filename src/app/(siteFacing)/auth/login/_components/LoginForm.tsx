@@ -9,7 +9,7 @@ export function LoginForm() {
   const [error, action] = useFormState(login, {});
 
   return (
-    <form action={action} className="mx-4 max-w-sm sm:mx-auto">
+    <form action={action} className="container mx-auto max-w-sm">
       <div className="group relative z-0 mb-5 w-full">
         <input
           type="tel"

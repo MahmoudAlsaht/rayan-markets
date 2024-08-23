@@ -41,7 +41,7 @@ export default async function OrdersPage({
           orderBy: { createdAt: "desc" },
           select: selectOrder,
         })
-      : await db.order.findMany()
+      : await db.order.findMany({ where: status !== "all" ? { status } : {} })
     : (await getOrders())?.toSorted(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -53,7 +53,9 @@ export default async function OrdersPage({
         className="container mt-4 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
         dir="rtl"
       >
-        {orders?.map((order) => <OrderCard key={order.id} order={order} />)}
+        {orders?.map((order) => (
+          <OrderCard key={order.id} user={user} order={order} />
+        ))}
       </div>
     </>
   );

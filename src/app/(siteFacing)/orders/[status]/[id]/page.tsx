@@ -2,6 +2,7 @@ import db from "@/db/db";
 import { OrderCard, OrderCardProp } from "../../_components/OrderCard";
 import { notFound } from "next/navigation";
 import { selectOrder } from "../page";
+import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
 
 export default async function OrderDetails({
   params: { id },
@@ -13,11 +14,17 @@ export default async function OrderDetails({
     select: selectOrder,
   });
 
+  const user = await checkUser();
+
   if (order == null) return notFound();
 
   return (
-    <main className="mx-auto mt-10 w-11/12 rounded-xl bg-slate-50 px-6 py-2 md:w-9/12 lg:w-6/12">
-      <OrderCard order={order as OrderCardProp} isOrderDetailsPage />
+    <main className="mx-auto mt-10 w-11/12 rounded-xl bg-slate-50 px-6 py-2">
+      <OrderCard
+        user={user}
+        order={order as OrderCardProp}
+        isOrderDetailsPage
+      />
     </main>
   );
 }
