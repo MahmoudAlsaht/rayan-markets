@@ -4,7 +4,7 @@ import Logo from "../../rayan.marketLogo.png";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { ShoppingBag, UserCircle } from "lucide-react";
+import { ShoppingBag, UserCircle, Truck } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -21,6 +21,7 @@ export default function MainNavbar({
   cart,
   offersExists = false,
   forHomeExists = false,
+  pendingOrdersLength,
 }: {
   user: {
     id: string;
@@ -32,6 +33,7 @@ export default function MainNavbar({
   cart: Cart | null;
   offersExists?: boolean;
   forHomeExists?: boolean;
+  pendingOrdersLength: number;
 }) {
   const pathname = usePathname();
 
@@ -110,14 +112,12 @@ export default function MainNavbar({
                 <SearchProducts />
               </li>
 
-              {cart != null && (
-                <LoadingLink href="/cart" className="relative">
-                  <li
-                    className={
-                      `${pathname === "/cart" && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}` &&
-                      "cursor-pointer"
-                    }
-                  >
+              {cart && (
+                <LoadingLink
+                  href="/cart"
+                  className={`relative cursor-pointer ${pathname.includes("/cart") && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}`}
+                >
+                  <li>
                     <ShoppingBag
                       className={`${pathname === "/cart" && "size-6"}`}
                     />
@@ -125,6 +125,25 @@ export default function MainNavbar({
                   <small className="absolute -top-2 end-3 inline-flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white">
                     {cart.products.length}
                   </small>
+                </LoadingLink>
+              )}
+
+              {user && pendingOrdersLength && (
+                <LoadingLink
+                  href="/orders/all"
+                  className={`relative cursor-pointer ${pathname.includes("/orders") && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}`}
+                >
+                  <li>
+                    <Truck
+                      className={`${pathname.includes("/orders") && "size-6"}`}
+                    />
+                  </li>
+                  <div className="absolute -top-1 end-4 flex justify-center">
+                    <small className="relative flex h-3 w-3">
+                      <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
+                      <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
+                    </small>
+                  </div>
                 </LoadingLink>
               )}
 

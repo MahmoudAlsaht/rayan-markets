@@ -5,7 +5,6 @@ import {
   Home,
   LayoutPanelTop,
   Locate,
-  // ShoppingBag,
   SlidersHorizontal,
   TicketCheck,
   Truck,
@@ -101,8 +100,7 @@ export const authorizedUserPermissions = (profileId: string) =>
     },
     {
       displayName: "الطلبات",
-      href: "/orders",
-      // href: "/admin/settings/orders",
+      href: "/orders/all",
       icon: (
         <Truck className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
       ),
@@ -127,7 +125,7 @@ export const customerPermissions = (profileId: string) =>
     },
     {
       displayName: "الطلبات",
-      href: `/orders`,
+      href: `/all`,
       icon: (
         <Truck className="h-6 w-6 flex-shrink-0 transition duration-75 group-hover:text-white" />
       ),

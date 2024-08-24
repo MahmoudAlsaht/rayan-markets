@@ -11,9 +11,11 @@ import { LoadingLink } from "@/context/LoadingContext";
 export default function BottomNavLinks({
   user,
   cart,
+  pendingOrdersLength,
 }: {
   user;
   cart: Cart | null;
+  pendingOrdersLength: number;
 }) {
   return (
     <div
@@ -36,9 +38,17 @@ export default function BottomNavLinks({
         </NavLink>
       )}
 
-      {user && (
+      {user && pendingOrdersLength && (
         <NavLink href="/orders/all" title="طلباتي">
-          <CiDeliveryTruck className="size-7" />
+          <div className="relative">
+            <CiDeliveryTruck className="size-7" />
+            <div className="absolute -right-1 -top-0 inline-flex">
+              <small className="relative flex h-3 w-3">
+                <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
+                <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
+              </small>
+            </div>
+          </div>
         </NavLink>
       )}
 

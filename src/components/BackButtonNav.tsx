@@ -13,10 +13,6 @@ export default function BackButtonNav({
   const router = useRouter();
   const pathname = usePathname();
 
-  const isOptionsPage = pathname === "/options";
-  const isProductsPage =
-    pathname.includes("/products") && !pathname.includes("/admin");
-
   return (
     <>
       <nav className="bg-inherit pb-2">
@@ -32,7 +28,7 @@ export default function BackButtonNav({
               !goHome
                 ? href === ""
                   ? router.back()
-                  : router.replace(href)
+                  : router.replace(href !== pathname ? href : "/")
                 : router.replace("/")
             }
           >

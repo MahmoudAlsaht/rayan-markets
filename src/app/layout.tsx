@@ -11,6 +11,7 @@ import { checkUser } from "./(siteFacing)/auth/_actions/isAuthenticated";
 import { getCart } from "./(siteFacing)/cart/_actions/checkCart";
 import BottomNavbar from "./(siteFacing)/(mobile)/_components/BottomNavbar";
 import db from "@/db/db";
+import { getPendingLength } from "./(siteFacing)/orders/_actions/getOrders";
 
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",
@@ -73,6 +74,7 @@ export default async function RootLayout({
     profile: { id: string };
   };
   const cart = await getCart();
+  const pendingLength = await getPendingLength();
   const offers = await db.product.findFirst({ where: { isOffer: true } });
   const forHomeProducts = await db.product.findFirst({
     where: { productType: "forHome" },
@@ -92,6 +94,7 @@ export default async function RootLayout({
             AdminNavbar={<AdminNavbar />}
             SiteFacingNavbar={
               <MainNavbar
+                pendingOrdersLength={pendingLength}
                 offersExists={offers !== null}
                 forHomeExists={forHomeProducts !== null}
                 user={user}

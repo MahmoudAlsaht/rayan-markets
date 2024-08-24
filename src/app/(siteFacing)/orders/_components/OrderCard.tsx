@@ -21,6 +21,7 @@ import { useTransition } from "react";
 import { completeOrder, rejectOrCancelOrder } from "../_actions/updateOrder";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 export type OrderCardProp = {
   id: string;
@@ -42,7 +43,7 @@ export function OrderCard({
   isOrderDetailsPage = false,
   user,
 }: {
-  order: OrderCardProp;
+  order: OrderCardProp | null;
   isOrderDetailsPage?: boolean;
   user: {
     id: string;
@@ -58,10 +59,10 @@ export function OrderCard({
   const router = useRouter();
 
   const now = new Date();
-  const formattedDate = format(order.createdAt, "yyyy/MM/dd");
-  const minutesPassed = differenceInMinutes(now, order.createdAt);
-  const hoursPassed = differenceInHours(now, order.createdAt);
-  const daysPassed = differenceInDays(now, order.createdAt);
+  const formattedDate = format(order?.createdAt as Date, "yyyy/MM/dd");
+  const minutesPassed = differenceInMinutes(now, order?.createdAt as Date);
+  const hoursPassed = differenceInHours(now, order?.createdAt as Date);
+  const daysPassed = differenceInDays(now, order?.createdAt as Date);
 
   const generateDisplayDate = () =>
     minutesPassed >= 60
@@ -95,7 +96,7 @@ export function OrderCard({
   const handleRejectAndCancel = () => {
     startTransition(async () => {
       await rejectOrCancelOrder(
-        order.id,
+        order?.id as string,
         user?.role === "customer" ? "canceled" : "rejected",
       );
       router.refresh();
@@ -104,27 +105,24 @@ export function OrderCard({
 
   const handleCompleteOrder = () => {
     startTransition(async () => {
-      await completeOrder(order.id, "finished");
+      await completeOrder(order?.id as string, "finished");
       router.refresh();
     });
   };
 
   return !isOrderDetailsPage ? (
-    <LoadingLink
-      href={`/orders/${order.status}/${order.id}`}
-      className="cursor-pointer rounded-2xl bg-white p-4 duration-500 hover:scale-105"
-    >
+    <div className="rounded-2xl bg-white p-4 duration-500 hover:scale-105">
       <div className="flex flex-col justify-center gap-2 p-2">
         <h3>
           <span className="text-rayanSecondary-dark">رقم الطلب:</span>{" "}
-          {order.orderId}
+          {order?.orderId}
         </h3>
         {statuses.map(
           (status) =>
-            status.value === order.status && (
+            status.value === order?.status && (
               <h3
                 className={`${status.color}`}
-                key={`${order.id} - ${order.status}`}
+                key={`${order?.id} - ${order?.status}`}
               >
                 <span className="text-rayanSecondary-dark">الحالة:</span>{" "}
                 {status.displayName}
@@ -135,20 +133,26 @@ export function OrderCard({
           <span className="text-rayanSecondary-dark">منذ: </span>{" "}
           {generateDisplayDate()}
         </h3>
+        <LoadingLink
+          className="flex items-center text-sky-400"
+          href={`/orders/${order?.status}/${order?.id}`}
+        >
+          تفاصيل الطلب <MdOutlineKeyboardArrowLeft size={30} />
+        </LoadingLink>
       </div>
-    </LoadingLink>
+    </div>
   ) : (
     <div className="mx-auto flex flex-col justify-center gap-2 p-2 text-sm sm:text-lg md:text-xl">
       <h3>
-        <span className="text-rayanSecondary-dark">رقم الطلب:</span>{" "}
-        {order.orderId}
+        <span className="text-rayanSecondary-dark">رقم الطلب: </span>{" "}
+        {order?.orderId}
       </h3>
       {statuses.map(
         (status) =>
-          status.value === order.status && (
+          status.value === order?.status && (
             <h3
               className={`${status.color}`}
-              key={`${order.id} - ${order.status}`}
+              key={`${order?.id} - ${order?.status}`}
             >
               <span className="text-rayanSecondary-dark">الحالة:</span>{" "}
               {status.displayName}
@@ -162,9 +166,9 @@ export function OrderCard({
       <h3>
         <span className="text-rayanSecondary-dark">طريقة الدفع: </span>{" "}
         <span className="text-rayanWarning-light">
-          {order.paymentMethod === "card"
+          {order?.paymentMethod === "card"
             ? "عن طريق البطاقة"
-            : order.paymentMethod === "cash"
+            : order?.paymentMethod === "cash"
               ? "نقدا"
               : "عن طريق المحفظة"}
         </span>
@@ -172,16 +176,16 @@ export function OrderCard({
 
       <h3>
         <span className="text-rayanSecondary-dark">المنطقة: </span>
-        {order.contact?.district?.name}
+        {order?.contact?.district?.name}
       </h3>
       <h3>
         <span className="text-rayanSecondary-dark">رقم التواصل: </span>
-        {order.contact?.contactNumber}
+        {order?.contact?.contactNumber}
       </h3>
       <div className="mt-4 flex">
-        <span className="w-38 text-rayanSecondary-dark">تفاصيل الطلب:</span>
+        <span className="w-38 text-rayanSecondary-dark">تفاصيل الطلب: </span>
         <div className="mr-1">
-          {order.products.map((product) => (
+          {order?.products.map((product) => (
             <LoadingLink
               target
               href={product?.productLink as string}
@@ -195,16 +199,76 @@ export function OrderCard({
             </LoadingLink>
           ))}
           <h3>
-            <span className="text-rayanSecondary-dark">اجمالي الفاتورة:</span>
-            {formatCurrency(parseFloat(order.billTotal.toFixed(2)))}
+            <span className="text-rayanSecondary-dark">اجمالي الفاتورة: </span>
+            {formatCurrency(parseFloat(order?.billTotal.toFixed(2) as string))}
           </h3>
+          {order?.promoCode && order.promoCode.promoType === "productPrice" && (
+            <>
+              <h3 className="text-rayanWarning-dark">
+                <span className="text-rayanSecondary-dark">كوبون: </span>
+                {`(${order.promoCode.code}) خصم ${order.promoCode.discount}% على الفاتورة`}
+              </h3>
+              <h3 className="text-destructive">
+                <span className="text-rayanSecondary-dark">
+                  خُصم من الفاتورة:{" "}
+                </span>
+                -
+                {formatCurrency(
+                  parseFloat(
+                    (
+                      order.billTotal *
+                      ((order.promoCode.discount || 0) / 100)
+                    ).toFixed(2),
+                  ),
+                )}
+              </h3>
+            </>
+          )}
           <h3>
             <span className="text-rayanSecondary-dark">التوصيل: </span>
-            {order.contact.district.shippingFees}
+            {order?.contact.district.shippingFees}
           </h3>
+          {order?.promoCode && order.promoCode.promoType === "shippingFees" && (
+            <>
+              <h3 className="text-rayanWarning-dark">
+                <span className="text-rayanSecondary-dark">كوبون: </span>
+                {`(${order.promoCode.code}) خصم ${order.promoCode.discount}% على التوصيل`}
+              </h3>
+              <h3 className="text-destructive">
+                <span className="text-rayanSecondary-dark">
+                  خُصم من رسوم التوصيل:{" "}
+                </span>
+                -
+                {formatCurrency(
+                  parseFloat(
+                    (
+                      (order?.contact?.district?.shippingFees || 0) *
+                      ((order.promoCode.discount || 0) / 100)
+                    ).toFixed(2),
+                  ),
+                )}
+              </h3>
+            </>
+          )}
+          {order?.promoCode && (
+            <h3 className="text-rayanWarning-dark">
+              <span className="text-rayanSecondary-dark">
+                اجمالي الطلب قبل الخصم:{" "}
+              </span>
+              {formatCurrency(
+                parseFloat(
+                  (
+                    (order?.contact?.district?.shippingFees || 0) +
+                    (order?.billTotal || 0)
+                  ).toFixed(2) as string,
+                ),
+              )}
+            </h3>
+          )}
+
           <h3>
             <span className="text-rayanSecondary-dark">اجمالي الطلب: </span>
-            {formatCurrency(parseFloat(order.orderTotal.toFixed(2)))}
+            {formatCurrency(parseFloat(order?.orderTotal.toFixed(2) as string))}
           </h3>
         </div>
       </div>
@@ -216,25 +280,25 @@ export function OrderCard({
             user.role === "editor" ||
             user?.role === "customer") && (
             <Button
-              disabled={isUpdating || order.status !== "pending"}
-              className={`w-full ${order.status === "pending" ? (user.role === "customer" ? "bg-destructive" : "bg-pink-700") : "cursor-text bg-foreground"}`}
+              disabled={isUpdating || order?.status !== "pending"}
+              className={`w-full ${order?.status === "pending" ? (user.role === "customer" ? "bg-destructive" : "bg-pink-700") : "cursor-text bg-foreground"}`}
               onClick={handleRejectAndCancel}
             >
               {isUpdating ? (
                 <Loader2 className="animate-spin text-rayanPrimary-dark" />
-              ) : order.status === "pending" ? (
+              ) : order?.status === "pending" ? (
                 user.role === "customer" ? (
                   "الغاء الطلب"
                 ) : (
                   "رفض الطلب"
                 )
-              ) : order.status === "canceled" ? (
+              ) : order?.status === "canceled" ? (
                 user.role === "customer" ? (
                   "لقد قمت بالغاء هذا الطلب"
                 ) : (
                   "الغي الطلب من قبل العميل"
                 )
-              ) : order.status === "rejected" ? (
+              ) : order?.status === "rejected" ? (
                 user.role === "customer" ? (
                   "لقد تم رفض طلبك"
                 ) : (
@@ -245,13 +309,13 @@ export function OrderCard({
               )}
             </Button>
           )}
-        {user && order.status === "pending" && user.role !== "customer" && (
+        {user && order?.status === "pending" && user.role !== "customer" && (
           <Button
             disabled={isUpdating}
             className="w-full bg-sky-600"
             onClick={handleCompleteOrder}
           >
-            {order.status === "pending" && isUpdating ? (
+            {order?.status === "pending" && isUpdating ? (
               <Loader2 className="animate-spin text-rayanPrimary-dark" />
             ) : (
               "إتمام التسليم"

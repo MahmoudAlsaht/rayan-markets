@@ -62,15 +62,15 @@ export async function createNewOrder(formData: FormData) {
 
   const productName = (product: CartProduct) =>
     product.flavor
-      ? `${product.name} - ${product.flavor}`
+      ? `${product.name} - (${product.flavor})`
       : product.weight
         ? product?.weight === 0.25
-          ? `ربع كيلو ${product.name} `
+          ? `(ربع كيلو) ${product.name}`
           : product.weight === 0.5
-            ? `${product.name} نصف كيلو`
+            ? `(نصف كيلو) ${product.name}`
             : product.weight === 0.75
-              ? `كيلو الا ربع ${product.name}`
-              : `${product.weight} كيلو`
+              ? `(كيلو الا ربع) ${product.name}`
+              : `(${product.weight} كيلو) ${product.name}`
         : product.name;
 
   const newOrderProduct = (product: CartProduct) => ({
@@ -122,11 +122,9 @@ export async function createNewOrder(formData: FormData) {
     });
   }
 
-  if (!user) await addOrder(newOrder);
-
   await deleteCart();
 
-  redirect("/orders/all");
+  redirect(`/orders/pending/${newOrder?.id}`);
 }
 
 function genOrderId() {

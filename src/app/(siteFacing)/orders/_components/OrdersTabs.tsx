@@ -1,8 +1,10 @@
 "use client";
-import { Tabs, TabsList } from "@/components/ui/tabs";
-import { notFound, usePathname } from "next/navigation";
-import { LoadingLink } from "@/context/LoadingContext";
-import { ReactNode } from "react";
+
+import { notFound, usePathname, useRouter } from "next/navigation";
+import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
+import { FormEvent, ReactNode, useEffect, useState } from "react";
+import { Search } from "lucide-react";
+import BackButtonNav from "@/components/BackButtonNav";
 
 export const statuses: {
   value: string;
@@ -36,15 +38,39 @@ export const statuses: {
   },
 ];
 
-export default function OrdersTabs() {
+export default function OrdersTabs({
+  search,
+  children,
+}: {
+  search?: string;
+  children: ReactNode;
+}) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { startLoading } = useStartLoading();
+  const [queryValue, setQueryValue] = useState<string>(search ? search : "");
+  const [orderStatus, setOrderStatus] = useState("");
 
-  if (!statuses.some((status) => pathname.includes(status.value)))
-    return notFound();
+  useEffect(() => {
+    if (!statuses.some((status) => pathname.includes(status.value)))
+      return notFound();
+    statuses.map(
+      (status) =>
+        pathname.includes(status.value) && setOrderStatus(status.value),
+    );
+  }, [pathname]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    startLoading(() => router.push(`/orders/all/?search=${queryValue}`));
+  };
 
   return (
-    <header className="mt-4 bg-inherit p-2 text-center" dir="rtl">
-      <div>
+    <>
+      <header className="mt-4 bg-inherit p-2 text-center" dir="rtl">
+        <BackButtonNav
+          href={pathname === "/orders/all" && !search ? pathname : ""}
+        />
         {statuses.map((status) => (
           <TabLink
             key={status.value}
@@ -57,8 +83,33 @@ export default function OrdersTabs() {
             {status.displayName}
           </TabLink>
         ))}
-      </div>
-    </header>
+        <div className="mx-auto my-3 w-10/12 sm:w-9/12 md:w-5/12">
+          <form
+            onSubmit={handleSubmit}
+            className="relative flex basis-10/12 items-center"
+          >
+            <input
+              type="text"
+              id="search-navbar"
+              name="query"
+              className="order-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-14 text-sm text-gray-900 focus:outline-none"
+              placeholder="ابحث عن منتج، فئة، علامة تجارية..."
+              value={queryValue}
+              onChange={(e) => setQueryValue(e.target.value)}
+            />
+            <LoadingLink
+              href="#"
+              type="submit"
+              className="absolute mr-2 bg-inherit text-rayanPrimary-dark hover:bg-slate-50"
+            >
+              <Search />
+            </LoadingLink>
+          </form>
+        </div>
+      </header>
+
+      {children}
+    </>
   );
 }
 
