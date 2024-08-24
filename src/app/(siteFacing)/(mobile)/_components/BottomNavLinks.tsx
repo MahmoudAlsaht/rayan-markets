@@ -39,7 +39,10 @@ export default function BottomNavLinks({
       )}
 
       {user && (
-        <NavLink href="/orders/all" title="طلباتي">
+        <NavLink
+          href="/orders/all"
+          title={user.role === "customer" ? "طلباتي" : "الطلبات"}
+        >
           <div className="relative">
             <CiDeliveryTruck className="size-7" />
             {pendingOrdersLength > 0 && (
