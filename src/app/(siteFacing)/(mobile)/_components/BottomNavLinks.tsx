@@ -38,16 +38,18 @@ export default function BottomNavLinks({
         </NavLink>
       )}
 
-      {user && pendingOrdersLength && (
+      {user && (
         <NavLink href="/orders/all" title="طلباتي">
           <div className="relative">
             <CiDeliveryTruck className="size-7" />
-            <div className="absolute -right-1 -top-0 inline-flex">
-              <small className="relative flex h-3 w-3">
-                <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
-                <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
-              </small>
-            </div>
+            {pendingOrdersLength > 0 && (
+              <div className="absolute -right-1 -top-0 inline-flex">
+                <small className="relative flex h-3 w-3">
+                  <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
+                  <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
+                </small>
+              </div>
+            )}
           </div>
         </NavLink>
       )}

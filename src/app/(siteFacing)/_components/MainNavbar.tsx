@@ -128,7 +128,7 @@ export default function MainNavbar({
                 </LoadingLink>
               )}
 
-              {user && pendingOrdersLength && (
+              {user && (
                 <LoadingLink
                   href="/orders/all"
                   className={`relative cursor-pointer ${pathname.includes("/orders") && "group rounded-lg text-base font-normal text-rayanPrimary-dark transition duration-75"}`}
@@ -138,12 +138,14 @@ export default function MainNavbar({
                       className={`${pathname.includes("/orders") && "size-6"}`}
                     />
                   </li>
-                  <div className="absolute -top-1 end-4 flex justify-center">
-                    <small className="relative flex h-3 w-3">
-                      <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
-                      <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
-                    </small>
-                  </div>
+                  {pendingOrdersLength > 0 && (
+                    <div className="absolute -top-1 end-4 flex justify-center">
+                      <small className="relative flex h-3 w-3">
+                        <small className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rayanWarning-light opacity-75"></small>
+                        <small className="relative inline-flex h-3 w-3 rounded-full bg-rayanWarning-light"></small>
+                      </small>
+                    </div>
+                  )}
                 </LoadingLink>
               )}
 
