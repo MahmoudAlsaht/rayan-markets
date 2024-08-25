@@ -34,20 +34,22 @@ export function CollapsibleContacts({
           <Plus className="mx-auto mt-8 size-10" />
         </ContactCard>
 
-        <section>
-          <ContactCard
-            profileId={profileId}
-            contactId={activeContact?.id}
-            isEditable
-            href={`/account/${profileId}/contacts/${activeContact?.id}`}
-            isDefault={activeContact?.defaultContact}
-          >
-            <div>العنوان الافتراضي</div>
-            <div>{activeContact?.district?.name}</div>
-            <div>{activeContact?.contactNumber}</div>
-          </ContactCard>
-          <DeleteContact contactId={activeContact?.id as string} />
-        </section>
+        {activeContact && (
+          <section>
+            <ContactCard
+              profileId={profileId}
+              contactId={activeContact?.id}
+              isEditable
+              href={`/account/${profileId}/contacts/${activeContact?.id}`}
+              isDefault={activeContact?.defaultContact}
+            >
+              <div>العنوان الافتراضي</div>
+              <div>{activeContact?.district?.name}</div>
+              <div>{activeContact?.contactNumber}</div>
+            </ContactCard>
+            <DeleteContact contactId={activeContact?.id as string} />
+          </section>
+        )}
 
         {isOpen &&
           contacts.map(

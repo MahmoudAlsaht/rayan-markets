@@ -4,23 +4,29 @@ import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { getCart, updateCart } from "../../cart/_actions/checkCart";
 
-const phoneNumberRegex = /^(07[789]\d{7})$/;
-
 const addAnonymousSchema = z.object({
   name: z.string().min(1, "الرجاء قم بادخال اسمك"),
-  contactNumber: z
-    .string()
-    .regex(phoneNumberRegex, "رقم الهاتف المدخل غير صحيح!")
-    .optional(),
+  phone: z.string().optional(),
   district: z.string().min(1, "يجب تحديد المنطقة"),
 });
 
-export const createAnonymous = async (_: unknown, formData: FormData) => {
+export const createAnonymous = async (
+  phone: string | null,
+  _: unknown,
+  formData: FormData,
+) => {
   const result = await addAnonymousSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
 
   if (result.success === false) return result.error.formErrors.fieldErrors;
+
+  if (!phone)
+    return {
+      name: "",
+      phone: "يرجى التأكد من جميع البيانات و المحاولة لاحقا",
+      district: "",
+    };
 
   const data = result.data;
 
@@ -33,7 +39,7 @@ export const createAnonymous = async (_: unknown, formData: FormData) => {
       contact: {
         create: {
           districtId: data.district,
-          contactNumber: data.contactNumber,
+          contactNumber: phone,
         },
       },
     },

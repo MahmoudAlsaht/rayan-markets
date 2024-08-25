@@ -3,19 +3,16 @@ import db from "@/db/db";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const phoneNumberRegex = /^(07[789]\d{7})$/;
-
 const editContactSchema = z.object({
-  isNewContactNumber: z.string().optional(),
-  contactNumber: z
-    .string()
-    .regex(phoneNumberRegex, "رقم الهاتف المدخل غير صحيح!")
-    .optional(),
+  editNumber: z.string().optional(),
+  isUserPhone: z.string().optional(),
   district: z.string().optional(),
   profileId: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 export const editContact = async (
+  phone: string | null,
   contactId: string,
   profileId: string,
   redirectUrl: string,
@@ -30,12 +27,22 @@ export const editContact = async (
 
   if (!profileId) {
     return {
-      isNewContactNumber: "",
-      contactNumber: "",
+      editNumber: "",
+      isUserPhone: "",
+      phone: "",
       district: "",
       profileId: "نعتذر لقد حدثت مشكلة ما يرجى المحاولة لاحقا",
     };
   }
+
+  if (!phone)
+    return {
+      editNumber: "",
+      isUserPhone: "",
+      profileId: "",
+      district: "",
+      phone: "نعتذر لقد حدثت مشكلة ما يرجى المحاولة لاحقا",
+    };
 
   const data = result.data;
 
@@ -56,7 +63,7 @@ export const editContact = async (
           where: { id: contactId },
           data: {
             districtId: data.district || currentContact?.district?.id,
-            contactNumber: data.contactNumber || currentContact?.contactNumber,
+            contactNumber: phone || currentContact?.contactNumber,
           },
         },
       },

@@ -14,7 +14,6 @@ export default async function page({
 
   return (
     <div dir="rtl">
-      <BackButtonNav />
       {setting === "username" && (
         <UsernameForm
           username={user?.username as string}
@@ -22,7 +21,7 @@ export default async function page({
         />
       )}
       {setting === "phone" && (
-        <PhoneForm phone={user?.phone as string} profileId={profileId} />
+        <PhoneForm currPhone={user?.phone as string} profileId={profileId} />
       )}
       {setting === "password" && <PasswordForm profileId={profileId} />}
       {setting === "account-deletion" && (

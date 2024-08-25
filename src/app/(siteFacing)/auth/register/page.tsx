@@ -7,6 +7,7 @@ import PageHeader from "@/components/PageHeader";
 export default async function RegisterPage() {
   const user = await checkUser();
   if (user) redirect("/");
+
   return (
     <main dir="rtl">
       <BackButtonNav />

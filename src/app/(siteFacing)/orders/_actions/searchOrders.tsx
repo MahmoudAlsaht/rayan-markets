@@ -14,6 +14,7 @@ export const select = {
   profile: true,
   anonymous: true,
   products: true,
+  note: true,
   contact: {
     select: {
       contactNumber: true,

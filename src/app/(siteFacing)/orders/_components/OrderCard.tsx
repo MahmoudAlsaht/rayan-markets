@@ -36,6 +36,7 @@ export type OrderCardProp = {
   anonymous: Partial<Anonymous>;
   products: Partial<OrderProduct>[];
   contact: Partial<Contact> & { district: Partial<District> };
+  note: string | null;
 };
 
 export function OrderCard({
@@ -182,6 +183,12 @@ export function OrderCard({
         <span className="text-rayanSecondary-dark">رقم التواصل: </span>
         {order?.contact?.contactNumber}
       </h3>
+      {order?.note && (
+        <h3 className="text-rayanWarning-light">
+          <span className="text-rayanSecondary-dark">الملاحظات: </span>
+          {order?.note}
+        </h3>
+      )}
       <div className="mt-4 flex">
         <span className="w-38 text-rayanSecondary-dark">تفاصيل الطلب: </span>
         <div className="mr-1">

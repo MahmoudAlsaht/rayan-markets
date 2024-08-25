@@ -7,8 +7,9 @@ export async function deleteContact(contactId: string) {
     where: { id: contactId },
     select: { districtId: true, profileId: true },
   });
-  await db.district.update({
-    where: { id: contact?.districtId as string },
+
+  await db.profile.update({
+    where: { id: contact?.profileId as string },
     data: {
       contacts: {
         disconnect: { id: contactId },
@@ -16,8 +17,8 @@ export async function deleteContact(contactId: string) {
     },
   });
 
-  await db.profile.update({
-    where: { id: contact?.profileId as string },
+  await db.district.update({
+    where: { id: contact?.districtId as string },
     data: {
       contacts: {
         delete: { id: contactId },

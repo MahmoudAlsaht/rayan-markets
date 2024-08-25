@@ -3,19 +3,16 @@ import db from "@/db/db";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const phoneNumberRegex = /^(07[789]\d{7})$/;
-
 const addContactSchema = z.object({
-  isNewContactNumber: z.string().optional(),
-  contactNumber: z
-    .string()
-    .regex(phoneNumberRegex, "رقم الهاتف المدخل غير صحيح!")
-    .optional(),
+  isUserPhone: z.string().optional(),
+  editNumber: z.string().optional(),
   district: z.string().min(1, "يجب تحديد المنطقة"),
   profileId: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 export const createNewContact = async (
+  phone: string | null,
   profileId: string,
   redirectUrl: string,
   _: unknown,
@@ -29,8 +26,9 @@ export const createNewContact = async (
 
   if (!profileId) {
     return {
-      isNewContactNumber: "",
-      contactNumber: "",
+      editNumber: "",
+      isUserPhone: "",
+      phone: "",
       district: "",
       profileId: "نعتذر لقد حدثت مشكلة ما يرجى المحاولة لاحقا",
     };
@@ -38,16 +36,17 @@ export const createNewContact = async (
 
   const data = result.data;
 
-  if (data.isNewContactNumber !== "on" && !data.contactNumber)
+  if (data.isUserPhone !== "on" && !phone)
     return {
-      isNewContactNumber: "رقم الهاتف المدخل غير صحيح!",
-      contactNumber: "",
+      isUserPhone: "",
+      editNumber: "",
+      phone: "",
       district: "",
       profileId: "",
     };
 
   const user = await db.user.findFirst({
-    where: { profileId },
+    where: { profile: { id: profileId } },
     select: { phone: true },
   });
 
@@ -57,8 +56,7 @@ export const createNewContact = async (
       contacts: {
         create: {
           districtId: data.district,
-          contactNumber:
-            data.isNewContactNumber === "on" ? user?.phone : data.contactNumber,
+          contactNumber: data.isUserPhone === "on" ? user?.phone : phone,
         },
       },
     },

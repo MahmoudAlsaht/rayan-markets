@@ -15,6 +15,22 @@ export default function SelectPayment() {
       className="h-full w-full p-4 sm:w-1/2 md:w-1/3"
       dir="rtl"
     >
+      <div className="group relative z-0 mb-5 w-full">
+        <label
+          htmlFor="note"
+          className="mb-2 block text-sm font-medium text-gray-900"
+        >
+          تعليمات اضافية
+        </label>
+        <textarea
+          id="note"
+          rows={4}
+          name="note"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          placeholder="اكتب أي تعليمات اضافية"
+        />
+      </div>
+
       <RadioGroup name="paymentMethod">
         <PaymentRadioCard value="cash" htmlFor="الدفع (نقدا) عند الاستلام">
           <div>الدفع ( نقدا ) عند الاستلام</div>

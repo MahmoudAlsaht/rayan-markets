@@ -16,6 +16,7 @@ const addOrderSchema = z.object({
   paymentMethod: z.enum(["card", "cash", "eWallet"], {
     required_error: "اختر طريقة الدفع",
   }),
+  note: z.string().optional(),
 });
 
 export async function createNewOrder(formData: FormData) {
@@ -112,6 +113,7 @@ export async function createNewOrder(formData: FormData) {
       anonymousId: contact.anonymousId,
       orderTotal: parseFloat(orderTotal.toFixed(2)),
       orderId: genOrderId(),
+      note: data.note,
     },
   });
 

@@ -24,7 +24,6 @@ export const sendVerificationCode = async (
     });
 
     const res = await sendMessage(data);
-    console.log(res);
   } catch (e: any) {
     console.error(e);
   }

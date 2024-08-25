@@ -1,60 +1,56 @@
-'use server';
-import { checkUser } from '@/app/(siteFacing)/auth/_actions/isAuthenticated';
-import db from '@/db/db';
-import {
-	hashPassword,
-	isValidPassword,
-} from '@/lib/hashPassword';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { z } from 'zod';
+"use server";
+import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
+import db from "@/db/db";
+import { isValidPassword } from "@/lib/hashPassword";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
 const deleteAccountSchema = z.object({
-	password: z.string().min(1, 'يجب أن تقوم بإدخال هذا الحقل'),
+  password: z.string().min(1, "يجب أن تقوم بإدخال هذا الحقل"),
 });
 
 export async function deleteAccount(
-	profileId: string,
-	_prevState: unknown,
-	formData: FormData,
+  profileId: string,
+  _prevState: unknown,
+  formData: FormData,
 ) {
-	const result = deleteAccountSchema.safeParse(
-		Object.fromEntries(formData.entries()),
-	);
-	if (result.success === false) {
-		return result.error.formErrors.fieldErrors;
-	}
+  const result = deleteAccountSchema.safeParse(
+    Object.fromEntries(formData.entries()),
+  );
+  if (result.success === false) {
+    return result.error.formErrors.fieldErrors;
+  }
 
-	const currentUser = await checkUser();
-	const wantToDeleteUser = await db.user.findFirst({
-		where: { profileId: profileId },
-	});
+  const currentUser = await checkUser();
+  const wantToDeleteUser = await db.user.findFirst({
+    where: { profile: { id: profileId } },
+  });
 
-	if (
-		currentUser == null ||
-		wantToDeleteUser == null ||
-		wantToDeleteUser.id !== currentUser.id
-	) {
-		return {
-			password: 'ليس لديك الصلاحية',
-		};
-	}
+  if (
+    currentUser == null ||
+    wantToDeleteUser == null ||
+    wantToDeleteUser.id !== currentUser.id
+  ) {
+    return {
+      password: "ليس لديك الصلاحية",
+    };
+  }
 
-	const data = result.data;
+  const data = result.data;
 
-	if (
-		!(await isValidPassword(
-			data.password,
-			wantToDeleteUser.password,
-		))
-	)
-		return {
-			password: 'البيانات المدخلة غير صحيحة',
-		};
+  if (!(await isValidPassword(data.password, wantToDeleteUser.password)))
+    return {
+      password: "البيانات المدخلة غير صحيحة",
+    };
 
-	await db.user.delete({ where: { id: wantToDeleteUser.id } });
+  await db.contact.deleteMany({
+    where: { profileId: wantToDeleteUser.profileId },
+  });
 
-	cookies().delete('token');
+  await db.user.delete({ where: { id: wantToDeleteUser.id } });
 
-	redirect(`/`);
+  cookies().delete("token");
+
+  redirect(`/`);
 }

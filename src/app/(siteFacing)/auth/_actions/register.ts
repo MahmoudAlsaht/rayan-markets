@@ -5,13 +5,10 @@ import { z } from "zod";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { sendVerificationCode } from "@/app/webhook/_actions/sendMessage";
-
-const phoneNumberRegex = /^(07[789]\d{7})$/;
 
 const registerSchema = z
   .object({
-    phone: z.string().regex(phoneNumberRegex, "رقم الهاتف المدخل غير صحيح!"),
+    phone: z.string().optional(),
     username: z.string().min(1, "يجب تحديد اسم المستخدم!"),
     password: z.string().min(6, "كلمة المرور يجب ان لا تكون اقل من 6 خانات"),
     confirmPassword: z.string(),
@@ -26,7 +23,11 @@ const registerSchema = z
     }
   });
 
-export const register = async (_pervState: unknown, formData: FormData) => {
+export const register = async (
+  phone: string | null,
+  _pervState: unknown,
+  formData: FormData,
+) => {
   const result = await registerSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
@@ -37,12 +38,9 @@ export const register = async (_pervState: unknown, formData: FormData) => {
 
   const data = result.data;
 
-  const user = await db.user.findUnique({
-    where: { phone: data.phone },
-  });
-  if (user !== null)
+  if (!phone)
     return {
-      phone: "هذا الهاتف مسجل بالفعل",
+      phone: "هناك مشكلة ما برقم الهاتف المدخل يرجى المحاولة لاحقا",
       username: "",
       password: "",
       confirmPassword: "",
@@ -50,7 +48,7 @@ export const register = async (_pervState: unknown, formData: FormData) => {
 
   const newUser = await db.user.create({
     data: {
-      phone: data.phone,
+      phone: phone,
       username: data.username,
       password: await hashPassword(data.password),
       role: "customer",
@@ -72,7 +70,6 @@ export const register = async (_pervState: unknown, formData: FormData) => {
     path: "/",
     expires: date,
   });
-  await sendVerificationCode("546897");
 
   redirect("/");
 };
