@@ -9,9 +9,12 @@ const withPWA = withPWAInit({
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
   swcMinify: true,
-  disable: process.env.NODE_ENV !== "production" && true,
+  disable: process.env.NODE_ENV !== "production",
   workboxOptions: {
     disableDevLogs: true,
+  },
+  fallbacks: {
+    document: "/offline",
   },
 });
 
