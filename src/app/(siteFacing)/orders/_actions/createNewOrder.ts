@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import z from "zod";
 import { deleteCart } from "../../cart/_actions/cartActions";
+import { revalidatePath } from "next/cache";
 
 const addOrderSchema = z.object({
   paymentMethod: z.enum(["card", "cash", "eWallet"], {
@@ -126,6 +127,8 @@ export async function createNewOrder(formData: FormData) {
 
   await deleteCart();
 
+  revalidatePath("/orders/all");
+  revalidatePath(`/orders/${newOrder.status}`);
   redirect(`/orders/pending/${newOrder?.id}`);
 }
 

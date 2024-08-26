@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
 import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { Search } from "lucide-react";
@@ -41,29 +41,27 @@ export const statuses: {
 export default function OrdersTabs({
   search,
   children,
+  userRole,
 }: {
   search?: string;
   children: ReactNode;
+  userRole: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { startLoading } = useStartLoading();
   const [queryValue, setQueryValue] = useState<string>(search ? search : "");
-  const [orderStatus, setOrderStatus] = useState("");
-
-  useEffect(() => {
-    if (!statuses.some((status) => pathname.includes(status.value)))
-      return notFound();
-    statuses.map(
-      (status) =>
-        pathname.includes(status.value) && setOrderStatus(status.value),
-    );
-  }, [pathname]);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     startLoading(() => router.push(`/orders/all/?search=${queryValue}`));
   };
+
+  useEffect(() => {
+    setIsAuthorized(userRole !== "customer" && userRole !== "anonymous");
+    console.log(isAuthorized);
+  }, [isAuthorized, userRole]);
 
   return (
     <>
@@ -83,29 +81,31 @@ export default function OrdersTabs({
             {status.displayName}
           </TabLink>
         ))}
-        <div className="mx-auto my-3 w-10/12 sm:w-9/12 md:w-5/12">
-          <form
-            onSubmit={handleSubmit}
-            className="relative flex basis-10/12 items-center"
-          >
-            <input
-              type="text"
-              id="search-navbar"
-              name="query"
-              className="order-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-14 text-sm text-gray-900 focus:outline-none"
-              placeholder="ابحث عن منتج، فئة، علامة تجارية..."
-              value={queryValue}
-              onChange={(e) => setQueryValue(e.target.value)}
-            />
-            <LoadingLink
-              href="#"
-              type="submit"
-              className="absolute mr-2 bg-inherit text-rayanPrimary-dark hover:bg-slate-50"
+        {isAuthorized && (
+          <div className="mx-auto my-3 w-10/12 sm:w-9/12 md:w-5/12">
+            <form
+              onSubmit={handleSubmit}
+              className="relative flex basis-10/12 items-center"
             >
-              <Search />
-            </LoadingLink>
-          </form>
-        </div>
+              <input
+                type="text"
+                id="search-navbar"
+                name="query"
+                className="order-2 w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-14 text-sm text-gray-900 focus:outline-none"
+                placeholder="اكتب رقم الطلب..."
+                value={queryValue}
+                onChange={(e) => setQueryValue(e.target.value)}
+              />
+              <LoadingLink
+                href="#"
+                type="submit"
+                className="absolute mr-2 bg-inherit text-rayanPrimary-dark hover:bg-slate-50"
+              >
+                <Search />
+              </LoadingLink>
+            </form>
+          </div>
+        )}
       </header>
 
       {children}

@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import { isAuthorizedUser } from "../(siteFacing)/auth/_actions/isAdmin";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminLayout({
   children,
 }: {

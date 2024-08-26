@@ -3,6 +3,7 @@
 import db from "@/db/db";
 import { notFound } from "next/navigation";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
+import { revalidatePath } from "next/cache";
 
 export async function rejectOrCancelOrder(
   id: string,
@@ -27,6 +28,9 @@ export async function rejectOrCancelOrder(
     return notFound();
 
   await db.order.update({ where: { id }, data: { status } });
+
+  revalidatePath(`/orders/${status}`);
+  revalidatePath(`/orders/${status}/${id}`);
 }
 
 export async function completeOrder(id: string, status: "finished") {
@@ -45,4 +49,6 @@ export async function completeOrder(id: string, status: "finished") {
     return notFound();
 
   await db.order.update({ where: { id }, data: { status } });
+  revalidatePath(`/orders/${status}`);
+  revalidatePath(`/orders/${status}/${id}`);
 }

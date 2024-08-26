@@ -20,7 +20,7 @@ export default async function OrderDetails({
   if (order == null) return notFound();
 
   return (
-    <OrdersTabs>
+    <OrdersTabs userRole={user ? user.role : "anonymous"}>
       <main className="mx-auto mt-10 w-11/12 rounded-xl bg-slate-50 px-6 py-2">
         <OrderCard
           user={user}

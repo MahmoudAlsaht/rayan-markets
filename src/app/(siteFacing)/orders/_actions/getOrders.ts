@@ -2,6 +2,7 @@
 
 import db from "@/db/db";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
+import { revalidatePath } from "next/cache";
 
 export async function getPendingLength() {
   const user = await checkUser();
@@ -24,5 +25,6 @@ export async function getPendingLength() {
       })
     )?.length;
 
+  revalidatePath("/");
   return 0;
 }

@@ -1,4 +1,3 @@
-import db from "@/db/db";
 import { OrderCard, OrderCardProp } from "../_components/OrderCard";
 import { searchOrders } from "../_actions/searchOrders";
 import OrdersTabs from "../_components/OrdersTabs";
@@ -15,7 +14,7 @@ export default async function OrdersPage({
   const { orders, user } = await searchOrders(status, search);
 
   return (
-    <OrdersTabs search={search}>
+    <OrdersTabs userRole={user ? user.role : "anonymous"} search={search}>
       <div
         className="container mt-4 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
         dir="rtl"

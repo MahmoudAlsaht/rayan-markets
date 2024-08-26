@@ -18,6 +18,11 @@ const Alexandria = localFont({
   display: "swap",
 });
 
+export const dynamic = async () => {
+  const user = await checkUser();
+  return user && user.role !== "customer" ? "force-dynamic" : "auto";
+};
+
 const APP_NAME = "أسواق الريان";
 const APP_DEFAULT_TITLE = "أسواق الريان العالمية";
 const APP_TITLE_TEMPLATE = "%s - أسواق الريان";
