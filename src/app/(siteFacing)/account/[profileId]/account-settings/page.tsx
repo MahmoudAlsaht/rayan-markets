@@ -28,7 +28,6 @@ export default function AccountSettings({
 }) {
   return (
     <main dir="rtl">
-      <BackButtonNav />
       <PageHeader title="إعدادات الحساب" />
 
       <div className="mt-4 grid h-dvh grid-cols-1 gap-4 sm:mt-8 md:grid-cols-2 lg:grid-cols-3">

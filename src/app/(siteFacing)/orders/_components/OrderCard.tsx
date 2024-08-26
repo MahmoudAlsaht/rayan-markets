@@ -71,25 +71,25 @@ export function OrderCard({
         ? daysPassed >= 30
           ? formattedDate
           : daysPassed === 1
-            ? "منذ يوم"
+            ? "يوم"
             : daysPassed === 2
-              ? "منذ يومين"
+              ? "يومين"
               : daysPassed > 2 && daysPassed < 11
                 ? `${daysPassed} أيام`
                 : `${daysPassed} يوماََ`
         : hoursPassed === 1
-          ? "منذ ساعة"
+          ? "ساعة"
           : hoursPassed === 2
-            ? "منذ ساعتين"
+            ? "ساعتين"
             : hoursPassed > 2 && hoursPassed < 11
               ? `${hoursPassed} ساعات`
               : `${hoursPassed} ساعة`
       : minutesPassed < 1
-        ? "منذ أقل من دقيقة"
+        ? "أقل من دقيقة"
         : minutesPassed === 1
-          ? "منذ دقيقة"
+          ? "دقيقة"
           : minutesPassed === 2
-            ? "منذ دقيقتين"
+            ? "دقيقتين"
             : minutesPassed > 2 && minutesPassed < 11
               ? `${minutesPassed} دقائق`
               : `${minutesPassed} دقيقة`;
