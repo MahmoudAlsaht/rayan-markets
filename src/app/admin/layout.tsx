@@ -12,6 +12,7 @@ export default async function AdminLayout({
   return (
     <main dir="rtl" className="h-screen bg-slate-200 pb-10">
       {children}
+      <div className="h-24"></div>
     </main>
   );
 }

@@ -8,5 +8,10 @@ export default async function SiteFacingLayout({
 }: {
   children: ReactNode;
 }) {
-  return <main dir="rtl">{children}</main>;
+  return (
+    <main dir="rtl">
+      {children}
+      <div className="h-24"></div>
+    </main>
+  );
 }

@@ -107,7 +107,6 @@ export default async function RootLayout({
           </LoadingProvider>
 
           <InstallApp />
-          <div className="h-24"></div>
         </ThemeProvider>
       </body>
     </html>
