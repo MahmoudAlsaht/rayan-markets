@@ -2,7 +2,7 @@
 
 import db from "@/db/db";
 import { addHours } from "date-fns";
-import { ProductCardProps } from "../products/_components/ProductCard";
+import { ProductCardProps } from "../products/[productsType]/[id]/page";
 
 function escapeRegExp(str: string) {
   return str?.replace(/[.@&*+?^${}()|[\]\\]/g, ""); // $& means the whole matched string

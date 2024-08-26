@@ -1,13 +1,13 @@
 import ProductsContainer, {
   ProductsContainerSkeleton,
 } from "../_components/ProductsContainer";
-import { ProductCardProps } from "../_components/ProductCard";
 import { searchProducts } from "../../_actions/product";
 import BackButtonNav from "@/components/BackButtonNav";
 import Banner from "../../_components/Banner";
 import ProductsMobileContainer from "../_components/ProductsMobileContainer";
 import { Suspense } from "react";
 import db from "@/db/db";
+import { ProductCardProps } from "./[id]/page";
 
 const getProducts = async (
   productsType: string,

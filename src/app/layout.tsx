@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import InstallApp from "../components/InstallApp";
 import "./globals.css";
@@ -13,15 +13,13 @@ import BottomNavbar from "./(siteFacing)/(mobile)/_components/BottomNavbar";
 import db from "@/db/db";
 import { getPendingLength } from "./(siteFacing)/orders/_actions/getOrders";
 
+export const dynamic =
+  process.env.NODE_ENV === "development" ? "force-dynamic" : "auto";
+
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",
   display: "swap",
 });
-
-export const dynamic = async () => {
-  const user = await checkUser();
-  return user && user.role !== "customer" ? "force-dynamic" : "auto";
-};
 
 const APP_NAME = "أسواق الريان";
 const APP_DEFAULT_TITLE = "أسواق الريان العالمية";
@@ -29,18 +27,25 @@ const APP_TITLE_TEMPLATE = "%s - أسواق الريان";
 const APP_DESCRIPTION =
   "أسواق الريان العالمية تجسد روح الكفاءة والابتكار والتركيز على العملاء";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   manifest: "/manifest.json",
   applicationName: APP_NAME,
+  category: "Home Supplies",
   title: {
     default: APP_DEFAULT_TITLE,
     template: APP_TITLE_TEMPLATE,
   },
   description: APP_DESCRIPTION,
-
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: APP_DEFAULT_TITLE,
     startupImage: ["/apple-touch-icon.png"],
   },
@@ -63,6 +68,10 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
+  },
+  other: {
+    "fb:app_id": `${process.env.WHATSAPP_APP_ID}`,
+    "facebook-domain-verification": `${process.env.META_VERIFICATION_CODE}`,
   },
 };
 

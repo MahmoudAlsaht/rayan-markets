@@ -3,7 +3,6 @@ import { FormEvent, ReactNode, Suspense, useEffect, useState } from "react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowDownUpIcon, Search } from "lucide-react";
-import { ProductCardProps } from "./ProductCard";
 import { sortBasedOnPrice } from "../../_actions/product";
 import {
   DropdownMenu,
@@ -16,6 +15,7 @@ import ProductsContainer, {
   ProductsContainerSkeleton,
 } from "./ProductsContainer";
 import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
+import { ProductCardProps } from "../[productsType]/[id]/page";
 
 export default function ProductsMobileContainer({
   query = "all",
@@ -127,11 +127,11 @@ export default function ProductsMobileContainer({
 
       <Suspense>{banner}</Suspense>
 
-      <section className="sm:hidden">
+      {/* <section className="sm:hidden">
         <Suspense fallback={<ProductsContainerSkeleton />}>
           <ProductsContainer products={sortedProducts as ProductCardProps[]} />
         </Suspense>
-      </section>
+      </section> */}
     </>
   );
 }

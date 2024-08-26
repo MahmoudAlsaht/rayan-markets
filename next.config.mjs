@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 import withPWAInit from "@ducanh2912/next-pwa";
-import { hostname } from "os";
-import path from "path";
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -19,6 +17,9 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     remotePatterns: [
       {

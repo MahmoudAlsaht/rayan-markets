@@ -62,7 +62,10 @@ export function ProductForm({
     {},
   );
   return (
-    <form action={action} className="mx-4 h-[150dvh] max-w-sm sm:mx-auto">
+    <form
+      action={action}
+      className="container mx-auto h-[150dvh] max-w-sm sm:mx-auto"
+    >
       <div className="flex gap-1">
         <div className="group relative z-0 mb-5 w-full">
           <select

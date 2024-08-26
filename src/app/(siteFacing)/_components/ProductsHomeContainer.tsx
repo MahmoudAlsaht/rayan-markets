@@ -5,12 +5,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import ProductCard, {
-  ProductCardProps,
-} from "../products/_components/ProductCard";
+
 import { searchProducts } from "../_actions/product";
 import { Button } from "@/components/ui/button";
 import { LoadingLink } from "@/context/LoadingContext";
+import ProductCard from "../products/_components/ProductCard";
+import { ProductCardProps } from "../products/[productsType]/[id]/page";
 
 const getProducts = async (
   productType: string,

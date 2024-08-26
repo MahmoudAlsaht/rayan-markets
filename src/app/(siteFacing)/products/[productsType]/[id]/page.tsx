@@ -3,13 +3,11 @@ import BackButtonNav from "@/components/BackButtonNav";
 import { Button } from "@/components/ui/button";
 import { addHours } from "date-fns";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
-import ProductCard, {
-  ProductCardProps,
-  ProductCardSkeleton,
-} from "../../_components/ProductCard";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { Suspense } from "react";
 import { LoadingLink } from "@/context/LoadingContext";
+import { DetailsProductSkeleton } from "../../_components/ProductCardSkeleton";
+import ProductCardDetails from "../../_components/ProductCardDetails";
 
 const selectProduct = {
   id: true,
@@ -103,6 +101,23 @@ const getLabels = async (labels: string[], id: string) => {
   ];
 };
 
+export type ProductCardProps = {
+  id: string | null;
+  image: {
+    path: string;
+  } | null;
+  name: string | null;
+  price: number | null;
+  newPrice: number | null;
+  productType: string;
+  description?: string | null;
+  body?: string | null;
+  weights: number[] | null;
+  flavors: string[] | null;
+  isOffer: boolean | null;
+  quantity: number;
+};
+
 export default function ProductsTypePage({
   params: { id },
 }: {
@@ -117,7 +132,7 @@ export default function ProductsTypePage({
         <BackButtonNav />
       </div>
 
-      <Suspense fallback={<ProductCardSkeleton isProductDetailsPage />}>
+      <Suspense fallback={<DetailsProductSkeleton />}>
         <ProductDetailsPageSuspense id={id} />
       </Suspense>
       <div className="h-20"></div>
@@ -153,11 +168,8 @@ async function ProductDetailsPageSuspense({ id }: { id: string }) {
         </Button>
       )}
 
-      <div className="container w-full p-0">
-        <ProductCard
-          product={product as ProductCardProps}
-          isProductDetailsPage
-        />
+      <div className="mb-32">
+        <ProductCardDetails product={product as ProductCardProps} />
       </div>
 
       {labels && labels.length > 0 && (

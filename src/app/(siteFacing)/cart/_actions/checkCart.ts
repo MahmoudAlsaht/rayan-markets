@@ -11,6 +11,7 @@ export type CartProduct = {
   total: number;
   quantity: number;
   counter: number;
+  limit: number;
   image: string;
 };
 

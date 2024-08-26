@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { Cart, CartProduct, getCart } from "./checkCart";
-import { ProductCardProps } from "../../products/_components/ProductCard";
+import { ProductCardProps } from "../../products/[productsType]/[id]/page";
 
 export async function addProductToCart(
   product: ProductCardProps & { selectedOption?: number | string },
@@ -26,6 +26,7 @@ export async function addProductToCart(
     price: cartProductPrice,
     image: product.image?.path as string,
     quantity: product.quantity,
+    limit: product.quantity,
     weight:
       typeof product.selectedOption === "number"
         ? (cartProductWeight as number)
@@ -75,6 +76,7 @@ export async function addToProductCounter(id: string) {
   const updatedProduct: CartProduct = {
     ...currentCartProduct,
     counter: currentCartProduct.counter + 1,
+    limit: currentCartProduct.limit - 1,
     total: currentCartProduct.price * (currentCartProduct.counter + 1),
   };
 
@@ -82,7 +84,15 @@ export async function addToProductCounter(id: string) {
     ...cart,
     total: cart.total + updatedProduct.price,
     products: cart.products.map((currProduct) =>
-      currProduct.id === id ? updatedProduct : currProduct,
+      currProduct.id === id
+        ? {
+            ...updatedProduct,
+            counter:
+              updatedProduct.counter > updatedProduct.quantity
+                ? updatedProduct.quantity
+                : updatedProduct.counter,
+          }
+        : currProduct,
     ),
   };
 
@@ -108,6 +118,7 @@ export async function takeFromProductCounter(id: string) {
   const updatedProduct: CartProduct = {
     ...currentCartProduct,
     counter: currentCartProduct.counter - 1,
+    limit: currentCartProduct.limit + 1,
     total: currentCartProduct.price * (currentCartProduct.counter - 1),
   };
 

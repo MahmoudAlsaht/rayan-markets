@@ -70,9 +70,11 @@ export function LoadingLink({
   children,
   type = "link",
   target = false,
+  action,
 }: {
   target?: boolean;
   href: string | (() => void);
+  action?: () => void;
   className?: string;
   children: ReactNode;
   type?: string;
@@ -82,6 +84,7 @@ export function LoadingLink({
 
   const handleStartLoading = () =>
     startLoading(() => {
+      if (action) action();
       if (typeof href === "function") href();
       else !target ? router.push(href) : window.open(href, "_blank");
     });

@@ -1,5 +1,5 @@
 import Banner from "@/app/(siteFacing)/_components/Banner";
-import { ProductCardProps } from "@/app/(siteFacing)/products/_components/ProductCard";
+import { ProductCardProps } from "@/app/(siteFacing)/products/[productsType]/[id]/page";
 import ProductsContainer, {
   ProductsContainerSkeleton,
 } from "@/app/(siteFacing)/products/_components/ProductsContainer";

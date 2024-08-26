@@ -60,7 +60,6 @@ export default function OrdersTabs({
 
   useEffect(() => {
     setIsAuthorized(userRole !== "customer" && userRole !== "anonymous");
-    console.log(isAuthorized);
   }, [isAuthorized, userRole]);
 
   return (

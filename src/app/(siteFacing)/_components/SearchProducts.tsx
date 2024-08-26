@@ -14,13 +14,13 @@ import { useFormState } from "react-dom";
 import { handleSearchInput, sortBasedOnPrice } from "../_actions/product";
 import { useEffect, useState } from "react";
 import ProductsContainer from "../products/_components/ProductsContainer";
-import { ProductCardProps } from "../products/_components/ProductCard";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ProductCardProps } from "../products/[productsType]/[id]/page";
 
 export default function SearchProducts({ className }: { className?: string }) {
   const formRef = React.useRef<HTMLFormElement | null>(null);
@@ -139,12 +139,11 @@ export default function SearchProducts({ className }: { className?: string }) {
             </div>
           ) : (
             <>
-              {products && (
+              {/* {products && (
                 <ProductsContainer
-                  handleCloseSearch={handleClose}
                   products={sortedProducts as ProductCardProps[]}
                 />
-              )}
+              )} */}
             </>
           )}
           <div className="h-20"></div>
