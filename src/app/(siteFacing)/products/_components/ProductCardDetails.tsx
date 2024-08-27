@@ -25,7 +25,10 @@ export default function ProductCardDetails({
           </div>
         )
       )}
-      <div dir="rtl" className="mt-4 w-full bg-inherit md:flex">
+      <div
+        dir="rtl"
+        className={`mt-4 w-full bg-inherit md:flex ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
+      >
         <div className="relative mx-auto h-72 w-11/12 sm:h-96 sm:w-3/5 md:w-2/5">
           <div className="relative h-full w-full">
             <Image
@@ -38,7 +41,7 @@ export default function ProductCardDetails({
             />
           </div>
           <div
-            className={`absolute rounded-lg bg-slate-100 py-3 transition-all duration-500 sm:left-0 ${productCart ? "-bottom-7 right-4 w-11/12" : "-bottom-6 right-1/4 w-1/2"}`}
+            className={`absolute rounded-lg bg-slate-100 py-3 transition-all duration-500 sm:left-0 ${productCart ? "-bottom-7 right-4 w-11/12" : "-bottom-6 right-1/4 w-1/2"} ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
           >
             <HandleCartActions product={product} />
           </div>

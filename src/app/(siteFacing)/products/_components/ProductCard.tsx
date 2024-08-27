@@ -5,7 +5,8 @@ import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { ProductCardProps } from "../[productsType]/[id]/page";
 import HandleCartActions from "./HandleCartActions";
 import { useProductCart } from "@/app/(siteFacing)/_context/ProductCartContext";
-// import { updateProductViews } from "../../_actions/product";
+import { updateProductViews } from "../../_actions/product";
+import { useRouter } from "next/navigation";
 
 export default function ProductCard({
   product,
@@ -13,16 +14,22 @@ export default function ProductCard({
   product: ProductCardProps;
 }) {
   const { productCart } = useProductCart();
+  const router = useRouter();
+
+  const handleUpdateViews = async () => {
+    await updateProductViews(product.id as string);
+    router.push(`/products/any/${product.id}`);
+  };
 
   return (
     <>
       <div
         dir="rtl"
-        className="cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+        className={`cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
       >
         <div className="relative h-44">
           <LoadingLink
-            href={`/products/any/${product.id}`}
+            href={handleUpdateViews}
             className="relative h-full w-full"
           >
             <Image
@@ -35,7 +42,7 @@ export default function ProductCard({
             />
           </LoadingLink>
           <div
-            className={`absolute -bottom-6 rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${productCart ? "right-0 w-full" : "right-1/4 w-1/2"} `}
+            className={`absolute -bottom-6 rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${productCart ? "right-0 w-full" : "right-1/4 w-1/2"} ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
           >
             <HandleCartActions product={product} />
           </div>
@@ -47,8 +54,8 @@ export default function ProductCard({
         </div>
 
         <LoadingLink
-          className="mt-2 w-full py-3 sm:px-4"
-          href={`/products/any/${product.id}`}
+          className="mt-3 w-full py-3 sm:px-4"
+          href={handleUpdateViews}
         >
           <p className="text-md block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
             {product?.name}

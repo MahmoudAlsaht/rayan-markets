@@ -32,7 +32,7 @@ export default function HandleCartActions({
   };
 
   return (
-    <div className="relative text-rayanPrimary-dark">
+    <div className={`relative`}>
       {!productCart && (
         <ProductMenuPrice
           disabled={product?.quantity < 1}
