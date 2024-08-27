@@ -1,6 +1,6 @@
 "use client";
 
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { ReactNode, useState, useTransition } from "react";
 import { editDefaultContacts } from "../_actions/editDefaultContacts";
 import { useRouter } from "next/navigation";

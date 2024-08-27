@@ -139,11 +139,11 @@ export default function SearchProducts({ className }: { className?: string }) {
             </div>
           ) : (
             <>
-              {/* {products && (
+              {products && (
                 <ProductsContainer
                   products={sortedProducts as ProductCardProps[]}
                 />
-              )} */}
+              )}
             </>
           )}
           <div className="h-20"></div>

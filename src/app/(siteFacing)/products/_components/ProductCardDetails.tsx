@@ -1,15 +1,17 @@
+"use client";
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 import { ProductCardProps } from "../[productsType]/[id]/page";
 import HandleCartActions from "./HandleCartActions";
-import { findProduct } from "../../cart/_actions/checkCart";
+import { useProductCart } from "@/app/(siteFacing)/_context/ProductCartContext";
 
-export default async function ProductCardDetails({
+export default function ProductCardDetails({
   product,
 }: {
   product: ProductCardProps;
 }) {
-  const productInCart = await findProduct(product.id as string);
+  const { productCart } = useProductCart();
+
   return (
     <>
       {product.quantity < 6 && product.quantity > 0 ? (
@@ -36,12 +38,9 @@ export default async function ProductCardDetails({
             />
           </div>
           <div
-            className={`absolute rounded-lg bg-slate-100 py-3 transition-all duration-500 sm:left-0 ${productInCart ? "-bottom-7 right-4 w-11/12" : "-bottom-6 right-1/4 w-1/2"}`}
+            className={`absolute rounded-lg bg-slate-100 py-3 transition-all duration-500 sm:left-0 ${productCart ? "-bottom-7 right-4 w-11/12" : "-bottom-6 right-1/4 w-1/2"}`}
           >
-            <HandleCartActions
-              productInCart={productInCart}
-              product={product}
-            />
+            <HandleCartActions product={product} />
           </div>
           {product?.isOffer && (
             <div className="absolute right-0 top-0 rounded-2xl bg-destructive px-4 py-0 text-white">
@@ -54,7 +53,7 @@ export default async function ProductCardDetails({
           <p className="text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl">
             {product?.body}
           </p>
-          {productInCart && productInCart.limit < 1 && (
+          {productCart && (productCart.limit || 0) < 1 && (
             <p className="mt-6 text-xl text-rayanWarning-dark">
               لا يمكنك اضافة المزيد من هذا المنتج{" "}
             </p>

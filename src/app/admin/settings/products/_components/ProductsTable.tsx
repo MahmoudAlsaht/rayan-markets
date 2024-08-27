@@ -46,7 +46,7 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "../_actions/deleteProduct";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);

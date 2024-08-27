@@ -46,10 +46,6 @@ export default function SelectPayment() {
           <Image alt="e-wallet icon" src={EWalletIcon} width={20} height={20} />
         </PaymentRadioCard>
       </RadioGroup>
-
-      {/* {error?.paymentMethod && (
-        <div className="my-2 text-destructive">{error.paymentMethod}</div>
-      )} */}
       <SubmitButton className="mt-2" body="تنفيذ الطلب" />
     </form>
   );

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";

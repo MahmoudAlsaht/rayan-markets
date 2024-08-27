@@ -46,7 +46,7 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { deleteSection } from "../_actions/deleteSection";
 import { Section } from "@prisma/client";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function SectionsTable({ data }: { data: Partial<Section>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);

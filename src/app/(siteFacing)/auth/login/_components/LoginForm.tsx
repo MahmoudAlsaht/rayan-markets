@@ -3,7 +3,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { login } from "../../_actions/login";
 import SubmitButton from "@/components/SubmitButton";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export function LoginForm() {
   const [error, action] = useFormState(login, {});

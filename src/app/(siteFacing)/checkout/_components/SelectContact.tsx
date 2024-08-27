@@ -8,17 +8,6 @@ export default async function SelectContact({
 }: {
   profileId: string;
 }) {
-  // const activeContact = await db.contact.findMany({
-  //   where: { AND: [{ profileId }, { defaultContact: true }] },
-  //   select: {
-  //     id: true,
-  //     contactNumber: true,
-  //     defaultContact: true,
-  //     district: { select: { name: true } },
-  //   },
-  //   orderBy: { createdAt: "desc" },
-  // });
-
   const contacts = await db.contact.findMany({
     where: { profileId },
     select: {

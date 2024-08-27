@@ -4,9 +4,9 @@ import { FormEvent, useState, useTransition } from "react";
 import { checkPromoAndAddToCart } from "../../_actions/checkPromo";
 import SubmitButton from "@/components/SubmitButton";
 import { formatCurrency } from "@/lib/formatters";
-import { Cart } from "../_actions/checkCart";
+import { Cart } from "@/app/(siteFacing)/_context/cart/CartContext";
 
-export default function CheckPromoForm({ cart }: { cart: Cart }) {
+export default function CheckPromoForm({ cart }: { cart: Cart | null }) {
   const [_, startChecking] = useTransition();
   const [promo, setPromo] = useState<PromoCode | null>(null);
   const [code, setCode] = useState("");
@@ -47,11 +47,14 @@ export default function CheckPromoForm({ cart }: { cart: Cart }) {
             (promo?.active && !promo.isTerms) ||
             (promo?.active &&
               promo?.isTerms &&
-              cart.total >= (promo?.minPrice || 0))
+              cart?.total &&
+              cart?.total >= (promo?.minPrice || 0))
               ? "border-rayanPrimary-dark text-rayanPrimary-dark focus:border-rayanPrimary-dark"
               : !promo?.active ||
                   !isPromoExist ||
-                  (promo.isTerms && cart.total < (promo?.minPrice || 0))
+                  (promo.isTerms &&
+                    cart?.total &&
+                    cart?.total < (promo?.minPrice || 0))
                 ? "border-destructive text-destructive focus:border-destructive"
                 : ""
           }
@@ -59,14 +62,16 @@ export default function CheckPromoForm({ cart }: { cart: Cart }) {
           {(promo?.active && !promo.isTerms) ||
           (promo?.active &&
             promo.isTerms &&
-            cart.total >= (promo?.minPrice || 0))
+            cart?.total &&
+            cart?.total >= (promo?.minPrice || 0))
             ? `لقد حصلت على ${promo.promoType === "shippingFees" ? " توصيل مجاني" : `على خصم بقيمة (${promo.discount}%) على مشترياتك `}`
             : !promo?.active && isPromoExist
               ? "هذا الكوبون غير فعال"
               : isPromoExist &&
                   promo?.isTerms &&
-                  cart.total < (promo?.minPrice || 0)
-                ? `يجب أن يكون إجمالي السلة (${formatCurrency(promo?.minPrice as number)}) لتحصل على الخصم. اضف مشتريات بقيمة (${formatCurrency((promo.minPrice as number) - cart.total)})`
+                  cart?.total &&
+                  cart?.total < (promo?.minPrice || 0)
+                ? `يجب أن يكون إجمالي السلة (${formatCurrency(promo?.minPrice as number)}) لتحصل على الخصم. اضف مشتريات بقيمة (${formatCurrency((promo.minPrice as number) - cart?.total)})`
                 : !isPromoExist && "لم يتم العثور على كوبون الخصم"}
         </div>
       )}

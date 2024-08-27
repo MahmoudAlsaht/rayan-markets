@@ -1,17 +1,18 @@
+"use client";
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { ProductCardProps } from "../[productsType]/[id]/page";
 import HandleCartActions from "./HandleCartActions";
-import { findProduct } from "../../cart/_actions/checkCart";
+import { useProductCart } from "@/app/(siteFacing)/_context/ProductCartContext";
 // import { updateProductViews } from "../../_actions/product";
 
-export default async function ProductCard({
+export default function ProductCard({
   product,
 }: {
   product: ProductCardProps;
 }) {
-  const productInCart = await findProduct(product.id as string);
+  const { productCart } = useProductCart();
 
   return (
     <>
@@ -34,12 +35,9 @@ export default async function ProductCard({
             />
           </LoadingLink>
           <div
-            className={`absolute -bottom-6 rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${productInCart ? "right-0 w-full" : "right-1/4 w-1/2"} `}
+            className={`absolute -bottom-6 rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${productCart ? "right-0 w-full" : "right-1/4 w-1/2"} `}
           >
-            <HandleCartActions
-              productInCart={productInCart}
-              product={product}
-            />
+            <HandleCartActions product={product} />
           </div>
           {product?.isOffer && (
             <div className="absolute right-0 top-0 rounded-2xl bg-destructive px-4 py-0 text-white">
@@ -52,12 +50,6 @@ export default async function ProductCard({
           className="mt-2 w-full py-3 sm:px-4"
           href={`/products/any/${product.id}`}
         >
-          {((productInCart && productInCart.limit < 1) ||
-            product.quantity < 1) && (
-            <p className="text-xs text-rayanWarning-dark">
-              لا يمكنك اضافة المزيد
-            </p>
-          )}
           <p className="text-md block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
             {product?.name}
           </p>

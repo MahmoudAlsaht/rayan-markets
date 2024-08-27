@@ -45,7 +45,7 @@ import {
 import { District } from "@prisma/client";
 import { deleteDistrict } from "../_actions/deleteDistrict";
 import { useRouter } from "next/navigation";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function DistrictsTable({
   data,

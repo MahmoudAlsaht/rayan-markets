@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/db/db";
-import { getCart, updateCart } from "../cart/_actions/checkCart";
+import { getCart, updateCart } from "../_context/cart/actions/checkCart";
 import { cookies } from "next/headers";
 
 export async function checkPromoAndAddToCart(code: string) {
@@ -22,7 +22,8 @@ export async function checkPromoAndAddToCart(code: string) {
     promo &&
     cart &&
     promo.active &&
-    (!promo.isTerms || (promo.isTerms && cart.total >= (promo?.minPrice || 0)))
+    (!promo.isTerms ||
+      (promo.isTerms && cart?.total && cart.total >= (promo?.minPrice || 0)))
   ) {
     const updatedCart = { ...cart, promoCode: promo };
     await updateCart(updatedCart);

@@ -1,10 +1,14 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
+import {
+  LoadingLink,
+  useStartLoading,
+} from "@/app/(siteFacing)/_context/LoadingContext";
 import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import BackButtonNav from "@/components/BackButtonNav";
+import { useCart } from "../../_context/cart/CartContext";
 
 export const statuses: {
   value: string;
@@ -52,12 +56,14 @@ export default function OrdersTabs({
   const { startLoading } = useStartLoading();
   const [queryValue, setQueryValue] = useState<string>(search ? search : "");
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const { checkCart } = useCart();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     startLoading(() => router.push(`/orders/all/?search=${queryValue}`));
   };
 
+  checkCart();
   useEffect(() => {
     setIsAuthorized(userRole !== "customer" && userRole !== "anonymous");
   }, [isAuthorized, userRole]);

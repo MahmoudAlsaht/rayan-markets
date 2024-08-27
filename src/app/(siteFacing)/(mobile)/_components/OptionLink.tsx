@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export function OptionLink({
   href,

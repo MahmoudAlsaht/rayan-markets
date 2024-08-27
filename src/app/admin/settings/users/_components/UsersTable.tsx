@@ -34,7 +34,7 @@ import {
 import { useState } from "react";
 import { User } from "@prisma/client";
 import EditRoleForm from "./EditRoleForm";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function UsersTable({ data }: { data: Partial<User>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);

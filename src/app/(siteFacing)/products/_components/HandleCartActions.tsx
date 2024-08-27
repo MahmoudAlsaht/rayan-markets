@@ -1,48 +1,39 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useProductCart } from "../../_context/ProductCartContext";
 import { ProductCardProps } from "../[productsType]/[id]/page";
 import ProductMenuPrice from "./ProductMenuPrice";
-import {
-  addProductToCart,
-  addToProductCounter,
-  takeFromProductCounter,
-} from "../../cart/_actions/cartActions";
-import { CartProduct } from "../../cart/_actions/checkCart";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 
 export default function HandleCartActions({
   product,
-  productInCart,
 }: {
   product: ProductCardProps;
-  productInCart: CartProduct | null;
 }) {
-  const [_, startTransition] = useTransition();
+  const {
+    addNewProduct,
+    addToProductCounter,
+    takeFromProductCounter,
+    productCart,
+  } = useProductCart();
 
   const handleAddToCart = (selectedOption?: number | string) => {
     if (product?.quantity < 1) return;
-    startTransition(async () => {
-      await addProductToCart({ ...product, selectedOption });
-    });
+    addNewProduct({ ...product, selectedOption });
   };
 
   const handleAddToCounter = () => {
-    if ((productInCart?.quantity || 0) < 1) return;
-    startTransition(async () => {
-      await addToProductCounter(product?.id as string);
-    });
+    if ((productCart?.quantity || 0) < 1) return;
+    addToProductCounter(product?.id as string);
   };
 
   const handleTakeFromCounter = () => {
-    startTransition(async () => {
-      await takeFromProductCounter(product?.id as string);
-    });
+    takeFromProductCounter(product?.id as string);
   };
 
   return (
     <div className="relative text-rayanPrimary-dark">
-      {!productInCart && (
+      {!productCart && (
         <ProductMenuPrice
           disabled={product?.quantity < 1}
           flavors={
@@ -58,18 +49,18 @@ export default function HandleCartActions({
           handleAddToCart={handleAddToCart}
         />
       )}
-      {productInCart && (
+      {productCart && (
         <div className="flex items-center justify-around">
           <Button
             variant="outline"
             className="bg-slate-100 hover:bg-slate-100"
             onClick={handleAddToCounter}
-            disabled={(productInCart?.limit || 0) < 1}
+            disabled={(productCart?.limit || 0) < 1}
           >
             <Plus className="size-7 text-rayanPrimary-dark" />
           </Button>
           <span className="text-rayanPrimary-dark">
-            {productInCart?.counter || 0}
+            {productCart?.counter || 0}
           </span>
           <Button
             variant="outline"

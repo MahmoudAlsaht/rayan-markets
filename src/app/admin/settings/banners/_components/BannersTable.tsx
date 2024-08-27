@@ -46,7 +46,7 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { deleteBanner } from "../_actions/deleteBanner";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);

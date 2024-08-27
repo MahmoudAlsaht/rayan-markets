@@ -13,12 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import logout from "../auth/_actions/logout";
 import SearchProducts from "./SearchProducts";
-import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
+import { useCart } from "@/app/(siteFacing)/_context/cart/CartContext";
 
 export default function MainNavbar({
   user,
-  cart,
   offersExists = false,
   forHomeExists = false,
   pendingOrdersLength,
@@ -30,12 +29,12 @@ export default function MainNavbar({
     role: string;
     profile: { id: string };
   };
-  cart: Cart | null;
   offersExists?: boolean;
   forHomeExists?: boolean;
   pendingOrdersLength: number;
 }) {
   const pathname = usePathname();
+  const { cart } = useCart();
 
   const isAccountPage = pathname === `/account/${user?.profile?.id}`;
 
@@ -123,7 +122,7 @@ export default function MainNavbar({
                     />
                   </li>
                   <small className="absolute -top-2 end-3 inline-flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white">
-                    {cart.products.length}
+                    {cart.products && cart.products.length}
                   </small>
                 </LoadingLink>
               )}

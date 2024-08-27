@@ -1,11 +1,11 @@
 import BackButtonNav from "@/components/BackButtonNav";
 import PageHeader from "@/components/PageHeader";
-import { getCart } from "./_actions/checkCart";
 import CartContainer, {
   CartContainerSkeleton,
 } from "./_components/CartContainer";
 import { Suspense } from "react";
-import { checkUser } from "../auth/_actions/isAuthenticated";
+import { redirect } from "next/navigation";
+import { getCart } from "../_context/cart/actions/checkCart";
 
 export default function CartPage() {
   return (
@@ -24,6 +24,6 @@ export default function CartPage() {
 
 async function CartSuspense() {
   const cart = await getCart();
-  const user = await checkUser();
-  return <CartContainer cart={cart} user={user} />;
+  if (!cart) redirect("/");
+  return <CartContainer />;
 }

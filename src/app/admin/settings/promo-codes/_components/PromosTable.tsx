@@ -45,7 +45,7 @@ import {
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { deletePromo } from "../_actions/deletePromo";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function PromosTable({ data }: { data: Partial<PromoCode>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);

@@ -4,14 +4,14 @@ import InstallApp from "../components/InstallApp";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
-import LoadingProvider from "@/context/LoadingContext";
+import LoadingProvider from "@/app/(siteFacing)/_context/LoadingContext";
 import AdminNavbar from "./admin/_components/AdminNavbar";
 import MainNavbar from "./(siteFacing)/_components/MainNavbar";
 import { checkUser } from "./(siteFacing)/auth/_actions/isAuthenticated";
-import { getCart } from "./(siteFacing)/cart/_actions/checkCart";
 import BottomNavbar from "./(siteFacing)/(mobile)/_components/BottomNavbar";
 import db from "@/db/db";
 import { getPendingLength } from "./(siteFacing)/orders/_actions/getOrders";
+import { CartProvider } from "./(siteFacing)/_context/cart/CartContext";
 
 export const dynamic =
   process.env.NODE_ENV === "development" ? "force-dynamic" : "auto";
@@ -87,7 +87,6 @@ export default async function RootLayout({
     role: string;
     profile: { id: string };
   };
-  const cart = await getCart();
   const pendingLength = await getPendingLength();
   const offers = await db.product.findFirst({ where: { isOffer: true } });
   const forHomeProducts = await db.product.findFirst({
@@ -104,21 +103,22 @@ export default async function RootLayout({
         dir="rtl"
       >
         <ThemeProvider attribute="class">
-          <LoadingProvider
-            AdminNavbar={<AdminNavbar />}
-            SiteFacingNavbar={
-              <MainNavbar
-                pendingOrdersLength={pendingLength}
-                offersExists={offers !== null}
-                forHomeExists={forHomeProducts !== null}
-                user={user}
-                cart={cart}
-              />
-            }
-            MobileNavBar={<BottomNavbar />}
-          >
-            {children}
-          </LoadingProvider>
+          <CartProvider>
+            <LoadingProvider
+              AdminNavbar={<AdminNavbar />}
+              SiteFacingNavbar={
+                <MainNavbar
+                  pendingOrdersLength={pendingLength}
+                  offersExists={offers !== null}
+                  forHomeExists={forHomeProducts !== null}
+                  user={user}
+                />
+              }
+              MobileNavBar={<BottomNavbar />}
+            >
+              {children}
+            </LoadingProvider>
+          </CartProvider>
 
           <InstallApp />
         </ThemeProvider>

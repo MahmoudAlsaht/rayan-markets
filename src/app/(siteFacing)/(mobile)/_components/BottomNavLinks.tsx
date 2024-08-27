@@ -5,18 +5,18 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { SlOptions } from "react-icons/sl";
 import { ImHome } from "react-icons/im";
 import { Search, ShoppingBag } from "lucide-react";
-import { Cart } from "@/app/(siteFacing)/cart/_actions/checkCart";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
+import { useCart } from "@/app/(siteFacing)/_context/cart/CartContext";
 
 export default function BottomNavLinks({
   user,
-  cart,
   pendingOrdersLength,
 }: {
   user;
-  cart: Cart | null;
   pendingOrdersLength: number;
 }) {
+  const { cart } = useCart();
+
   return (
     <div
       className={`mx-auto grid h-full max-w-lg ${user && cart ? "grid-cols-5" : user || cart ? "grid-cols-4" : "grid-cols-3"}`}
@@ -33,7 +33,7 @@ export default function BottomNavLinks({
         <NavLink href="/cart" navType="cart">
           <ShoppingBag />
           <small className="absolute -right-1 -top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs font-bold text-white">
-            {cart.products.length}
+            {cart?.products?.length}
           </small>
         </NavLink>
       )}

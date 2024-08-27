@@ -1,17 +1,14 @@
 "use server";
 
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
-import {
-  CartProduct,
-  getCart,
-} from "@/app/(siteFacing)/cart/_actions/checkCart";
+import { getCart } from "@/app/(siteFacing)/_context/cart/actions/checkCart";
 import db from "@/db/db";
-import { Anonymous, Order, User } from "@prisma/client";
+import { Anonymous, User } from "@prisma/client";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import z from "zod";
-import { deleteCart } from "../../cart/_actions/cartActions";
 import { revalidatePath } from "next/cache";
+import { CartProduct } from "@/app/(siteFacing)/_context/cart/CartContext";
 
 const addOrderSchema = z.object({
   paymentMethod: z.enum(["card", "cash", "eWallet"], {
@@ -32,7 +29,7 @@ export async function createNewOrder(formData: FormData) {
   const user = await checkUser();
   const cart = await getCart();
 
-  if (!cart) return notFound();
+  if (!cart || !cart.total || !cart.products) return notFound();
 
   const customer = user || cart?.anonymous;
 
@@ -125,7 +122,7 @@ export async function createNewOrder(formData: FormData) {
     });
   }
 
-  await deleteCart();
+  cookies().delete("cart");
 
   revalidatePath("/orders/all");
   revalidatePath(`/orders/${newOrder.status}`);
@@ -139,36 +136,4 @@ function genOrderId() {
     orderId += `${Math.floor(Math.random() * 10)}`;
   }
   return orderId;
-}
-
-export async function getOrders() {
-  const checkCookies = cookies().get("orders");
-
-  if (!checkCookies?.value) return null;
-
-  const orders = JSON.parse(checkCookies.value);
-
-  if (orders == null) return null;
-
-  return orders as Order[];
-}
-
-export async function addOrder(newOrder: Order) {
-  const orders = await getOrders();
-  const updatedOrders = !orders ? [newOrder] : [...orders, newOrder];
-
-  cookies().set("orders", JSON.stringify(updatedOrders));
-}
-
-export async function updateOrders(updatedOrder: Order) {
-  const orders = await getOrders();
-  if (!orders) return;
-  const updatedOrders = [
-    ...orders,
-    orders.map((order) =>
-      order.id === updatedOrder?.id ? updatedOrder : order,
-    ),
-  ];
-
-  cookies().set("orders", JSON.stringify(updatedOrders));
 }

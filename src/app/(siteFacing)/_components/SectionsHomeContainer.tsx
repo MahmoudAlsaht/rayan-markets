@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import SectionCarouselCard from "./SectionCarouselCard";
 import { SectionCardProps } from "../sections/_components/SectionCard";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 const getSections = cache(
   (type: string) => {

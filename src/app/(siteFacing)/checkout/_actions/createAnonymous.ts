@@ -2,7 +2,7 @@
 import db from "@/db/db";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
-import { getCart, updateCart } from "../../cart/_actions/checkCart";
+import { getCart, updateCart } from "../../_context/cart/actions/checkCart";
 
 const addAnonymousSchema = z.object({
   name: z.string().min(1, "الرجاء قم بادخال اسمك"),

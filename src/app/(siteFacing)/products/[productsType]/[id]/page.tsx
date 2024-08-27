@@ -5,9 +5,10 @@ import { addHours } from "date-fns";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
 import ProductsContainer from "../../_components/ProductsContainer";
 import { Suspense } from "react";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { DetailsProductSkeleton } from "../../_components/ProductCardSkeleton";
 import ProductCardDetails from "../../_components/ProductCardDetails";
+import { ProductCartProvider } from "@/app/(siteFacing)/_context/ProductCartContext";
 
 const selectProduct = {
   id: true,
@@ -169,7 +170,9 @@ async function ProductDetailsPageSuspense({ id }: { id: string }) {
       )}
 
       <div className="mb-32">
-        <ProductCardDetails product={product as ProductCardProps} />
+        <ProductCartProvider id={product?.id as string}>
+          <ProductCardDetails product={product as ProductCardProps} />
+        </ProductCartProvider>
       </div>
 
       {labels && labels.length > 0 && (

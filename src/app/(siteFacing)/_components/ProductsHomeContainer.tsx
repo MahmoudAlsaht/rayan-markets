@@ -8,9 +8,10 @@ import {
 
 import { searchProducts } from "../_actions/product";
 import { Button } from "@/components/ui/button";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import ProductCard from "../products/_components/ProductCard";
 import { ProductCardProps } from "../products/[productsType]/[id]/page";
+import { ProductCartProvider } from "@/app/(siteFacing)/_context/ProductCartContext";
 
 const getProducts = async (
   productType: string,
@@ -61,14 +62,19 @@ export default async function SectionsHomeContainer({
           className="w-11/12"
         >
           <CarouselContent>
-            {products.map((product) => (
-              <CarouselItem
-                key={product.id}
-                className="basis-3/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
-              >
-                <ProductCard product={product as ProductCardProps} />
-              </CarouselItem>
-            ))}
+            {products.map(
+              (product) =>
+                product.quantity > 0 && (
+                  <CarouselItem
+                    key={product.id}
+                    className="basis-3/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
+                  >
+                    <ProductCartProvider id={product.id as string}>
+                      <ProductCard product={product as ProductCardProps} />
+                    </ProductCartProvider>
+                  </CarouselItem>
+                ),
+            )}
           </CarouselContent>
         </Carousel>
       </section>

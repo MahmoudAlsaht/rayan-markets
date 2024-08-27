@@ -14,7 +14,10 @@ import { Filter } from "lucide-react";
 import ProductsContainer, {
   ProductsContainerSkeleton,
 } from "./ProductsContainer";
-import { LoadingLink, useStartLoading } from "@/context/LoadingContext";
+import {
+  LoadingLink,
+  useStartLoading,
+} from "@/app/(siteFacing)/_context/LoadingContext";
 import { ProductCardProps } from "../[productsType]/[id]/page";
 
 export default function ProductsMobileContainer({
@@ -127,11 +130,11 @@ export default function ProductsMobileContainer({
 
       <Suspense>{banner}</Suspense>
 
-      {/* <section className="sm:hidden">
+      <section className="sm:hidden">
         <Suspense fallback={<ProductsContainerSkeleton />}>
           <ProductsContainer products={sortedProducts as ProductCardProps[]} />
         </Suspense>
-      </section> */}
+      </section>
     </>
   );
 }

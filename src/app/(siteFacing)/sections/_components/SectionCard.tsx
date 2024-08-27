@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export type SectionCardProps = {
   id: string;

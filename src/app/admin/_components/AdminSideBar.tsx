@@ -11,7 +11,7 @@ import {
   staffPermissions,
   UserPermission,
 } from "./UserPermissions";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function AdminSideBar({
   admin,

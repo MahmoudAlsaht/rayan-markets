@@ -3,7 +3,7 @@ import { SectionCardProps } from "../sections/_components/SectionCard";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { LoadingLink } from "@/context/LoadingContext";
+import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
 export default function SectionCarouselCard({
   section,
