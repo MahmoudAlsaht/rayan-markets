@@ -7,6 +7,7 @@ import SubmitButton from "@/components/SubmitButton";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { useState } from "react";
 import PhoneNumberForm from "@/app/(siteFacing)/_components/PhoneNumberForm";
+import Privacy from "./Privacy";
 
 export function RegisterForm() {
   const [phone, setPhone] = useState<string | null>(null);
@@ -80,6 +81,7 @@ export function RegisterForm() {
           تسجيل الدخول
         </LoadingLink>
       </div>
+      <Privacy />
       <SubmitButton body={"التسجيل"} />
     </form>
   );
