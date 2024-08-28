@@ -1,16 +1,28 @@
 "use client";
 import CartCard, { CartCardSkeleton } from "./CartCard";
 import { Button } from "@/components/ui/button";
-import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
+import {
+  LoadingLink,
+  useStartLoading,
+} from "@/app/(siteFacing)/_context/LoadingContext";
 import { formatCurrency } from "@/lib/formatters";
 import CheckPromoForm from "./CheckPromoForm";
-import { Cart, useCart } from "@/app/(siteFacing)/_context/cart/CartContext";
+import { useCart } from "@/app/(siteFacing)/_context/cart/CartContext";
 import { ProductCartProvider } from "@/app/(siteFacing)/_context/ProductCartContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const CART_MIN = 5;
 
 export default function CartContainer() {
+  const router = useRouter();
   const { cart } = useCart();
+  const { startLoading } = useStartLoading();
+
+  useEffect(() => {
+    if (!cart) startLoading(() => router.push("/"));
+  }, [cart, router, startLoading]);
+
   return (
     <main dir="rtl" className="flex w-full flex-col gap-4">
       <section className="grid grid-cols-1 gap-2 pt-5 sm:container sm:order-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

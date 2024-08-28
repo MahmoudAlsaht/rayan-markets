@@ -5,7 +5,6 @@ import CartContainer, {
 } from "./_components/CartContainer";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getCart } from "../_context/cart/actions/checkCart";
 
 export default function CartPage() {
   return (
@@ -23,7 +22,5 @@ export default function CartPage() {
 }
 
 async function CartSuspense() {
-  const cart = await getCart();
-  if (!cart) redirect("/");
   return <CartContainer />;
 }
