@@ -8,9 +8,12 @@ import z from "zod";
 const addPromoSchema = z.object({
   code: z.string().min(1, "الرجاء ادخال هذا الحقل"),
   active: z.string(),
-  isMinPrice: z.string(),
+  isMinPrice: z.string().optional(),
   discount: z.string().min(1, "الرجاء ادخل قيمة الخصم").optional(),
-  minPrice: z.string().min(1, "الرجاء ادخل الحد الأدنى لتطبيق الخصم"),
+  minPrice: z
+    .string()
+    .min(1, "الرجاء ادخل الحد الأدنى لتطبيق الخصم")
+    .optional(),
   promoType: z.string().min(1, "الرجاء ادخل نوع الكوبون "),
 });
 
@@ -33,7 +36,7 @@ export async function createNewPromo(
 
   if (checkPromoExists != null)
     return {
-      code: "هذا القسم موجود بالفعل",
+      code: "هذا الكوبون موجود بالفعل",
       active: "",
       discount: "",
       promoType: "",
@@ -60,7 +63,10 @@ export async function createNewPromo(
           : parseInt(data.discount as string) || 0,
       promoType: data.promoType,
       active: data.active === "on" ? true : false,
-      minPrice: data.isMinPrice === "on" ? parseFloat(data.minPrice) : null,
+      minPrice:
+        data.isMinPrice === "on" && data.minPrice
+          ? parseFloat(data.minPrice)
+          : null,
       isTerms: data.isMinPrice === "on",
       startDate:
         data.active === "on" ? date?.from && addHours(date?.from, 3) : null,

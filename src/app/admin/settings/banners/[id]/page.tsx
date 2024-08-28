@@ -13,7 +13,7 @@ export default async function EditBannerPage({
     select: {
       id: true,
       bannerType: true,
-      images: { select: { path: true, id: true } },
+      images: { select: { path: true, id: true, link: true } },
     },
   });
 
@@ -23,8 +23,10 @@ export default async function EditBannerPage({
       <PageHeader
         title={
           banner?.bannerType === "offers"
-            ? "تعديل لافتة العروض"
-            : "تعديل اللافتة الرئيسية"
+            ? "تعديل لافتة قسم العروض"
+            : banner?.bannerType === "forHome"
+              ? "تعديل لافتة قسم المنزلية"
+              : "تعديل اللافتة الرئيسية"
         }
       />
 
