@@ -8,6 +8,26 @@ import db from "@/db/db";
 import { Section } from "@prisma/client";
 import { Suspense } from "react";
 
+const selectProduct = {
+  id: true,
+  name: true,
+  labels: true,
+  description: true,
+  body: true,
+  price: true,
+  newPrice: true,
+  productType: true,
+  weights: true,
+  flavors: true,
+  isOffer: true,
+  quantity: true,
+  image: {
+    select: {
+      path: true,
+    },
+  },
+};
+
 const getSectionBanners = (id: string) => {
   return db.section.findUnique({
     where: { id },
@@ -29,32 +49,10 @@ const getSectionProducts = (id: string) => {
     where: { id },
     select: {
       brandProducts: {
-        select: {
-          id: true,
-          image: { select: { path: true } },
-          name: true,
-          price: true,
-          newPrice: true,
-          productType: true,
-          description: true,
-          body: true,
-          weights: true,
-          isOffer: true,
-        },
+        select: selectProduct,
       },
       categoryProducts: {
-        select: {
-          id: true,
-          image: { select: { path: true } },
-          name: true,
-          price: true,
-          newPrice: true,
-          productType: true,
-          description: true,
-          body: true,
-          weights: true,
-          isOffer: true,
-        },
+        select: selectProduct,
       },
     },
   });

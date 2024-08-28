@@ -33,12 +33,18 @@ export default function SelectPayment() {
 
       <RadioGroup name="paymentMethod">
         <PaymentRadioCard value="cash" htmlFor="الدفع (نقدا) عند الاستلام">
-          <div>الدفع ( نقدا ) عند الاستلام</div>
+          <div>
+            الدفع <span className="text-rayanWarning-dark">( نقدا )</span> عند
+            الاستلام
+          </div>
           <GiTakeMyMoney size="20" />
         </PaymentRadioCard>
 
         <PaymentRadioCard value="card" htmlFor="الدفع (بالبطاقة) عند الاستلام">
-          <div>الدفع ( بالبطاقة ) عند الاستلام</div>
+          <div>
+            الدفع <span className="text-rayanWarning-dark">( بالبطاقة )</span>{" "}
+            عند الاستلام
+          </div>
           <GrAtm size="20" />
         </PaymentRadioCard>
         <PaymentRadioCard value="eWallet" htmlFor="الدفع عن طريق المحفظة">
