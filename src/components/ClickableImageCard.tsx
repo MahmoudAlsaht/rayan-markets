@@ -23,7 +23,7 @@ import {
   editImage,
   addImageLink,
 } from "@/app/admin/_actions/image";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 export default function ClickableImageCard({
   image,
@@ -79,12 +79,12 @@ export default function ClickableImageCard({
             <Image
               alt={imageAlt}
               src={image.path as string}
-              className="max-h-32 w-full cursor-pointer"
+              className="min-h-24 w-full cursor-pointer rounded-xl"
               width={100}
-              height={50}
+              height={100}
             />
           </DropdownMenuTrigger>
-          {file && (
+          {file && file?.size > 0 && (
             <Button
               disabled={isPending}
               className="mt-2"
@@ -121,8 +121,15 @@ export default function ClickableImageCard({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent>
-        <DialogClose onClick={() => setOpen(false)} />
+      <DialogContent showClose={false}>
+        <Button
+          onClick={() => setOpen(false)}
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+        >
+          <X />
+        </Button>
         <DialogHeader>
           {dialogType === "delete" && (
             <DialogTitle className="text-rayanError-dark">

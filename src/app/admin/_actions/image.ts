@@ -10,11 +10,11 @@ export async function editImage(id: string, formData: FormData) {
 
   const image = await db.image.findUnique({ where: { id } });
 
-  if (image == null) return;
+  if (!image) return;
 
   const uploadedImage = await upload(file);
 
-  if (uploadedImage == null) return;
+  if (!uploadedImage) return;
 
   deleteCloudinaryImage(image.filename);
   await db.image.update({
@@ -25,8 +25,7 @@ export async function editImage(id: string, formData: FormData) {
     },
   });
 
-  revalidatePath("/");
-  revalidatePath("/offers");
+  revalidatePath("/", "layout");
 }
 
 export async function deleteImage(id: string) {
@@ -37,24 +36,21 @@ export async function deleteImage(id: string) {
   deleteCloudinaryImage(image.filename);
 
   await db.image.delete({ where: { id } });
-  revalidatePath("/");
-  revalidatePath("/products/offers");
-  revalidatePath("/products/for-home");
+
+  revalidatePath("/", "layout");
 }
 
 export async function addImageLink(id: string, link: string) {
   const image = await db.image.findUnique({ where: { id } });
   if (!image) return;
 
-  console.log(image?.id);
-
+  console.log(id, image);
   await db.image.update({
     where: { id },
     data: {
       link,
     },
   });
-  revalidatePath("/");
-  revalidatePath("/products/offers");
-  revalidatePath("/products/for-home");
+
+  revalidatePath("/", "layout");
 }

@@ -83,7 +83,7 @@ async function updateBannerSection(files: File[] | null, sectionId: string) {
         data: {
           sectionBanners: {
             create: {
-              imageType: "BannerImage",
+              imageType: "SectionBannerImage",
               filename: bannerImage?.filename as string,
               path: bannerImage?.path as string,
             },
