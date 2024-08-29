@@ -14,7 +14,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const imageUploader = (fileUri: string): Promise<UploadResponse> => {
+export const imageUploader = (fileUri: string): Promise<UploadResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload(fileUri, {
@@ -54,3 +54,5 @@ export async function upload(file: File) {
 export function deleteCloudinaryImage(filename: string) {
   cloudinary.uploader.destroy(filename, { invalidate: true });
 }
+
+export { cloudinary };

@@ -11,8 +11,8 @@ const productImageSchema = z
   .instanceof(File, { message: "الرجاء اختر صورة للمنتج" })
   .refine((file) => file.size === 0 || file.type.startsWith("image/"));
 const addProductSchema = z.object({
-  category: z.string().min(1, "الرجاء قم باختيار قسم"),
-  brand: z.string().min(1, "الرجاء قم باختيار علامة"),
+  category: z.string().min(1, "الرجاء قم باختيار قسم").optional(),
+  brand: z.string().min(1, "الرجاء قم باختيار علامة").optional(),
   name: z.string().min(1, "الرجاء ادخال هذا الحقل"),
   body: z.string().min(1, "الرجاء ادخال هذا الحقل"),
   price: z
