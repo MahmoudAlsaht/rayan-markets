@@ -9,6 +9,12 @@ import { Suspense } from "react";
 import db from "@/db/db";
 import { ProductCardProps } from "./[id]/page";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "منتجاتنا",
+};
+
 const getProducts = async (
   productsType: string,
   orderBy?: string,

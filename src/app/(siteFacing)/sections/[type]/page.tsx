@@ -8,6 +8,12 @@ import SectionsContainer, {
 } from "../_components/SectionsContainer";
 import { Suspense } from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "الأقسام و العلامات التجارية",
+};
+
 const getSections = cache(
   (type: string) => {
     return db.section.findMany({

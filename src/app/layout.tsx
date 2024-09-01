@@ -23,7 +23,7 @@ const Alexandria = localFont({
 
 const APP_NAME = "أسواق الريان";
 const APP_DEFAULT_TITLE = "أسواق الريان العالمية";
-const APP_TITLE_TEMPLATE = "%s - أسواق الريان";
+const APP_TITLE_TEMPLATE = "أسواق الريان - %s";
 const APP_DESCRIPTION =
   "أسواق الريان العالمية تجسد روح الكفاءة والابتكار والتركيز على العملاء";
 
