@@ -1,6 +1,7 @@
 "use server";
 import db from "@/db/db";
 import { fetchAndUploadImage } from "./uploadImages";
+import { revalidatePath } from "next/cache";
 
 type Data = {
   name: string;
@@ -93,6 +94,7 @@ export async function generateData(fileData: any[]) {
         categoryImage: cloudImages[randomize(cloudImages)],
       });
     }
+    revalidatePath("/", "layout");
     // for (const item of data) {
     //   if (item.name && item.name !== "" && !(await findProduct(item.name))) {
     //     await generateProduct({ ...item });
