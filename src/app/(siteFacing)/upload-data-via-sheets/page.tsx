@@ -1,5 +1,5 @@
 import { isEditor } from "../auth/_actions/isAdmin";
-import DataForm from "./DataForm";
+import DataForm from "./_components/DataForm";
 
 export default async function UploadData() {
   await isEditor();

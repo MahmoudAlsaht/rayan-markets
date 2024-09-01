@@ -3,10 +3,6 @@ import axios from "axios";
 import stream from "stream";
 import { promisify } from "util";
 
-// Google Custom Search API configuration
-const GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY";
-const GOOGLE_SEARCH_ENGINE_ID = "YOUR_SEARCH_ENGINE_ID";
-
 const pipeline = promisify(stream.pipeline);
 
 export async function fetchAndUploadImage(imageUrl: string) {
