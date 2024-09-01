@@ -43,12 +43,8 @@ export const login = async (_pervState: unknown, formData: FormData) => {
     process.env.SECRET_1,
   );
 
-  const date = new Date();
-  date.setTime(date.getTime() + 1000 * 60 * 60 * 24 * 60);
-
   cookies().set("token", token, {
     path: "/",
-    expires: date,
   });
 
   redirect("/");

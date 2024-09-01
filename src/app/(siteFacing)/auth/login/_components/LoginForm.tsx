@@ -51,6 +51,9 @@ export function LoginForm() {
         <LoadingLink href="/auth/register" className="underline">
           التسجيل
         </LoadingLink>
+        <LoadingLink href="/auth/reset-password" className="underline">
+          نسيت كلمة المرور؟ اعادة تعيين
+        </LoadingLink>
       </div>
       <SubmitButton body={"تسجيل الدخول"} />
     </form>

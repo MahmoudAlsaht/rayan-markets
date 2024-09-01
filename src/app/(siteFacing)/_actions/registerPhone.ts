@@ -43,6 +43,17 @@ export async function registerPhone(
         phoneVerification: undefined,
       };
   }
+  if (type === "resetPassword") {
+    const user = await db.user.findUnique({
+      where: { phone: data.phone },
+    });
+
+    if (!user)
+      return {
+        phone: "لم يتم العثور على حساب مرتبط بهذا الرقم",
+        phoneVerification: undefined,
+      };
+  }
 
   const checkVerificationCode = await db.verificationCode.findUnique({
     where: { phone: data.phone },

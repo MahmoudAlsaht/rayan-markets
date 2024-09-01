@@ -2,14 +2,11 @@
 import db from "@/db/db";
 import { hashPassword } from "@/lib/hashPassword";
 import { z } from "zod";
-import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const registerSchema = z
+const resetSchema = z
   .object({
     phone: z.string().optional(),
-    username: z.string().min(1, "يجب تحديد اسم المستخدم!"),
     password: z.string().min(6, "كلمة المرور يجب ان لا تكون اقل من 6 خانات"),
     confirmPassword: z.string(),
   })
@@ -23,12 +20,12 @@ const registerSchema = z
     }
   });
 
-export const register = async (
+export const resetPassword = async (
   phone: string | null,
   _pervState: unknown,
   formData: FormData,
 ) => {
-  const result = await registerSchema.safeParse(
+  const result = await resetSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
 
@@ -41,31 +38,16 @@ export const register = async (
   if (!phone)
     return {
       phone: "هناك مشكلة ما برقم الهاتف المدخل يرجى المحاولة لاحقا",
-      username: "",
       password: "",
       confirmPassword: "",
     };
 
-  const newUser = await db.user.create({
+  await db.user.update({
+    where: { phone },
     data: {
-      phone: phone,
-      username: data.username,
       password: await hashPassword(data.password),
-      role: "customer",
-      profile: {
-        create: {},
-      },
     },
   });
 
-  const token = jwt.sign(
-    { id: newUser?.id, name: newUser?.username },
-    process.env.SECRET_1,
-  );
-
-  cookies().set("token", token, {
-    path: "/",
-  });
-
-  redirect("/");
+  redirect("/auth/login");
 };

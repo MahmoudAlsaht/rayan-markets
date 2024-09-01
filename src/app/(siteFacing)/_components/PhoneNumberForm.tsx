@@ -2,7 +2,6 @@
 import SubmitButton from "@/components/SubmitButton";
 import { useFormState } from "react-dom";
 import { registerPhone } from "../_actions/registerPhone";
-import { usePathname } from "next/navigation";
 import VerifyPhoneForm from "./VerifyPhoneForm";
 
 export default function PhoneNumberForm({
@@ -12,8 +11,6 @@ export default function PhoneNumberForm({
   setPhoneNumber: (value: string) => void;
   type: string;
 }) {
-  const pathname = usePathname();
-
   const [data, action] = useFormState(registerPhone.bind(null, type), {
     phone: undefined,
     phoneVerification: undefined,
