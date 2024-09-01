@@ -177,24 +177,24 @@ async function generateProduct(product: Data) {
         imageId: newImage.id,
         name: product.name,
         body: product.body,
-        brandId: brand && brand?.id,
-        categoryId: category && category?.id,
+        brandId: brand ? brand?.id : undefined,
+        categoryId: category ? category?.id : undefined,
         productType:
-          !product.productType && product.productType === ""
+          !product.productType || product.productType === ""
             ? "normal"
             : product.productType,
         price:
-          product.price && product.price === ""
+          product.price || product.price === ""
             ? 1.0
-            : parseFloat(parseFloat(product.price || "1").toFixed(2)),
+            : parseFloat(parseFloat(product.price as string).toFixed(2)),
         isOffer: product.offerStartsAt != null && product.offerEndsAt != null,
         newPrice:
-          !product.newPrice && product.newPrice === ""
+          !product.newPrice || product.newPrice === ""
             ? undefined
-            : parseFloat(parseFloat(product.newPrice || "0").toFixed(2)),
+            : parseFloat(parseFloat(product.newPrice as string).toFixed(2)),
         quantity:
-          product.quantity && product.quantity === ""
-            ? 100
+          product.quantity || product.quantity === ""
+            ? 0
             : parseInt(product.quantity || "100"),
         offerStartsAt: product.offerStartsAt,
         offerEndsAt: product.offerEndsAt,
