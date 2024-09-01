@@ -13,8 +13,7 @@ import db from "@/db/db";
 import { getPendingLength } from "./(siteFacing)/orders/_actions/getOrders";
 import { CartProvider } from "./(siteFacing)/_context/cart/CartContext";
 
-export const dynamic =
-  process.env.NODE_ENV === "development" ? "force-dynamic" : "auto";
+export const dynamic = "force-dynamic";
 
 const Alexandria = localFont({
   src: "../fonts/Alexandria-VariableFont_wght.ttf",

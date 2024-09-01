@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
 import BackButtonNav from "@/components/BackButtonNav";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function AccountLayout({
   children,
