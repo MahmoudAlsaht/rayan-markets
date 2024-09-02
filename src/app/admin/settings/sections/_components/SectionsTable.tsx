@@ -107,7 +107,7 @@ export default function SectionsTable({ data }: { data: Partial<Section>[] }) {
               alt="banner image"
               src={(row.getValue("bannerImage") as string).replace(
                 "/upload",
-                "/upload/w_200",
+                "/upload/w_100",
               )}
               width={100}
               height={100}

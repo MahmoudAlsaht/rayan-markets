@@ -88,7 +88,7 @@ export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
               alt="banner image"
               src={(row.getValue("bannerImage") as string).replace(
                 "/upload",
-                "/upload/w_200",
+                "/upload/w_100",
               )}
               width={100}
               height={100}

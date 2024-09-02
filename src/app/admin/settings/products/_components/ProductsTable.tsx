@@ -78,7 +78,10 @@ export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
       cell: ({ row }) => (
         <Image
           alt={row.getValue("name")}
-          src={row.getValue("image")}
+          src={(row.getValue("image") as string).replace(
+            "/upload",
+            "/upload/w_100",
+          )}
           width={100}
           height={100}
           className="h-20 w-24"

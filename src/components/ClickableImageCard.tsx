@@ -78,7 +78,7 @@ export default function ClickableImageCard({
           <DropdownMenuTrigger asChild>
             <Image
               alt={imageAlt}
-              src={image?.path?.replace("/upload", "/upload/w_200") as string}
+              src={image?.path?.replace("/upload", "/upload/w_100") as string}
               className="min-h-24 w-full cursor-pointer rounded-xl"
               width={100}
               height={100}

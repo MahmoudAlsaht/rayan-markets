@@ -44,7 +44,6 @@ export async function addImageLink(id: string, link: string) {
   const image = await db.image.findUnique({ where: { id } });
   if (!image) return;
 
-  console.log(id, image);
   await db.image.update({
     where: { id },
     data: {

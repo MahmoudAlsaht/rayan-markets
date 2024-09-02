@@ -21,7 +21,7 @@ export async function fetchAndUploadImage(imageUrl: string) {
           resource_type: "auto",
           folder: process.env.CLOUDINARY_FOLDER_NAME,
           transformation: [
-            { width: 800, height: 600, crop: "limit" },
+            { width: 250, height: 500, crop: "limit" },
             { quality: "auto" },
             { fetch_format: "auto" },
           ],
@@ -38,10 +38,7 @@ export async function fetchAndUploadImage(imageUrl: string) {
 
     const uploadResponse = await uploadPromise;
     return {
-      path: (uploadResponse as any).secure_url.replace(
-        "/upload",
-        "/upload/w_200",
-      ),
+      path: (uploadResponse as any).secure_url,
       filename: (uploadResponse as any).public_id,
     };
   } catch (error) {
