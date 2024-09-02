@@ -18,7 +18,7 @@ export default function PrivacyDialog() {
     <dialog
       ref={dialogRef}
       onClose={() => router.back()}
-      className="w-6/12 rounded border bg-white p-6 text-rayanPrimary-dark backdrop:bg-slate-300/50"
+      className="w-full rounded border bg-white p-6 text-rayanPrimary-dark backdrop:bg-slate-300/50 sm:w-6/12"
     >
       <Button
         onClick={() => {
