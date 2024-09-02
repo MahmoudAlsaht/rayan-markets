@@ -32,7 +32,6 @@ export function SectionForm({
 
   return (
     <form action={action} className="mx-4 h-screen max-w-sm sm:mx-auto">
-      {section?.sectionBanners[0]!.id}
       <div className="group relative z-0 mb-5 w-full">
         <select
           name="type"

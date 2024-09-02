@@ -79,14 +79,14 @@ const cloudImages = [
 ];
 
 function randomize(arr) {
-  return Math.floor(Math.random() * arr.length + 1);
+  return Math.floor(Math.random() * (arr.length - 1));
 }
 
 export async function generateData(fileData: any[]) {
   const data: Data[] = fileData;
 
   try {
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 20; i++) {
       await generateProduct({
         ...data[randomize(data)],
         productImage: cloudImages[randomize(cloudImages)],
@@ -94,22 +94,29 @@ export async function generateData(fileData: any[]) {
         categoryImage: cloudImages[randomize(cloudImages)],
       });
     }
-    revalidatePath("/", "layout");
     // for (const item of data) {
-    //   if (item.name && item.name !== "" && !(await findProduct(item.name))) {
+    //   if (
+    //     item.name &&
+    //     item.name !== "" &&
+    //     item.body &&
+    //     item.body !== "" &&
+    //     !(await findProduct(item.name, item.body, item.category, item.brand))
+    //   ) {
     //     await generateProduct({ ...item });
     //   }
     // }
+    revalidatePath("/", "layout");
   } catch (e) {
     console.log(e);
   }
 }
 
-async function generateSection(name: string, image: string, type: string) {
-  if (!image || !name || !type) return null;
-  const { path, filename } = await fetchAndUploadImage(image);
-  if (!path || !filename) return null;
+async function generateSection(name?: string, image?: string, type?: string) {
+  if (!name || !image || !type) return null;
 
+  const res = await fetchAndUploadImage(image);
+  if (!res) return null;
+  const { filename, path } = res;
   return await db.section.create({
     data: {
       name,
@@ -125,7 +132,7 @@ async function generateSection(name: string, image: string, type: string) {
   });
 }
 
-async function findSection(name: string, type: string) {
+async function findSection(name?: string, type?: string) {
   return await db.section.findFirst({
     where: {
       AND: [{ name }, { type }],
@@ -133,36 +140,50 @@ async function findSection(name: string, type: string) {
   });
 }
 
-async function findProduct(name: string) {
-  return await db.product.findFirst({
+async function findProduct(
+  name: string,
+  body: string,
+  categoryName?: string,
+  brandName?: string,
+) {
+  const product = await db.product.findFirst({
     where: {
-      AND: [{ name }],
+      name,
     },
   });
+  const category = await findSection(categoryName, "categories");
+  const brand = await findSection(brandName, "brands");
+  if (!product) return null;
+  const isDuplicateNameAndBody = product.name === name && product.body === body;
+  if (!category && !brand && isDuplicateNameAndBody) return null;
+  const isCategoryDuplicate = category
+    ? category.id === product.categoryId
+    : product.categoryId != null;
+  const isBrandDuplicate = brand
+    ? brand.id === product.brandId
+    : product.brandId != null;
+  return isDuplicateNameAndBody && isCategoryDuplicate && isBrandDuplicate
+    ? null
+    : product;
 }
 
 async function generateProduct(product: Data) {
   try {
     const category =
-      // (product.category &&
-      //   product.category !== "" &&
-      //   (await findSection(product.category, "categories"))) ||
-      product.category &&
-      product.categoryImage &&
+      (await findSection(product.category, "categories")) ||
       (await generateSection(
         product.category,
         product.categoryImage,
         "categories",
       ));
     const brand =
-      // (product.brand &&
-      //   product.brand !== "" &&
-      //   (await findSection(product.brand, "brands"))) ||
-      product.brand &&
-      product.brandImage &&
+      (product.brand !== "" && (await findSection(product.brand, "brands"))) ||
       (await generateSection(product.brand, product.brandImage, "brands"));
 
-    const { path, filename } = await fetchAndUploadImage(product.productImage);
+    const res = await fetchAndUploadImage(product.productImage);
+
+    if (!res) return null;
+    const { filename, path } = res;
 
     const newImage = await db.image.create({
       data: {
@@ -177,17 +198,28 @@ async function generateProduct(product: Data) {
         imageId: newImage.id,
         name: product.name,
         body: product.body,
-        brandId: brand ? brand?.id : undefined,
-        categoryId: category ? category?.id : undefined,
-        productType: !product.productType ? "normal" : product.productType,
-        price: product.price
-          ? 1.0
-          : parseFloat(parseFloat(product.price as string).toFixed(2)),
-        isOffer: product.offerStartsAt != null && product.offerEndsAt != null,
-        newPrice: !product.newPrice
-          ? undefined
-          : parseFloat(parseFloat(product.newPrice as string).toFixed(2)),
-        quantity: product.quantity ? 0 : parseInt(product.quantity || "100"),
+        brandId: brand ? brand?.id : null,
+        categoryId: category ? category?.id : null,
+        productType:
+          !product.productType || product.productType === ""
+            ? "normal"
+            : product.productType,
+        price:
+          !product.price || product.price === ""
+            ? 1.0
+            : formatPrice(product.price),
+        isOffer: checkIsOffer(product.offerStartsAt, product.offerEndsAt),
+        newPrice: checkIsOffer(product.offerStartsAt, product.offerEndsAt)
+          ? !product.newPrice || product.newPrice === ""
+            ? product.price && product.price !== ""
+              ? formatPrice(product.price)
+              : null
+            : formatPrice(product.newPrice)
+          : null,
+        quantity:
+          !product.quantity || product.quantity === ""
+            ? 0
+            : parseInt(product.quantity),
         offerStartsAt: product.offerStartsAt,
         offerEndsAt: product.offerEndsAt,
         description: product.description,
@@ -204,4 +236,12 @@ async function generateProduct(product: Data) {
   } catch (e: any) {
     e.message;
   }
+}
+
+function checkIsOffer(startDate, endDate) {
+  return startDate != null && endDate != null;
+}
+
+function formatPrice(price: string) {
+  return parseFloat(parseFloat(price).toFixed(2));
 }

@@ -5,7 +5,10 @@ import {
 } from "cloudinary";
 
 type UploadResponse =
-  | { success: true; result?: UploadApiResponse }
+  | {
+      success: true;
+      result?: Partial<UploadApiResponse & { filename: string; path: string }>;
+    }
   | { success: false; error: UploadApiErrorResponse };
 
 cloudinary.config({
@@ -23,7 +26,12 @@ export const imageUploader = (fileUri: string): Promise<UploadResponse> => {
         use_filename: true,
         allowed_formats: ["jpeg", "png", "jpg", "gif", "webp"],
       })
-      .then((result) => resolve({ success: true, result }))
+      .then((result) =>
+        resolve({
+          success: true,
+          result: { path: result.secure_url, filename: result.public_id },
+        }),
+      )
       .catch((error) => {
         reject({ success: false, error });
       });
@@ -43,8 +51,8 @@ export async function upload(file: File) {
 
   if (res.success) {
     return {
-      path: res.result?.secure_url,
-      filename: res.result?.public_id,
+      path: res.result?.path,
+      filename: res.result?.filename,
     };
   }
 
