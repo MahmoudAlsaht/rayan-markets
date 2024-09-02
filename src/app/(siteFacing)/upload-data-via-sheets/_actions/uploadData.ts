@@ -87,7 +87,7 @@ export async function generateData(fileData: any[]) {
 
   try {
     for (let i = 0; i < 10; i++) {
-      await wait(2000);
+      await wait(5000);
       await generateProduct({
         ...data[randomize(data)],
         productImage: cloudImages[randomize(cloudImages)],
