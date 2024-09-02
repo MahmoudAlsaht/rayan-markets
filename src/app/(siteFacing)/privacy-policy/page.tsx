@@ -7,7 +7,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <div className="container h-full w-8/12 overflow-scroll p-5" dir="rtl">
+    <div
+      className="h-full w-full overflow-scroll p-1 sm:container sm:w-8/12 sm:p-5"
+      dir="rtl"
+    >
       <Privacy />
     </div>
   );
