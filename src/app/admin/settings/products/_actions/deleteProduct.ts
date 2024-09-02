@@ -46,8 +46,5 @@ export async function deleteProduct(id: string) {
     where: { id: product?.imageId as string },
   });
 
-  revalidatePath("/");
-  revalidatePath("/products");
-  revalidatePath("/products/offers");
-  revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 }

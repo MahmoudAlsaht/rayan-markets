@@ -38,10 +38,7 @@ export async function editBanner(
     },
   });
 
-  updatedBanner.bannerType === "main" && revalidatePath("/");
-  updatedBanner.bannerType === "offers" && revalidatePath("/products/offers");
-  updatedBanner.bannerType === "forHome" &&
-    revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 
   redirect("/admin/settings/banners");
 }

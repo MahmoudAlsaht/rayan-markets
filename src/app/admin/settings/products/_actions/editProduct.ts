@@ -113,11 +113,7 @@ export async function editProduct(
     },
   });
 
-  revalidatePath("/");
-  revalidatePath("/products");
-  revalidatePath(`/products/${currentProduct?.id}`);
-  revalidatePath("/products/offers");
-  revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 
   redirect("/admin/settings/products");
 }

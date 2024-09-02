@@ -106,10 +106,7 @@ export async function createNewProduct(
     },
   });
 
-  revalidatePath("/");
-  revalidatePath("/products");
-  revalidatePath("/products/offers");
-  revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 
   redirect("/admin/settings/products");
 }

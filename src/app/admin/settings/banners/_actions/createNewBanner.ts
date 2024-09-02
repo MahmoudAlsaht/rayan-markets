@@ -43,9 +43,7 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
       },
     });
 
-    data.bannerType === "main" && revalidatePath("/");
-    data.bannerType === "offers" && revalidatePath("/products/offers");
-    data.bannerType === "forHome" && revalidatePath("/products/for-home");
+    revalidatePath("/", "layout");
 
     return redirect("/admin/settings/banners");
   }

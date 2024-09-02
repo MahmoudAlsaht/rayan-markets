@@ -22,7 +22,5 @@ export async function deleteBanner(id: string) {
 
   await db.banner.delete({ where: { id } });
 
-  banner?.bannerType === "main" && revalidatePath("/");
-  banner?.bannerType === "offers" && revalidatePath("/products/offers");
-  banner?.bannerType === "forHome" && revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 }

@@ -43,7 +43,5 @@ export async function deleteSection(id: string) {
     }
   }
 
-  revalidatePath("/");
-  revalidatePath(`/sections/${section.type}`);
-  revalidatePath(`/sections/${section?.type}/${id}`);
+  revalidatePath("/", "layout");
 }
