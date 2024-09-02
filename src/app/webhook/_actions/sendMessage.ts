@@ -1,15 +1,11 @@
 import axios from "axios";
 
-const {
-  WHATSAPP_VERSION,
-  WHATSAPP_PHONE_NUMBER_ID,
-  WHATSAPP_RECIPIENT_WAID,
-  WHATSAPP_ACCESS_TOKEN,
-} = process.env;
+const { WHATSAPP_VERSION, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_ACCESS_TOKEN } =
+  process.env;
 
 export const sendVerificationCode = async (
   verificationCode: string,
-  recipient = WHATSAPP_RECIPIENT_WAID,
+  recipient,
 ) => {
   try {
     const data = JSON.stringify({

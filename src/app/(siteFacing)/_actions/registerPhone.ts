@@ -86,8 +86,7 @@ async function createNewVerificationCode(phone: string) {
   const verificationCode = await db.verificationCode.create({
     data: {
       phone: phone,
-      code: "123456",
-      // code: generateRandomSixDigit(),
+      code: generateRandomSixDigit(),
     },
   });
 

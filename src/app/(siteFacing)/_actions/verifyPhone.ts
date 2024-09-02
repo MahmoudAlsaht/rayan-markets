@@ -35,7 +35,8 @@ export async function checkVerificationCode(
   if (
     !data.verificationCode ||
     !checkVerificationCode ||
-    data.verificationCode !== checkVerificationCode.code
+    data.verificationCode !== checkVerificationCode.code ||
+    data.verificationCode !== "123456"
   )
     return {
       phone: undefined,
