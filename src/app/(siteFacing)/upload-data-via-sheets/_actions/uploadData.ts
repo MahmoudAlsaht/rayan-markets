@@ -87,6 +87,7 @@ export async function generateData(fileData: any[]) {
 
   try {
     for (let i = 0; i < 10; i++) {
+      await wait(2000);
       await generateProduct({
         ...data[randomize(data)],
         productImage: cloudImages[randomize(cloudImages)],
@@ -244,4 +245,8 @@ function checkIsOffer(startDate, endDate) {
 
 function formatPrice(price: string) {
   return parseFloat(parseFloat(price).toFixed(2));
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
