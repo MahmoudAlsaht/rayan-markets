@@ -18,11 +18,11 @@ const editProductSchema = z.object({
   price: z
     .string()
     .min(1, "الرجاء ادخال هذا الحقل")
-    .regex(/^[1-9]\d*(\.\d+)?$/),
+    .regex(/^[.1-9]\d*(\.\d+)?$/),
   quantity: z
     .string()
     .min(1, "الرجاء ادخال هذا الحقل")
-    .regex(/^[1-9]\d*$/),
+    .regex(/^[0-9]\d*$/),
   productType: z.string().min(1, "الرجاء اختيار نوع المنتج"),
   description: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
   options: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
@@ -30,7 +30,7 @@ const editProductSchema = z.object({
   newPrice: z
     .string()
     .min(1, "الرجاء ادخال هذا الحقل")
-    .regex(/^[1-9]\d*(\.\d+)?$/)
+    .regex(/^[.1-9]\d*(\.\d+)?$/)
     .optional(),
   productImage: productImageSchema.optional(),
 });
