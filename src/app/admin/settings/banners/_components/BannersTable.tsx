@@ -86,7 +86,10 @@ export default function BannersTable({ data }: { data: Partial<Banner>[] }) {
           row.getValue("bannerImage") !== "no image" ? (
             <Image
               alt="banner image"
-              src={row.getValue("bannerImage")}
+              src={(row.getValue("bannerImage") as string).replace(
+                "/upload",
+                "/upload/w_200",
+              )}
               width={100}
               height={100}
               className="h-20 w-24"

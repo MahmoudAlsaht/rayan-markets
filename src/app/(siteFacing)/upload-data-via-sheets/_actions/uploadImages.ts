@@ -17,7 +17,15 @@ export async function fetchAndUploadImage(imageUrl: string) {
     // Create a promise that resolves with the Cloudinary upload result
     const uploadPromise = new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: "auto" },
+        {
+          resource_type: "auto",
+          folder: process.env.CLOUDINARY_FOLDER_NAME,
+          transformation: [
+            { width: 800, height: 600, crop: "limit" },
+            { quality: "auto" },
+            { fetch_format: "auto" },
+          ],
+        },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
@@ -30,7 +38,10 @@ export async function fetchAndUploadImage(imageUrl: string) {
 
     const uploadResponse = await uploadPromise;
     return {
-      path: (uploadResponse as any).secure_url,
+      path: (uploadResponse as any).secure_url.replace(
+        "/upload",
+        "/upload/w_200",
+      ),
       filename: (uploadResponse as any).public_id,
     };
   } catch (error) {

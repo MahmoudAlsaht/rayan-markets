@@ -88,7 +88,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
               } relative h-32 w-full opacity-100 transition-opacity duration-700 ease-in sm:h-52 md:h-80`}
             >
               <Image
-                src={image.path || ""}
+                src={image.path.replace("/upload", "/upload/w_600") || ""}
                 fill
                 alt={`banner's image`}
                 className="cursor-pointer rounded-2xl object-cover"

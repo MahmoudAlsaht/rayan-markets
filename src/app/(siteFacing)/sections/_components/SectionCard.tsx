@@ -23,7 +23,9 @@ export default function SectionCard({
             fill
             priority
             className="rounded-3xl object-cover"
-            src={section?.cover?.path as string}
+            src={
+              section?.cover?.path.replace("/upload", "/upload/w_200") as string
+            }
             alt={`${section.name}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

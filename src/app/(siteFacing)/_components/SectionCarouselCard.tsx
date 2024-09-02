@@ -26,7 +26,9 @@ export default function SectionCarouselCard({
           <Image
             fill
             className="rounded-3xl"
-            src={section.cover?.path as string}
+            src={
+              section.cover?.path.replace("/upload", "/upload/w_200") as string
+            }
             alt={`${section.name}'s image`}
           />
           {showName && (

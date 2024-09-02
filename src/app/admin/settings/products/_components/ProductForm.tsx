@@ -356,7 +356,7 @@ export function ProductForm({
         {product && (
           <Image
             alt={product?.name as string}
-            src={product?.image?.path || ""}
+            src={product?.image?.path.replace("/upload", "/upload/w_200") || ""}
             width={100}
             height={100}
             className="mt-2 h-full w-1/3"

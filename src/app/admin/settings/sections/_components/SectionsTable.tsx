@@ -87,7 +87,10 @@ export default function SectionsTable({ data }: { data: Partial<Section>[] }) {
       cell: ({ row }) => (
         <Image
           alt={row.getValue("name")}
-          src={row.getValue("cover")}
+          src={(row.getValue("cover") as string).replace(
+            "/upload",
+            "/upload/w_200",
+          )}
           width={100}
           height={100}
           className="h-20 w-24"
@@ -102,7 +105,10 @@ export default function SectionsTable({ data }: { data: Partial<Section>[] }) {
           row.getValue("bannerImage") !== "no image" ? (
             <Image
               alt="banner image"
-              src={row.getValue("bannerImage")}
+              src={(row.getValue("bannerImage") as string).replace(
+                "/upload",
+                "/upload/w_200",
+              )}
               width={100}
               height={100}
               className="h-20 w-24"

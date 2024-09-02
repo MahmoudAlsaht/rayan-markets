@@ -36,7 +36,12 @@ export default function ProductCard({
               fill
               priority
               className="rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
-              src={product?.image?.path as string}
+              src={
+                product?.image?.path.replace(
+                  "/upload",
+                  "/upload/w_200",
+                ) as string
+              }
               alt={`${product?.name || "product"}'s image`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />

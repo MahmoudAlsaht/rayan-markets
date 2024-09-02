@@ -94,7 +94,7 @@ export function SectionForm({
         {section && (
           <Image
             alt={section?.name as string}
-            src={section?.cover?.path || ""}
+            src={section?.cover?.path.replace("/upload", "/upload/w_200") || ""}
             width={100}
             height={100}
             className="mt-2 h-full w-1/6"

@@ -25,6 +25,11 @@ export const imageUploader = (fileUri: string): Promise<UploadResponse> => {
         folder: process.env.CLOUDINARY_FOLDER_NAME,
         use_filename: true,
         allowed_formats: ["jpeg", "png", "jpg", "gif", "webp"],
+        transformation: [
+          { width: 800, height: 600, crop: "limit" },
+          { quality: "auto" },
+          { fetch_format: "auto" },
+        ],
       })
       .then((result) =>
         resolve({
