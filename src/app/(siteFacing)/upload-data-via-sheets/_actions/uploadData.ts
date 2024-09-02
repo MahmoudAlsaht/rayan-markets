@@ -86,7 +86,7 @@ export async function generateData(fileData: any[]) {
   const data: Data[] = fileData;
 
   try {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 1000; i++) {
       await generateProduct({
         ...data[randomize(data)],
         productImage: cloudImages[randomize(cloudImages)],
