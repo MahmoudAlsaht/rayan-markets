@@ -17,8 +17,8 @@ const addProductSchema = z.object({
   body: z.string().min(1, "الرجاء ادخال هذا الحقل"),
   price: z
     .string()
-    .min(1, "الرجاء ادخال هذا الحقل")
-    .regex(/^[.1-9]\d*(\.\d+)?$/),
+    .min(0.05, "الرجاء ادخال هذا الحقل")
+    .regex(/^(?!0\d|[0.]*$)\d*\.?\d+$/),
   quantity: z
     .string()
     .min(1, "الرجاء ادخال هذا الحقل")
@@ -29,8 +29,8 @@ const addProductSchema = z.object({
   isOffer: z.string().optional(),
   newPrice: z
     .string()
-    .min(1, "الرجاء ادخال هذا الحقل")
-    .regex(/^[.1-9]\d*(\.\d+)?$/)
+    .min(0.05, "الرجاء ادخال هذا الحقل")
+    .regex(/^(?!0\d|[0.]*$)\d*\.?\d+$/)
     .optional(),
   productImage: productImageSchema.refine(
     (file) => file.size > 0,

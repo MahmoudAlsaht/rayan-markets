@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ProductCardProps } from "../products/[productsType]/[id]/page";
+import { ProductCardProps } from "../products/[productType]/[id]/page";
 
 export default function SearchProducts({ className }: { className?: string }) {
   const formRef = React.useRef<HTMLFormElement | null>(null);
@@ -32,7 +32,7 @@ export default function SearchProducts({ className }: { className?: string }) {
 
   const [pending, startSearching] = React.useTransition();
 
-  const [products, searchAction] = useFormState(handleSearchInput, null);
+  const [data, searchAction] = useFormState(handleSearchInput, null);
 
   useEffect(() => {
     if (formRef.current) formRef.current.reset();
@@ -48,13 +48,13 @@ export default function SearchProducts({ className }: { className?: string }) {
   useEffect(() => {
     const sortProducts = async () => {
       const fetchedProducts = await sortBasedOnPrice(
-        products as ProductCardProps[],
+        data?.products as ProductCardProps[],
         priceType,
       );
       setSortedProducts(fetchedProducts);
     };
     sortProducts();
-  }, [products, priceType]);
+  }, [data, priceType]);
 
   return (
     <Drawer open={open} onClose={handleClose}>
@@ -139,7 +139,7 @@ export default function SearchProducts({ className }: { className?: string }) {
             </div>
           ) : (
             <>
-              {products && (
+              {data?.products && (
                 <ProductsContainer
                   products={sortedProducts as ProductCardProps[]}
                 />

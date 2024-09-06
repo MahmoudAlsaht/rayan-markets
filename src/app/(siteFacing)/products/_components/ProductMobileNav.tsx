@@ -1,9 +1,17 @@
 "use client";
-import { FormEvent, ReactNode, Suspense, useEffect, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  Suspense,
+  useState,
+  SyntheticEvent,
+  ChangeEvent,
+  MouseEventHandler,
+  FormEventHandler,
+} from "react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowDownUpIcon, Search } from "lucide-react";
-import { sortBasedOnPrice } from "../../_actions/product";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,54 +19,39 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
-import ProductsContainer, {
-  ProductsContainerSkeleton,
-} from "./ProductsContainer";
 import {
   LoadingLink,
   useStartLoading,
 } from "@/app/(siteFacing)/_context/LoadingContext";
-import { ProductCardProps } from "../[productsType]/[id]/page";
 
-export default function ProductsMobileContainer({
-  query = "all",
-  products,
+export default function ProductMobileNav({
+  query,
   banner,
   offersExists = false,
   forHomeExists = false,
+  sortPrice,
 }: {
-  query?: string;
-  products: ProductCardProps[];
+  query: string;
   banner?: ReactNode;
   offersExists?: boolean;
   forHomeExists?: boolean;
+  sortPrice: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { startLoading } = useStartLoading();
-  const [queryValue, setQueryValue] = useState<string>(
-    query === "all" ? "" : query,
-  );
-  const [priceType, setPriceType] = useState("all");
-  const [sortedProducts, setSortedProducts] = useState<
-    ProductCardProps[] | null | undefined
-  >(null);
-
-  useEffect(() => {
-    const sortProducts = async () => {
-      const fetchedProducts = await sortBasedOnPrice(
-        products as ProductCardProps[],
-        priceType,
-      );
-      setSortedProducts(fetchedProducts);
-    };
-    sortProducts();
-  }, [products, priceType]);
+  const [queryValue, setQueryValue] = useState<string>(query || "");
+  const [sortPriceValue, setSortPriceValue] = useState<string>(sortPrice || "");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    startLoading(() => router.push(`${pathname}?search=${queryValue}`));
+    startLoading(() =>
+      router.push(
+        `${pathname}${queryValue !== "" ? `?search=${queryValue}${sortPriceValue !== "" ? `&sortPrice=${sortPriceValue}` : ""}` : `${sortPriceValue !== "" ? `?sortPrice=${sortPriceValue}` : ""}`}`,
+      ),
+    );
   };
+
   return (
     <>
       <div className="sm:hidden">
@@ -66,14 +59,14 @@ export default function ProductsMobileContainer({
           <TabsList className="w-full bg-inherit">
             <TabLink
               className={`${pathname === "/products/any" && "bg-background text-rayanPrimary-dark shadow-sm"}`}
-              href={`/products/any?search=${query}`}
+              href={`/products/any${queryValue !== "" ? `?search=${queryValue}${sortPriceValue !== "" ? `&sortPrice=${sortPriceValue}` : ""}` : `${sortPriceValue !== "" ? `?sortPrice=${sortPriceValue}` : ""}`}`}
             >
               كل المنتجات
             </TabLink>
             {offersExists && (
               <TabLink
                 className={`${pathname === "/products/offers" && "bg-background text-rayanPrimary-dark shadow-sm"}`}
-                href={`/products/offers?search=${query}`}
+                href={`/products/offers${queryValue !== "" ? `?search=${queryValue}${sortPriceValue !== "" ? `&sortPrice=${sortPriceValue}` : ""}` : `${sortPriceValue !== "" ? `?sortPrice=${sortPriceValue}` : ""}`}`}
               >
                 العروض
               </TabLink>
@@ -81,7 +74,7 @@ export default function ProductsMobileContainer({
             {forHomeExists && (
               <TabLink
                 className={`${pathname === "/products/for-home" && "bg-background text-rayanPrimary-dark shadow-sm"}`}
-                href={`/products/for-home?search=${query}`}
+                href={`/products/for-home${queryValue !== "" ? `?search=${queryValue}${sortPriceValue !== "" ? `&sortPrice=${sortPriceValue}` : ""}` : `${sortPriceValue !== "" ? `?sortPrice=${sortPriceValue}` : ""}`}`}
               >
                 المنزلية
               </TabLink>
@@ -116,11 +109,26 @@ export default function ProductsMobileContainer({
                 <ArrowDownUpIcon className="size-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setPriceType("highest")}>
-                  الأعلى سعرا
+                <DropdownMenuItem>
+                  <LoadingLink
+                    href={`${pathname}${queryValue !== "" ? `?search=${queryValue}` : ""}`}
+                  >
+                    افتراضي
+                  </LoadingLink>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setPriceType("lowest")}>
-                  الأقل سعرا
+                <DropdownMenuItem onClick={() => setSortPriceValue("highest")}>
+                  <LoadingLink
+                    href={`${pathname}${queryValue !== "" ? `?search=${queryValue}&sortPrice=highest` : "?sortPrice=highest"}`}
+                  >
+                    الأعلى سعرا
+                  </LoadingLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortPriceValue("lowest")}>
+                  <LoadingLink
+                    href={`${pathname}${queryValue !== "" ? `?search=${queryValue}&sortPrice=lowest` : "?sortPrice=lowest"}`}
+                  >
+                    الأقل سعرا
+                  </LoadingLink>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -129,12 +137,6 @@ export default function ProductsMobileContainer({
       </div>
 
       <Suspense>{banner}</Suspense>
-
-      <section className="sm:hidden">
-        <Suspense fallback={<ProductsContainerSkeleton />}>
-          <ProductsContainer products={sortedProducts as ProductCardProps[]} />
-        </Suspense>
-      </section>
     </>
   );
 }
@@ -148,7 +150,6 @@ function TabLink({
   children: ReactNode;
   className?: string;
 }) {
-  const pathname = usePathname();
   return (
     <LoadingLink
       href={href}

@@ -65,8 +65,13 @@ export async function registerPhone(
       phone: undefined,
     };
 
-  if (!(await checkIsVerificationCodeExpired(checkVerificationCode)))
+  if (!(await checkIsVerificationCodeExpired(checkVerificationCode))) {
+    await sendVerificationCode(
+      checkVerificationCode.code,
+      checkVerificationCode.phone,
+    );
     return { phoneVerification: checkVerificationCode.id, phone: undefined };
+  }
 
   await db.verificationCode.delete({ where: { id: checkVerificationCode.id } });
 

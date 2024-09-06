@@ -1,6 +1,6 @@
 "use client";
 import { useProductCart } from "../../_context/ProductCartContext";
-import { ProductCardProps } from "../[productsType]/[id]/page";
+import { ProductCardProps } from "../[productType]/[id]/page";
 import ProductMenuPrice from "./ProductMenuPrice";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";

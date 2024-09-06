@@ -25,7 +25,7 @@ export default function BottomNavLinks({
         <ImHome className="size-6" />
       </NavLink>
 
-      <NavLink title="المنتجات" href="/products/any?search=all">
+      <NavLink title="المنتجات" href="/products/any">
         <Search className="size-6" />
       </NavLink>
 

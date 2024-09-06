@@ -10,27 +10,28 @@ import { searchProducts } from "../_actions/product";
 import { Button } from "@/components/ui/button";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import ProductCard from "../products/_components/ProductCard";
-import { ProductCardProps } from "../products/[productsType]/[id]/page";
+import { ProductCardProps } from "../products/[productType]/[id]/page";
 import { ProductCartProvider } from "@/app/(siteFacing)/_context/ProductCartContext";
 
 const getProducts = async (
   productType: string,
   orderBy?: string,
   search?: string,
-) => await searchProducts(search, orderBy, productType, 10);
+) =>
+  await searchProducts({ inputQuery: search, orderBy, productType, limit: 10 });
 
 export default async function SectionsHomeContainer({
   type,
 }: {
   type: string;
 }) {
-  const products = await getProducts(
+  const data = await getProducts(
     type === "newest offers" ? "offers" : "any",
     type,
   );
 
   return (
-    products.length && (
+    data?.products?.length && (
       <section className="my-6 sm:container">
         <hr className="my-2 border-slate-300" />
         <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
@@ -62,7 +63,7 @@ export default async function SectionsHomeContainer({
           className="w-11/12"
         >
           <CarouselContent>
-            {products.map(
+            {data.products.map(
               (product) =>
                 product.quantity > 0 && (
                   <CarouselItem

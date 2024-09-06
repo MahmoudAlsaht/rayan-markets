@@ -5,21 +5,21 @@ const { WHATSAPP_VERSION, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_ACCESS_TOKEN } =
 
 export const sendVerificationCode = async (
   verificationCode: string,
-  recipient,
+  recipient: string,
 ) => {
   try {
     const data = JSON.stringify({
       messaging_product: "whatsapp",
       preview_url: false,
       recipient_type: "individual",
-      to: recipient,
+      to: `+962${recipient.slice(1)}`,
       type: "text",
       text: {
         body: `Your verification code is: ${verificationCode}`,
       },
     });
 
-    const res = await sendMessage(data);
+    await sendMessage(data);
   } catch (e: any) {
     console.error(e);
   }
@@ -27,7 +27,7 @@ export const sendVerificationCode = async (
 
 async function sendMessage(data) {
   const config = {
-    method: "POST",
+    method: "post",
     url: `https://graph.facebook.com/${WHATSAPP_VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
     headers: {
       Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,

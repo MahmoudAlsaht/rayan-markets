@@ -1,21 +1,42 @@
+"use client";
 import { ProductCartProvider } from "@/app/(siteFacing)/_context/ProductCartContext";
-import { ProductCardProps } from "../[productsType]/[id]/page";
+import { ProductCardProps } from "../[productType]/[id]/page";
 import ProductCard from "./ProductCard";
 import { ProductCardSkeleton } from "./ProductCardSkeleton";
+import { InfiniteData } from "@tanstack/react-query";
+import React from "react";
 
 export default function ProductsContainer({
   products,
+  data,
 }: {
-  products: ProductCardProps[];
+  products?: ProductCardProps[];
+  data?: InfiniteData<
+    {
+      products: ProductCardProps[];
+      nextCursor: number | null;
+    },
+    unknown
+  >;
 }) {
   return (
     <main dir="rtl">
       <section className="mb-5 grid w-full grid-cols-2 gap-x-0 gap-y-5 bg-inherit py-6 sm:mx-auto sm:grid-cols-3 sm:gap-x-2 sm:gap-y-5 md:grid-cols-4 md:gap-2 lg:grid-cols-5">
-        {products?.map((product) => (
-          <ProductCartProvider key={product.id} id={product.id as string}>
-            <ProductCard product={product} />
-          </ProductCartProvider>
+        {data?.pages.map((pages, i) => (
+          <React.Fragment key={i}>
+            {pages.products?.map((product) => (
+              <ProductCartProvider key={product.id} id={product.id as string}>
+                <ProductCard product={product} />
+              </ProductCartProvider>
+            ))}
+          </React.Fragment>
         ))}
+        {products &&
+          products?.map((product) => (
+            <ProductCartProvider key={product.id} id={product.id as string}>
+              <ProductCard product={product} />
+            </ProductCartProvider>
+          ))}
       </section>
     </main>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { ProductCardProps } from "@/app/(siteFacing)/products/[productsType]/[id]/page";
+import { ProductCardProps } from "@/app/(siteFacing)/products/[productType]/[id]/page";
 
 import {
   createContext,

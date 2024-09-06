@@ -1,32 +1,12 @@
+// import { getProducts } from "@/app/(siteFacing)/_actions/product";
 import Banner from "@/app/(siteFacing)/_components/Banner";
-import { ProductCardProps } from "@/app/(siteFacing)/products/[productsType]/[id]/page";
-import ProductsContainer, {
-  ProductsContainerSkeleton,
-} from "@/app/(siteFacing)/products/_components/ProductsContainer";
+import { ProductCardProps } from "@/app/(siteFacing)/products/[productType]/[id]/page";
+import { ProductsContainerSkeleton } from "@/app/(siteFacing)/products/_components/ProductsContainer";
+import ProductsInfiniteScrolling from "@/app/(siteFacing)/products/_components/ProductsInfiniteScrolling";
 import BackButtonNav from "@/components/BackButtonNav";
 import db from "@/db/db";
 import { Section } from "@prisma/client";
 import { Suspense } from "react";
-
-const selectProduct = {
-  id: true,
-  name: true,
-  labels: true,
-  description: true,
-  body: true,
-  price: true,
-  newPrice: true,
-  productType: true,
-  weights: true,
-  flavors: true,
-  isOffer: true,
-  quantity: true,
-  image: {
-    select: {
-      path: true,
-    },
-  },
-};
 
 const getSectionBanners = (id: string) => {
   return db.section.findUnique({
@@ -39,20 +19,6 @@ const getSectionBanners = (id: string) => {
           path: true,
           link: true,
         },
-      },
-    },
-  });
-};
-
-const getSectionProducts = (id: string) => {
-  return db.section.findUnique({
-    where: { id },
-    select: {
-      brandProducts: {
-        select: selectProduct,
-      },
-      categoryProducts: {
-        select: selectProduct,
       },
     },
   });
@@ -115,25 +81,12 @@ async function SectionBannersSuspense({
   );
 }
 
-async function SectionProductsSuspense({
-  id,
-  type,
-}: {
-  id: string;
-  type: string;
-}) {
-  const section = (await getSectionProducts(id)) as any;
+function SectionProductsSuspense({ id, type }: { id: string; type: string }) {
   return (
-    <>
-      <ProductsContainer
-        products={
-          type === "categories"
-            ? ((section as SectionProducts)
-                ?.categoryProducts as ProductCardProps[])
-            : ((section as SectionProducts)
-                ?.brandProducts as ProductCardProps[])
-        }
-      />
-    </>
+    <ProductsInfiniteScrolling
+      productType={"forSectionPage"}
+      sectionId={id}
+      sectionType={type}
+    />
   );
 }

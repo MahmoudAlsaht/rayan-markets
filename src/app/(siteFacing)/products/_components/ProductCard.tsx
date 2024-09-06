@@ -2,7 +2,7 @@
 import { formatCurrency } from "@/lib/formatters";
 import Image from "next/image";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
-import { ProductCardProps } from "../[productsType]/[id]/page";
+import { ProductCardProps } from "../[productType]/[id]/page";
 import HandleCartActions from "./HandleCartActions";
 import { useProductCart } from "@/app/(siteFacing)/_context/ProductCartContext";
 import { updateProductViews } from "../../_actions/product";
