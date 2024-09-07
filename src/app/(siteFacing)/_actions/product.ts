@@ -363,7 +363,7 @@ export async function searchProducts({
 
   const baseWhere: Prisma.ProductWhereInput = {
     ...(productType === "for-home" ? { productType: "forHome" } : {}),
-    ...(productType === "offers" ? { isOfer: true } : {}),
+    ...(productType === "offers" ? { isOffer: true } : {}),
     ...(query !== "all" && query !== ""
       ? {
           OR: [
