@@ -12,6 +12,7 @@ export default async function EditProductPage({
     where: { id },
     select: {
       id: true,
+      barCode: true,
       category: {
         select: {
           id: true,

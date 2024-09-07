@@ -25,6 +25,7 @@ const addProductSchema = z.object({
     .regex(/^[0-9]\d*$/),
   productType: z.string().min(1, "الرجاء اختيار نوع المنتج"),
   description: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
+  barCode: z.string().min(1, "الرجاء ادخال هذا الحقل").regex(/^[0-9]\d*$/).optional(),
   options: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
   isOffer: z.string().optional(),
   newPrice: z
@@ -68,6 +69,7 @@ export async function createNewProduct(
       productImage: "",
       description: "",
       options: "",
+      barCode: "",
     };
 
   const options = data.options?.split(" ");
@@ -93,6 +95,7 @@ export async function createNewProduct(
       productType: data.productType,
       isOffer: data.isOffer === "on" ? true : false,
       imageId: newImage.id,
+      barCode: data.barCode ? parseInt(data.barCode) : undefined,
       weights:
         data.productType === "weight" ? options?.map((w) => parseFloat(w)) : [],
       flavors: data.productType === "flavor" ? options : [],

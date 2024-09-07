@@ -33,6 +33,11 @@ const editProductSchema = z.object({
     .regex(/^(?!0\d|[0.]*$)\d*\.?\d+$/)
     .optional(),
   productImage: productImageSchema.optional(),
+  barCode: z
+    .string()
+    .min(1, "الرجاء ادخال هذا الحقل")
+    .regex(/^[0-9]\d*$/)
+    .optional(),
 });
 
 export async function editProduct(
@@ -110,6 +115,7 @@ export async function editProduct(
           ? (date?.to && addMinutes(date.to, 1619)) ||
             currentProduct?.offerEndsAt
           : null,
+      barCode: data.barCode ? parseInt(data.barCode) : undefined,
     },
   });
 

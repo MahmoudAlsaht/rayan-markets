@@ -52,6 +52,7 @@ model Product {
   numberOfPurchases Int       @default(0)
   productType       String    @default("normal")
   description       String?
+  barCode           Int?
 
   weights Float[]
   flavors String[]
