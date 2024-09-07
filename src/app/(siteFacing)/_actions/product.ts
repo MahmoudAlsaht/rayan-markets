@@ -39,20 +39,17 @@ const orderProductBy = (
   | undefined =>
   orderBy === "views"
     ? {
-        id: "desc",
         views: "desc",
         newPrice: productType === "offers" ? filterSortPrice : undefined,
         price: productType !== "offers" ? filterSortPrice : undefined,
       }
     : orderBy === "purchases"
       ? {
-          id: "desc",
           numberOfPurchases: "desc",
           newPrice: productType === "offers" ? filterSortPrice : undefined,
           price: productType !== "offers" ? filterSortPrice : undefined,
         }
       : {
-          id: "desc",
           newPrice: productType === "offers" ? filterSortPrice : undefined,
           price: productType !== "offers" ? filterSortPrice : undefined,
         };
@@ -419,7 +416,7 @@ export async function getProductsForSection(
       where: baseWhere,
       take: limit + 1,
       skip,
-      orderBy: orderProductBy(orderBy, productType, undefined),
+      orderBy: orderProductBy(orderBy, productType, "all"),
       select: selectProduct,
     }),
     db.product.count({ where: baseWhere }),
