@@ -416,7 +416,7 @@ export async function getProductsForSection(
       where: baseWhere,
       take: limit + 1,
       skip,
-      orderBy: orderProductBy(orderBy, productType, "all"),
+      orderBy: orderProductBy(orderBy, productType, "desc"),
       select: selectProduct,
     }),
     db.product.count({ where: baseWhere }),
