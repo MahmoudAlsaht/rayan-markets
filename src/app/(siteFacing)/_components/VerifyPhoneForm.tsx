@@ -1,28 +1,37 @@
 "use client";
+import { checkVerificationCode } from "@/app/webhook/_actions/sendMessage";
 import SubmitButton from "@/components/SubmitButton";
-import { useFormState } from "react-dom";
-import { checkVerificationCode } from "../_actions/verifyPhone";
+import { FormEvent, useRef, useState } from "react";
 
 export default function VerifyPhoneForm({
-  phoneVerification,
+  phoneNumber,
   setPhoneNumber,
 }: {
-  phoneVerification: string | undefined;
   setPhoneNumber: (value: string) => void;
+  phoneNumber?: string;
 }) {
-  const [data, action] = useFormState(
-    checkVerificationCode.bind(null, phoneVerification),
-    { phone: undefined, verificationCode: undefined },
-  );
-
-  if (data?.phone) setPhoneNumber(data?.phone);
+  const codeRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState({ status: false, message: "" });
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const code = codeRef.current?.value;
+    if (
+      code &&
+      phoneNumber &&
+      (await checkVerificationCode(code, phoneNumber)) === "approved"
+    ) {
+      setPhoneNumber(phoneNumber);
+      setError({ status: false, message: "" });
+    }
+    setError({ status: true, message: "رقم التحقق غير صحيح أعد المحاولة" });
+  };
 
   return (
-    <form className="container mx-auto max-w-sm" action={action}>
+    <form className="container mx-auto max-w-sm" onSubmit={handleSubmit}>
       <div className="group relative z-0 mb-5 w-full">
         <input
           type="text"
-          name="verificationCode"
+          ref={codeRef}
           id="verificationCode"
           className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
           placeholder=""
@@ -33,8 +42,8 @@ export default function VerifyPhoneForm({
         >
           رمز التحقق
         </label>
-        {data?.verificationCode && (
-          <div className="text-destructive">{data.verificationCode}</div>
+        {error.status && (
+          <div className="text-destructive">{error.message}</div>
         )}
       </div>
       <SubmitButton body={"تحقق"} />

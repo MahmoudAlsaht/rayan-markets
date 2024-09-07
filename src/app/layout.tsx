@@ -96,7 +96,7 @@ export default async function RootLayout({
     <html lang="ar" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-slate-200 text-rayanPrimary-dark antialiased",
+          "min-h-screen bg-slate-50 text-rayanPrimary-dark antialiased",
           Alexandria.className,
         )}
         dir="rtl"

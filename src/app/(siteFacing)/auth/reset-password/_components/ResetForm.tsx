@@ -54,7 +54,7 @@ export function ResetForm() {
         )}
       </div>
 
-      <SubmitButton body={"التسجيل"} />
+      <SubmitButton body={"حفظ"} />
     </form>
   );
 }

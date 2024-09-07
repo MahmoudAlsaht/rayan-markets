@@ -38,7 +38,7 @@ export default function ProductCardDetails({
               src={
                 product?.image?.path.replace(
                   "/upload",
-                  "/upload/w_200",
+                  "/upload/w_400",
                 ) as string
               }
               alt={`${product?.name || "product"}'s image`}

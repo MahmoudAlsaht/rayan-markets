@@ -21,17 +21,12 @@ export default function ProductMenuPrice({
   const addProduct = () => handleAddToCart();
 
   if (!weights && !flavors)
-    return (
-      <ShoppingBag
-        className="size-6 w-full cursor-pointer"
-        onClick={!disabled ? addProduct : () => null}
-      />
-    );
+    return <ShoppingBagButton onClick={!disabled ? addProduct : () => null} />;
 
   return (
     <DropdownMenu dir="rtl">
       <DropdownMenuTrigger asChild disabled={disabled}>
-        <ShoppingBag className="size-6 w-full cursor-pointer" />
+        <ShoppingBagButton onClick={!disabled ? addProduct : () => null} />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSeparator />
@@ -47,5 +42,17 @@ export default function ProductMenuPrice({
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function ShoppingBagButton({ onClick }: { onClick: () => void }) {
+  return (
+    <div
+      className="flex w-full cursor-pointer items-center justify-center"
+      onClick={onClick}
+    >
+      <span className="basis-8/12">أضف للسلة</span>
+      <ShoppingBag className="size-6" />
+    </div>
   );
 }

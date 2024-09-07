@@ -13,7 +13,7 @@ export function RegisterForm() {
   const [error, action] = useFormState(register.bind(null, phone), {});
 
   return !phone ? (
-    <PhoneNumberForm type="contactNumber" setPhoneNumber={setPhone} />
+    <PhoneNumberForm type="userPhone" setPhoneNumber={setPhone} />
   ) : (
     <form action={action} className="container mx-auto max-w-sm">
       {error?.phone && <div className="text-destructive">{error?.phone}</div>}

@@ -1,39 +1,27 @@
-import axios from "axios";
+"use server";
+import twilio from "twilio";
 
-const { WHATSAPP_VERSION, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_ACCESS_TOKEN } =
+const { TWILIO_SERVICE_SID, TWILIO_AUTH_TOKEN, TWILIO_ACCOUNT_SID } =
   process.env;
+const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-export const sendVerificationCode = async (
-  verificationCode: string,
-  recipient: string,
-) => {
-  try {
-    const data = JSON.stringify({
-      messaging_product: "whatsapp",
-      preview_url: false,
-      recipient_type: "individual",
+export async function sendVerificationCode(recipient: string) {
+  console.log(`+962${recipient.slice(1)}`);
+  const message = await client.verify.v2
+    .services(`${TWILIO_SERVICE_SID}`)
+    .verifications.create({
       to: `+962${recipient.slice(1)}`,
-      type: "text",
-      text: {
-        body: `Your verification code is: ${verificationCode}`,
-      },
+      channel: "whatsapp",
+    });
+}
+
+export async function checkVerificationCode(code: string, recipient: string) {
+  const verificationCheck = await client.verify.v2
+    .services(`${TWILIO_SERVICE_SID}`)
+    .verificationChecks.create({
+      code,
+      to: `+962${recipient.slice(1)}`,
     });
 
-    await sendMessage(data);
-  } catch (e: any) {
-    console.error(e);
-  }
-};
-
-async function sendMessage(data) {
-  const config = {
-    method: "post",
-    url: `https://graph.facebook.com/${WHATSAPP_VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
-    headers: {
-      Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    data,
-  };
-  return await axios(config);
+  return verificationCheck.status;
 }

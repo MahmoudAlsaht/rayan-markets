@@ -47,7 +47,7 @@ export default function ProductCard({
             />
           </LoadingLink>
           <div
-            className={`absolute -bottom-6 rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${productCart ? "right-0 w-full" : "right-1/4 w-1/2"} ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
+            className={`absolute -bottom-6 right-0 w-full rounded-lg bg-slate-100 py-2 duration-500 sm:left-0 ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
           >
             <HandleCartActions product={product} />
           </div>
@@ -65,9 +65,9 @@ export default function ProductCard({
           <p className="text-md block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
             {product?.name}
           </p>
-          <div className="mt-4 flex items-center justify-center gap-6">
+          <div className="mt-4 flex items-center justify-center gap-1">
             <div className="flex items-center justify-around sm:gap-2 md:justify-start">
-              <p className="sm:text-md my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark">
+              <p className="my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark">
                 {formatCurrency(
                   product?.newPrice
                     ? product?.newPrice
@@ -77,7 +77,7 @@ export default function ProductCard({
             </div>
             {product?.newPrice && (
               <del>
-                <p className="sm:text-md cursor-auto text-sm text-gray-600 line-through">
+                <p className="cursor-auto text-sm text-gray-600 line-through">
                   {formatCurrency(product?.price as number)}
                 </p>
               </del>
