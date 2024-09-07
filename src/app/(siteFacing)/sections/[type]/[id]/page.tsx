@@ -6,6 +6,7 @@ import ProductsInfiniteScrolling from "@/app/(siteFacing)/products/_components/P
 import BackButtonNav from "@/components/BackButtonNav";
 import db from "@/db/db";
 import { Section } from "@prisma/client";
+import React from "react";
 import { Suspense } from "react";
 
 const getSectionBanners = (id: string) => {
@@ -14,6 +15,13 @@ const getSectionBanners = (id: string) => {
     select: {
       name: true,
       sectionBanners: {
+        select: {
+          id: true,
+          path: true,
+          link: true,
+        },
+      },
+      mobileSectionBanners: {
         select: {
           id: true,
           path: true,
@@ -52,6 +60,11 @@ type SectionProducts = Partial<Section> & {
     path: string;
     link: string;
   }[];
+  mobileSectionBanners: {
+    id: string;
+    path: string;
+    link: string;
+  }[];
 };
 
 async function SectionBannersSuspense({
@@ -65,18 +78,35 @@ async function SectionBannersSuspense({
 
   return (
     <>
-      <Banner
-        type={`${type === "categories" ? "category" : "brand"}'s Banner`}
-        sectionId={id}
-        sectionBanners={(section as SectionProducts)?.sectionBanners?.map(
-          (banner, index) => ({
+      <div className="hidden sm:block">
+        <Banner
+          type={`${type === "categories" ? "category" : "brand"}'s Banner`}
+          sectionId={id}
+          sectionBanners={(section as SectionProducts)?.sectionBanners?.map(
+            (banner, index) => ({
+              id: `${index}-${section.name}-${type}`,
+              path: banner.path,
+              link: banner.link as string,
+            }),
+          )}
+        />
+        <h1 className="mt-4 text-center text-4xl">{section?.name}</h1>
+      </div>
+
+      <div className="sm:hidden">
+        <Banner
+          type={`${type === "categories" ? "category" : "brand"}'s Banner`}
+          sectionId={id}
+          sectionBanners={(
+            section as SectionProducts
+          )?.mobileSectionBanners?.map((banner, index) => ({
             id: `${index}-${section.name}-${type}`,
             path: banner.path,
             link: banner.link as string,
-          }),
-        )}
-      />
-      <h1 className="mt-4 text-center text-4xl">{section?.name}</h1>
+          }))}
+        />
+        <h1 className="mt-4 text-center text-4xl">{section?.name}</h1>
+      </div>
     </>
   );
 }

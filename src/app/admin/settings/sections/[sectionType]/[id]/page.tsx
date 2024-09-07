@@ -23,6 +23,13 @@ export default async function EditSectionPage({
           link: true,
         },
       },
+      mobileSectionBanners: {
+        select: {
+          id: true,
+          path: true,
+          link: true,
+        },
+      },
     },
   });
   return (

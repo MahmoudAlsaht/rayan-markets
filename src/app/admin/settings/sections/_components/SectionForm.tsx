@@ -21,6 +21,11 @@ export function SectionForm({
       path: string;
       link: string | null;
     }[];
+    mobileSectionBanners: {
+      id: string;
+      path: string;
+      link: string | null;
+    }[];
   } | null;
 }) {
   const [error, action] = useFormState(
@@ -119,6 +124,32 @@ export function SectionForm({
         <div className="mt-2 grid grid-cols-2 gap-1">
           {section &&
             section.sectionBanners?.map((image) => (
+              <ClickableImageCard
+                key={image.id}
+                image={image}
+                imageAlt={`${section.name} banner's image`}
+              />
+            ))}
+        </div>
+      </div>
+
+      <div className="group relative z-0 mb-5 w-full">
+        <label
+          className="mb-2 block text-gray-900"
+          htmlFor="mobileBannerImages"
+        >
+          تحميل صورة للهاتف
+        </label>
+        <input
+          className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
+          id="mobileBannerImages"
+          name="mobileBannerImages"
+          type="file"
+          multiple
+        />
+        <div className="mt-2 grid grid-cols-2 gap-1">
+          {section &&
+            section.mobileSectionBanners?.map((image) => (
               <ClickableImageCard
                 key={image.id}
                 image={image}

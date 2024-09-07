@@ -10,7 +10,7 @@ export default async function AdminLayout({
 }) {
   await isAuthorizedUser();
   return (
-    <main dir="rtl" className="h-screen bg-slate-200 pb-10">
+    <main dir="rtl" className="h-screen bg-slate-50 pb-10">
       {children}
       <div className="h-24"></div>
     </main>

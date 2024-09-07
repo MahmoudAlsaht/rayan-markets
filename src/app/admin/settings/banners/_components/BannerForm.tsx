@@ -16,6 +16,10 @@ export function BannerForm({
       path: string;
       id: string;
     }[];
+    mobileImages: {
+      path: string;
+      id: string;
+    }[];
   } | null;
 }) {
   const [error, action] = useFormState(
@@ -67,6 +71,32 @@ export function BannerForm({
         <div className="mt-2 grid grid-cols-2 gap-1">
           {banner &&
             banner?.images.map((image) => (
+              <ClickableImageCard
+                key={image.id}
+                image={image}
+                imageAlt={`${banner.bannerType} banner's image`}
+              />
+            ))}
+        </div>
+      </div>
+
+      <div className="group relative z-0 mb-5 w-full">
+        <label className="mb-2 block text-gray-900" htmlFor="mobileImages">
+          تحميل صور للهاتف
+        </label>
+        <input
+          className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
+          id="mobileImages"
+          name="mobileImages"
+          type="file"
+          multiple
+        />
+        {error?.mobileImages && (
+          <div className="text-destructive">{error.mobileImages}</div>
+        )}
+        <div className="mt-2 grid grid-cols-2 gap-1">
+          {banner &&
+            banner?.mobileImages.map((image) => (
               <ClickableImageCard
                 key={image.id}
                 image={image}

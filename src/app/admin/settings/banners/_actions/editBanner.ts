@@ -11,6 +11,7 @@ const bannerImageSchema = z
 
 const editBannerSchema = z.object({
   bannerImages: bannerImageSchema.optional(),
+  mobileImages: bannerImageSchema.optional(),
   bannerType: z.string().optional(),
 });
 
@@ -26,14 +27,19 @@ export async function editBanner(
   if (result.success === false) return result.error.formErrors.fieldErrors;
 
   const bannerImages = formData.getAll("bannerImages") as File[] | null;
+  const mobileImages = formData.getAll("mobileImages") as File[] | null;
 
   const imagesIds = await uploadBannerImages(bannerImages);
+  const mobileImagesIds = await uploadBannerImages(mobileImages);
 
   const updatedBanner = await db.banner.update({
     where: { id },
     data: {
       images: {
         connect: imagesIds,
+      },
+      mobileImages: {
+        connect: mobileImagesIds,
       },
     },
   });

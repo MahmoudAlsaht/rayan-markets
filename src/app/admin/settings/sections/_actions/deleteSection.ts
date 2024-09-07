@@ -21,6 +21,12 @@ export async function deleteSection(id: string) {
           filename: true,
         },
       },
+      mobileSectionBanners: {
+        select: {
+          id: true,
+          filename: true,
+        },
+      },
     },
   });
 
@@ -36,6 +42,15 @@ export async function deleteSection(id: string) {
 
   if (section?.sectionBanners && section?.sectionBanners.length) {
     for (const image of section?.sectionBanners) {
+      image.filename && deleteCloudinaryImage(image.filename as string);
+      await db.image.delete({
+        where: { id: image.id as string },
+      });
+    }
+  }
+
+  if (section?.mobileSectionBanners && section?.mobileSectionBanners.length) {
+    for (const image of section?.mobileSectionBanners) {
       image.filename && deleteCloudinaryImage(image.filename as string);
       await db.image.delete({
         where: { id: image.id as string },

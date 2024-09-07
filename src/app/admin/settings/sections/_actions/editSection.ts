@@ -62,15 +62,29 @@ export async function editSection(
   });
 
   const bannerFiles = formData.getAll("bannerImages") as File[] | null;
+  const mobileBannerFiles = formData.getAll("mobileBannerImages") as
+    | File[]
+    | null;
 
   if (bannerFiles && bannerFiles.length > 0)
-    updateBannerSection(bannerFiles, currentSection?.id as string);
+    updateBannerSection(bannerFiles, currentSection?.id as string, "web");
+
+  if (mobileBannerFiles && mobileBannerFiles.length > 0)
+    updateBannerSection(
+      mobileBannerFiles,
+      currentSection?.id as string,
+      "mobile",
+    );
 
   revalidatePath("/", "layout");
   redirect("/admin/settings/sections");
 }
 
-async function updateBannerSection(files: File[] | null, sectionId: string) {
+async function updateBannerSection(
+  files: File[] | null,
+  sectionId: string,
+  type: "web" | "mobile",
+) {
   if (files && files.length > 0) {
     for (const file of files) {
       if (file.size === 0) break;
@@ -78,13 +92,26 @@ async function updateBannerSection(files: File[] | null, sectionId: string) {
       await db.section.update({
         where: { id: sectionId },
         data: {
-          sectionBanners: {
-            create: {
-              imageType: "SectionBannerImage",
-              filename: bannerImage?.filename as string,
-              path: bannerImage?.path as string,
-            },
-          },
+          sectionBanners:
+            type === "web"
+              ? {
+                  create: {
+                    imageType: "SectionBannerImage",
+                    filename: bannerImage?.filename as string,
+                    path: bannerImage?.path as string,
+                  },
+                }
+              : undefined,
+          mobileSectionBanners:
+            type === "mobile"
+              ? {
+                  create: {
+                    imageType: "SectionBannerImage",
+                    filename: bannerImage?.filename as string,
+                    path: bannerImage?.path as string,
+                  },
+                }
+              : undefined,
         },
       });
     }

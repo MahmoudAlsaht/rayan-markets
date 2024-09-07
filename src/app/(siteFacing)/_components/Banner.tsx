@@ -20,6 +20,14 @@ const getBanner = cache(
             link: true,
           },
         },
+        mobileImages: {
+          select: {
+            bannerId: true,
+            id: true,
+            path: true,
+            link: true,
+          },
+        },
       },
     });
   },
@@ -71,6 +79,8 @@ async function BannerSuspense({
 
   const images = banner ? banner?.images : sectionBanners;
 
+  const mobileImages = banner ? banner?.mobileImages : sectionBanners;
+
   return (
     images && (
       <div>
@@ -88,13 +98,24 @@ async function BannerSuspense({
             </Button>
           </Link>
         )}
-        <ImageCarousel
-          images={images.map((image) => ({
-            id: image.id,
-            path: image.path,
-            link: image.link,
-          }))}
-        />
+        <div className="hidden sm:block">
+          <ImageCarousel
+            images={images.map((image) => ({
+              id: image.id,
+              path: image.path,
+              link: image.link,
+            }))}
+          />
+        </div>
+        <div className="sm:hidden">
+          <ImageCarousel
+            images={(mobileImages || images).map((image) => ({
+              id: image.id,
+              path: image.path,
+              link: image.link,
+            }))}
+          />
+        </div>
       </div>
     )
   );

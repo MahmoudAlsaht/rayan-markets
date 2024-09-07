@@ -8,12 +8,14 @@ import z from "zod";
 const bannerImageSchema = z
   .instanceof(File, { message: "الرجاء اختر صورة للقسم" })
   .refine((file) => file.size === 0 || file.type.startsWith("image/"));
+
 const addBannerSchema = z.object({
   bannerType: z.string().min(1, "الرجاء ادخال هذا الحقل"),
   bannerImages: bannerImageSchema.refine(
     (file) => file.size > 0,
     "الرجاء اختر صورة للعلامة",
   ),
+  mobileImages: bannerImageSchema.optional(),
 });
 
 export async function createNewBanner(_prevState: unknown, formData: FormData) {
@@ -30,8 +32,10 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
   });
 
   const bannerImages = formData.getAll("bannerImages") as File[];
+  const mobileImages = formData.getAll("mobileImages") as File[];
 
   const imagesIds = await uploadBannerImages(bannerImages);
+  const mobileImagesIds = await uploadBannerImages(mobileImages);
 
   if (checkBannerExists == null) {
     await db.banner.create({
@@ -39,6 +43,9 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
         bannerType: data.bannerType,
         images: {
           connect: imagesIds,
+        },
+        mobileImages: {
+          connect: mobileImagesIds,
         },
       },
     });
@@ -53,6 +60,9 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
     data: {
       images: {
         connect: imagesIds,
+      },
+      mobileImages: {
+        connect: mobileImagesIds,
       },
     },
   });

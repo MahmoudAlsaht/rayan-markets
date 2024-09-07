@@ -59,14 +59,22 @@ export async function createNewSection(
   });
 
   const bannerFiles = formData.getAll("bannerImages") as File[] | null;
+  const mobileBannerFiles = formData.getAll("mobileBannerImages") as
+    | File[]
+    | null;
 
-  createBannerSection(bannerFiles, newSection.id);
+  createBannerSection(bannerFiles, newSection.id, "web");
+  createBannerSection(mobileBannerFiles, newSection.id, "mobile");
 
   revalidatePath("/", "layout");
   redirect("/admin/settings/sections");
 }
 
-async function createBannerSection(files: File[] | null, sectionId: string) {
+async function createBannerSection(
+  files: File[] | null,
+  sectionId: string,
+  type: "web" | "mobile",
+) {
   if (files)
     for (const file of files) {
       if (file.size === 0) break;
@@ -74,13 +82,26 @@ async function createBannerSection(files: File[] | null, sectionId: string) {
       await db.section.update({
         where: { id: sectionId },
         data: {
-          sectionBanners: {
-            create: {
-              imageType: "SectionBannerImage",
-              filename: bannerImage?.filename as string,
-              path: bannerImage?.path as string,
-            },
-          },
+          sectionBanners:
+            type === "web"
+              ? {
+                  create: {
+                    imageType: "SectionBannerImage",
+                    filename: bannerImage?.filename as string,
+                    path: bannerImage?.path as string,
+                  },
+                }
+              : undefined,
+          mobileSectionBanners:
+            type === "mobile"
+              ? {
+                  create: {
+                    imageType: "SectionBannerImage",
+                    filename: bannerImage?.filename as string,
+                    path: bannerImage?.path as string,
+                  },
+                }
+              : undefined,
         },
       });
     }

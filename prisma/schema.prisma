@@ -115,8 +115,14 @@ model Image {
   sectionId     String?  @db.ObjectId
   sectionBanner Section? @relation(name: "sectionBanner", fields: [sectionId], references: [id])
 
+  mobileSectionId      String?  @db.ObjectId
+  mobileSectionBanners Section? @relation(name: "mobileSectionBanners", fields: [mobileSectionId], references: [id])
+
   bannerId String? @db.ObjectId
-  banner   Banner? @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  banner   Banner? @relation(name: "webImages", fields: [bannerId], references: [id], onDelete: Cascade)
+
+  mobileBannerId String? @db.ObjectId
+  bannerMobile   Banner? @relation(name: "mobileImages", fields: [mobileBannerId], references: [id], onDelete: Cascade)
 }
 
 model Section {
@@ -131,6 +137,8 @@ model Section {
 
   sectionBanners Image[] @relation(name: "sectionBanner")
 
+  mobileSectionBanners Image[] @relation(name: "mobileSectionBanners")
+
   categoryProducts Product[] @relation(name: "category")
 
   brandProducts Product[] @relation(name: "brand")
@@ -142,7 +150,9 @@ model Banner {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  images Image[]
+  images Image[] @relation(name: "webImages")
+
+  mobileImages Image[] @relation(name: "mobileImages")
 }
 
 model Anonymous {

@@ -14,6 +14,7 @@ export default async function EditBannerPage({
       id: true,
       bannerType: true,
       images: { select: { path: true, id: true, link: true } },
+      mobileImages: { select: { path: true, id: true, link: true } },
     },
   });
 

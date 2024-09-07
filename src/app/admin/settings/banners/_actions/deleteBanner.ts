@@ -11,11 +11,18 @@ export async function deleteBanner(id: string) {
       id: true,
       bannerType: true,
       images: { select: { id: true, filename: true } },
+      mobileImages: { select: { id: true, filename: true } },
     },
   });
 
   if (banner && banner?.images)
     for (const image of banner.images) {
+      deleteCloudinaryImage(image.filename);
+      await db.image.delete({ where: { id: image.id } });
+    }
+
+  if (banner && banner?.mobileImages)
+    for (const image of banner.mobileImages) {
       deleteCloudinaryImage(image.filename);
       await db.image.delete({ where: { id: image.id } });
     }
