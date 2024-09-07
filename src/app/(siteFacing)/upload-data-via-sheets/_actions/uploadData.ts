@@ -86,25 +86,25 @@ export async function generateData(fileData: any[]) {
   const data: Data[] = fileData;
 
   try {
-    for (let i = 0; i < 1000; i++) {
-      await generateProduct({
-        ...data[randomize(data)],
-        productImage: cloudImages[randomize(cloudImages)],
-        brandImage: cloudImages[randomize(cloudImages)],
-        categoryImage: cloudImages[randomize(cloudImages)],
-      });
-    }
-    // for (const item of data) {
-    //   if (
-    //     item.name &&
-    //     item.name !== "" &&
-    //     item.body &&
-    //     item.body !== "" &&
-    //     !(await findProduct(item.name, item.body, item.category, item.brand))
-    //   ) {
-    //     await generateProduct({ ...item });
-    //   }
+    // for (let i = 0; i < 1000; i++) {
+    //   await generateProduct({
+    //     ...data[randomize(data)],
+    //     productImage: cloudImages[randomize(cloudImages)],
+    //     brandImage: cloudImages[randomize(cloudImages)],
+    //     categoryImage: cloudImages[randomize(cloudImages)],
+    //   });
     // }
+    for (const item of data) {
+      if (
+        item.name &&
+        item.name !== "" &&
+        item.body &&
+        item.body !== "" &&
+        !(await findProduct(item.name, item.body, item.category, item.brand))
+      ) {
+        await generateProduct({ ...item });
+      }
+    }
     revalidatePath("/", "layout");
   } catch (e) {
     console.log(e);
@@ -151,9 +151,9 @@ async function findProduct(
       name,
     },
   });
+  if (!product) return null;
   const category = await findSection(categoryName, "categories");
   const brand = await findSection(brandName, "brands");
-  if (!product) return null;
   const isDuplicateNameAndBody = product.name === name && product.body === body;
   if (!category && !brand && isDuplicateNameAndBody) return null;
   const isCategoryDuplicate = category
@@ -163,8 +163,8 @@ async function findProduct(
     ? brand.id === product.brandId
     : product.brandId != null;
   return isDuplicateNameAndBody && isCategoryDuplicate && isBrandDuplicate
-    ? null
-    : product;
+    ? product
+    : null;
 }
 
 async function generateProduct(product: Data) {

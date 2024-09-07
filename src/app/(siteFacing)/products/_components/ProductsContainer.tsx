@@ -14,7 +14,8 @@ export default function ProductsContainer({
   data?: InfiniteData<
     {
       products: ProductCardProps[];
-      nextCursor: number | null;
+      hasNextPage: boolean;
+      totalCount: number;
     },
     unknown
   >;

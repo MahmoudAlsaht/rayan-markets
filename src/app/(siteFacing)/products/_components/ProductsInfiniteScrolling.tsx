@@ -1,11 +1,10 @@
 "use client";
-
-import ProductsContainer, {
-  ProductsContainerSkeleton,
-} from "./ProductsContainer";
 import React, { useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import ProductsContainer, {
+  ProductsContainerSkeleton,
+} from "./ProductsContainer";
 import { getProductsForSection, searchProducts } from "../../_actions/product";
 
 export default function ProductsInfiniteScrolling({
@@ -39,7 +38,7 @@ export default function ProductsInfiniteScrolling({
 
       return searchProducts({
         inputQuery: query,
-        cursor: pageParam,
+        page: pageParam,
         limit: 12,
         productType,
         orderBy,
@@ -56,12 +55,30 @@ export default function ProductsInfiniteScrolling({
     hasNextPage,
     isFetchingNextPage,
     status,
+    refetch,
   } = useInfiniteQuery({
-    queryKey: ["products"],
+    queryKey: [
+      "products",
+      sectionType,
+      sectionId,
+      productType,
+      orderBy,
+      query,
+      sortPrice,
+    ],
     queryFn: fetchProducts,
     initialPageParam: 0,
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.hasNextPage) {
+        return allPages.length;
+      }
+      return undefined;
+    },
   });
+
+  useEffect(() => {
+    refetch();
+  }, [sectionType, sectionId, productType, orderBy, query, sortPrice, refetch]);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -77,13 +94,17 @@ export default function ProductsInfiniteScrolling({
       <ProductsContainer data={data} />
 
       <div ref={ref}>
-        {isFetchingNextPage && (
+        {isFetchingNextPage ? (
           <div className="flex items-center justify-center space-x-2">
             <span className="sr-only">Loading...</span>
             <div className="h-4 w-4 animate-bounce rounded-full bg-black [animation-delay:-0.3s] sm:h-8 sm:w-8"></div>
             <div className="h-4 w-4 animate-bounce rounded-full bg-black [animation-delay:-0.15s] sm:h-8 sm:w-8"></div>
             <div className="h-4 w-4 animate-bounce rounded-full bg-black sm:h-8 sm:w-8"></div>
           </div>
+        ) : hasNextPage ? (
+          <div className="py-4 text-center">Scroll for more</div>
+        ) : (
+          <div className="py-4 text-center">No more products</div>
         )}
       </div>
     </>

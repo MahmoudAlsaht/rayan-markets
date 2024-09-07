@@ -216,6 +216,8 @@ model Order {
   orderTotal    Float
   note          String?
 
+  droppingTime DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
