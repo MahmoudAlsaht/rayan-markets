@@ -102,9 +102,9 @@ export default function ProductsInfiniteScrolling({
             <div className="h-4 w-4 animate-bounce rounded-full bg-black sm:h-8 sm:w-8"></div>
           </div>
         ) : hasNextPage ? (
-          <div className="py-4 text-center">Scroll for more</div>
+          ""
         ) : (
-          <div className="py-4 text-center">No more products</div>
+          <div className="py-4 text-center">لا يوجد المزيد من المنتجات</div>
         )}
       </div>
     </>
