@@ -21,6 +21,7 @@ export default function OfferDatePicker({
   date: DateRange | undefined;
   setDate: Dispatch<SetStateAction<DateRange | undefined>>;
 }) {
+  console.log(date);
   return (
     <div className={cn("my-4 grid gap-2", className)}>
       <Popover>
@@ -29,7 +30,7 @@ export default function OfferDatePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-auto justify-start text-left font-normal",
+              "w-[300px] justify-start text-left font-normal",
               !date && "text-rayanSecondary-dark",
             )}
           >
