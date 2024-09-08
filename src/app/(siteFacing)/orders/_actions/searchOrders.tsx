@@ -10,6 +10,7 @@ export const select = {
   paymentMethod: true,
   orderTotal: true,
   createdAt: true,
+  pickUpDate: true,
   promoCode: { select: { discount: true, promoType: true, code: true } },
   profile: true,
   anonymous: true,

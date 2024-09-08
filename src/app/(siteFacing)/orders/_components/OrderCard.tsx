@@ -37,6 +37,7 @@ export type OrderCardProp = {
   products: Partial<OrderProduct>[];
   contact: Partial<Contact> & { district: Partial<District> };
   note: string | null;
+  pickUpDate: Date | null;
 };
 
 export function OrderCard({
@@ -64,6 +65,9 @@ export function OrderCard({
   const minutesPassed = differenceInMinutes(now, order?.createdAt as Date);
   const hoursPassed = differenceInHours(now, order?.createdAt as Date);
   const daysPassed = differenceInDays(now, order?.createdAt as Date);
+  const pickUpDate = order?.pickUpDate
+    ? format(order?.pickUpDate as Date, "yyyy/MM/dd الساعة HH:mm")
+    : null;
 
   const generateDisplayDate = () =>
     minutesPassed >= 60
@@ -171,10 +175,17 @@ export function OrderCard({
             ? "عن طريق البطاقة"
             : order?.paymentMethod === "cash"
               ? "نقدا"
-              : "عن طريق المحفظة"}
+              : order?.paymentMethod === "eWallets"
+                ? "عن طريق المحفظة"
+                : "استلام من المحل"}
         </span>
       </h3>
-
+      {order?.pickUpDate && (
+        <h3>
+          <span className="text-rayanSecondary-dark">موعد التسليم: </span>{" "}
+          {pickUpDate}
+        </h3>
+      )}
       <h3>
         <span className="text-rayanSecondary-dark">المنطقة: </span>
         {order?.contact?.district?.name}

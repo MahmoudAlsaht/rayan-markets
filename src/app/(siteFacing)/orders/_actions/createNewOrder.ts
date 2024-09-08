@@ -11,13 +11,21 @@ import { revalidatePath } from "next/cache";
 import { CartProduct } from "@/app/(siteFacing)/_context/cart/CartContext";
 
 const addOrderSchema = z.object({
-  paymentMethod: z.enum(["card", "cash", "eWallet"], {
-    required_error: "اختر طريقة الدفع",
-  }),
+  paymentMethod: z
+    .enum(["card", "cash", "eWallet"], {
+      required_error: "اختر طريقة الدفع",
+    })
+    .optional(),
+  isPickUp: z.string(),
   note: z.string().optional(),
+  pickUpDate: z.string().optional(),
 });
 
-export async function createNewOrder(formData: FormData) {
+export async function createNewOrder(
+  date: Date | undefined,
+  _: unknown,
+  formData: FormData,
+) {
   const result = await addOrderSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
@@ -57,7 +65,21 @@ export async function createNewOrder(formData: FormData) {
     },
   });
 
-  if (!contact) return notFound();
+  if (!contact)
+    return {
+      paymentMethod: "",
+      isPickUp: "",
+      note: "",
+      pickUpDate: "يجب تحديد تاريخ الاستلام",
+    };
+
+  if (data.isPickUp === "on" && !date)
+    return {
+      paymentMethod: "",
+      isPickUp: "",
+      note: "",
+      pickUpDate: "يجب تحديد تاريخ الاستلام",
+    };
 
   const productName = (product: CartProduct) =>
     product.flavor
@@ -102,7 +124,9 @@ export async function createNewOrder(formData: FormData) {
           data: cart?.products.map((product) => newOrderProduct(product)),
         },
       },
-      paymentMethod: data.paymentMethod,
+      paymentMethod: data.paymentMethod
+        ? data.paymentMethod
+        : "استلام من المحل",
       status: "pending",
       billTotal: parseFloat(cart.total.toFixed(2)),
       promoCodeId: cart.promoCode?.id,
@@ -112,6 +136,7 @@ export async function createNewOrder(formData: FormData) {
       orderTotal: parseFloat(orderTotal.toFixed(2)),
       orderId: genOrderId(),
       note: data.note,
+      pickUpDate: data.isPickUp === "on" ? date : undefined,
     },
   });
 
