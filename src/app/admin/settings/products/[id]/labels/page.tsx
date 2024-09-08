@@ -19,7 +19,7 @@ export default async function LabelsPage({
   return (
     <div dir="rtl">
       <BackButtonNav />
-      <PageHeader title={`كود للمنتج ${product?.name}`} />
+      <PageHeader title={`الكلمات المفتاحية للمنتج ${product?.name}`} />
       <LabelForm labels={product?.labels} productId={id} />
     </div>
   );

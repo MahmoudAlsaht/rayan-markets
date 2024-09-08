@@ -19,7 +19,7 @@ export default async function BarCodesPage({
   return (
     <div dir="rtl">
       <BackButtonNav />
-      <PageHeader title={`الكلمات المفتاحية للمنتج ${product?.name}`} />
+      <PageHeader title={` كود المنتج ${product?.name}`} />
       <BarCodeForm barCodes={product?.barCode} productId={id} />
     </div>
   );
