@@ -52,7 +52,6 @@ model Product {
   numberOfPurchases Int       @default(0)
   productType       String    @default("normal")
   description       String?
-  barCode           Int?
 
   weights Float[]
   flavors String[]
@@ -62,6 +61,9 @@ model Product {
 
   labelIds String[] @db.ObjectId
   labels   Label[]  @relation(fields: [labelIds], references: [id])
+
+  barCodeIds String[]  @db.ObjectId
+  barCode    BarCode[] @relation(fields: [barCodeIds], references: [id])
 
   imageId String? @unique @db.ObjectId
   image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -90,6 +92,17 @@ model PromoCode {
 }
 
 model Label {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  value String
+
+  productIds String[]  @db.ObjectId
+  products   Product[] @relation(fields: [productIds], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BarCode {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   value String
 

@@ -111,6 +111,11 @@ export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <LoadingLink
+                  href={`/admin/settings/products/${product.id}/barCodes`}
+                >
+                  <DropdownMenuItem>كود المنتج</DropdownMenuItem>
+                </LoadingLink>
+                <LoadingLink
                   href={`/admin/settings/products/${product.id}/labels`}
                 >
                   <DropdownMenuItem>الكلمات المفتاحية</DropdownMenuItem>
