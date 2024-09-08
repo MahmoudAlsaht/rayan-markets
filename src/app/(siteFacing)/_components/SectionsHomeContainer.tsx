@@ -37,48 +37,44 @@ export default async function SectionsHomeContainer({
 }) {
   const sections = await getSections(type);
 
-  return (
-    sections.length && (
-      <section className="my-4 sm:container" dir="ltr">
-        <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
-          <small className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
-            {type === "brands" ? "العلامات التجارية" : "الفئات"}
-          </small>
-          <LoadingLink
-            className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
-            href={`/sections/${type}`}
-          >
-            <span>المزيد</span>
-            <ArrowRightCircle />
-          </LoadingLink>
-        </div>
-        <Carousel
-          opts={{
-            align: "center",
-            loop: true,
-            dragFree: true,
-            slidesToScroll: "auto",
-            duration: 1500,
-          }}
-          className="w-11/12"
+  return sections.length ? (
+    <section className="my-4 sm:container" dir="ltr">
+      <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
+        <small className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
+          {type === "brands" ? "العلامات التجارية" : "الفئات"}
+        </small>
+        <LoadingLink
+          className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
+          href={`/sections/${type}`}
         >
-          <CarouselContent>
-            {sections.map(
-              (section, index) =>
-                index < 10 && (
-                  <CarouselItem
-                    key={section.id}
-                    className="basis-1/3 sm:basis-1/4 md:basis-1/6"
-                  >
-                    <SectionCarouselCard
-                      section={section as SectionCardProps}
-                    />
-                  </CarouselItem>
-                ),
-            )}
-          </CarouselContent>
-        </Carousel>
-      </section>
-    )
-  );
+          <span>المزيد</span>
+          <ArrowRightCircle />
+        </LoadingLink>
+      </div>
+      <Carousel
+        opts={{
+          align: "center",
+          loop: true,
+          dragFree: true,
+          slidesToScroll: "auto",
+          duration: 1500,
+        }}
+        className="w-11/12"
+      >
+        <CarouselContent>
+          {sections.map(
+            (section, index) =>
+              index < 10 && (
+                <CarouselItem
+                  key={section.id}
+                  className="basis-1/3 sm:basis-1/4 md:basis-1/6"
+                >
+                  <SectionCarouselCard section={section as SectionCardProps} />
+                </CarouselItem>
+              ),
+          )}
+        </CarouselContent>
+      </Carousel>
+    </section>
+  ) : null;
 }
