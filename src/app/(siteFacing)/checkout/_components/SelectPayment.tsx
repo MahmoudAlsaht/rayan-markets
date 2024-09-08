@@ -15,7 +15,7 @@ import { setHours, setMinutes, setSeconds } from "date-fns";
 export default function SelectPayment() {
   const [isPickUp, setIsPickUp] = useState(false);
   const [date, setDate] = useState<Date>(
-    setSeconds(setMinutes(setHours(new Date(), 12), 0), 0),
+    setSeconds(setMinutes(setHours(new Date(), 24), 0), 0),
   );
 
   const [error, action] = useFormState(
