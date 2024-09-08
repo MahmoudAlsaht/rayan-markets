@@ -77,6 +77,7 @@ export default function DayTimePicker({
         </label>
       </div>
       <Calendar
+        hideNavigation
         mode="single"
         required
         selected={selected}
