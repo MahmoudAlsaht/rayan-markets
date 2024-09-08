@@ -6,7 +6,7 @@ export default function PageHeader({
   mt?: string | undefined;
 }) {
   return (
-    <h1 className={`text-center ${mt ? mt : "mt-16"} mb-4 text-4xl`}>
+    <h1 className={`text-center ${mt ? mt : "mt-16"} text-md mb-4 sm:text-4xl`}>
       {title}
     </h1>
   );
