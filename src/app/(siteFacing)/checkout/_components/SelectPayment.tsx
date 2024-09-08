@@ -10,12 +10,18 @@ import SubmitButton from "@/components/SubmitButton";
 import { createNewOrder } from "../../orders/_actions/createNewOrder";
 import { useFormState } from "react-dom";
 import DayTimePicker from "./DayTimePicker";
+import { setHours, setMinutes, setSeconds } from "date-fns";
 
 export default function SelectPayment() {
   const [isPickUp, setIsPickUp] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(
+    setSeconds(setMinutes(setHours(new Date(), 12), 0), 0),
+  );
 
-  const [error, action] = useFormState(createNewOrder.bind(null, date), {});
+  const [error, action] = useFormState(
+    createNewOrder.bind(null, isPickUp ? date : undefined),
+    {},
+  );
 
   return (
     <form

@@ -73,14 +73,6 @@ export async function createNewOrder(
       pickUpDate: "يجب تحديد تاريخ الاستلام",
     };
 
-  if (data?.isPickUp === "on" && !date)
-    return {
-      paymentMethod: "",
-      isPickUp: "",
-      note: "",
-      pickUpDate: "يجب تحديد تاريخ الاستلام",
-    };
-
   const productName = (product: CartProduct) =>
     product.flavor
       ? `${product.name} - (${product.flavor})`
@@ -151,6 +143,7 @@ export async function createNewOrder(
 
   revalidatePath("/orders/all");
   revalidatePath(`/orders/${newOrder.status}`);
+
   redirect(`/orders/pending/${newOrder?.id}`);
 }
 
