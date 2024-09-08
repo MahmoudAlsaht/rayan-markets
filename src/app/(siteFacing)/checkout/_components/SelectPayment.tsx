@@ -15,7 +15,7 @@ export default function SelectPayment() {
   const [isPickUp, setIsPickUp] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
 
-  const [_error, action] = useFormState(createNewOrder.bind(null, date), {});
+  const [error, action] = useFormState(createNewOrder.bind(null, date), {});
 
   return (
     <form
@@ -37,6 +37,9 @@ export default function SelectPayment() {
       {isPickUp && (
         <div className="group relative z-0 mb-5 w-full">
           <DayTimePicker selected={date} setSelected={setDate} />
+          {error.pickUpDate && (
+            <div className="mt-2 text-destructive">{error.pickUpDate}</div>
+          )}
         </div>
       )}
 

@@ -1,5 +1,10 @@
 "use client";
-import React, { ChangeEventHandler, SetStateAction, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 import { setHours, setMinutes, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -12,6 +17,20 @@ export default function DayTimePicker({
   selected: Date;
 }) {
   const [timeValue, setTimeValue] = useState<string>("00:00");
+
+  useEffect(() => {
+    const [hours, minutes] = timeValue
+      .split(":")
+      .map((str) => parseInt(str, 10));
+    const newSelectedDate = new Date(
+      selected.getFullYear(),
+      selected.getMonth(),
+      selected.getDate(),
+      hours,
+      minutes,
+    );
+    setSelected(newSelectedDate);
+  }, [selected, setSelected, timeValue]);
 
   const handleTimeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const time = e.target.value;

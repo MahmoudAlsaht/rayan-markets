@@ -175,7 +175,7 @@ export function OrderCard({
             ? "عن طريق البطاقة"
             : order?.paymentMethod === "cash"
               ? "نقدا"
-              : order?.paymentMethod === "eWallets"
+              : order?.paymentMethod === "eWallet"
                 ? "عن طريق المحفظة"
                 : "استلام من المحل"}
         </span>

@@ -16,7 +16,7 @@ const addOrderSchema = z.object({
       required_error: "اختر طريقة الدفع",
     })
     .optional(),
-  isPickUp: z.string(),
+  isPickUp: z.string().optional(),
   note: z.string().optional(),
   pickUpDate: z.string().optional(),
 });
@@ -73,7 +73,7 @@ export async function createNewOrder(
       pickUpDate: "يجب تحديد تاريخ الاستلام",
     };
 
-  if (data.isPickUp === "on" && !date)
+  if (data?.isPickUp === "on" && !date)
     return {
       paymentMethod: "",
       isPickUp: "",
