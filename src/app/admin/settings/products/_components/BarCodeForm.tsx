@@ -107,6 +107,7 @@ export default function BarCodeForm({
             {barCodes &&
               barCodes.map((barCode) => (
                 <BarCodePill
+                  isPending={isPending}
                   key={barCode.id}
                   id={barCode.id}
                   value={barCode.value}
@@ -124,6 +125,7 @@ export default function BarCodeForm({
             {selectedBarCodes &&
               selectedBarCodes.map((barCode, index) => (
                 <BarCodePill
+                  isPending={isPending}
                   key={barCode.id || index}
                   id={barCode.id || index}
                   value={barCode.value}
@@ -141,10 +143,12 @@ function BarCodePill({
   id,
   value,
   handleDelete,
+  isPending = false,
 }: {
   id: string | number | null;
   value: string | null;
   handleDelete: (id: any) => void;
+  isPending: boolean;
 }) {
   return (
     <div
@@ -153,7 +157,7 @@ function BarCodePill({
     >
       {value}
       <div className="absolute -start-[-5px] inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-xs font-bold text-red-500">
-        <Trash2 onClick={() => handleDelete(id)} />
+        <Trash2 onClick={() => !isPending && handleDelete(id)} />
       </div>
     </div>
   );

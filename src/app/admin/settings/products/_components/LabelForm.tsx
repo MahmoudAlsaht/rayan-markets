@@ -1,168 +1,156 @@
-'use client';
-import SubmitButton from '@/components/SubmitButton';
-import { Button } from '@/components/ui/button';
-import { Label } from '@prisma/client';
-import { Loader2, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useRef, useState, useTransition } from 'react';
-import { createNewLabels } from '../[id]/labels/_actions/createNewLabel';
-import { deleteLabel } from '../[id]/labels/_actions/deleteLabel';
+"use client";
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
+import { Label } from "@prisma/client";
+import { Loader2, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState, useTransition } from "react";
+import { createNewLabels } from "../[id]/labels/_actions/createNewLabel";
+import { deleteLabel } from "../[id]/labels/_actions/deleteLabel";
 
 export default function LabelForm({
-	labels,
-	productId,
+  labels,
+  productId,
 }: {
-	labels: Label[] | undefined;
-	productId: string;
+  labels: Label[] | undefined;
+  productId: string;
 }) {
-	const router = useRouter();
-	const [selectedLabels, setSelectedLabels] = useState<
-		{ value: string; id?: number }[]
-	>([]);
-	const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const [selectedLabels, setSelectedLabels] = useState<
+    { value: string; id?: number }[]
+  >([]);
+  const [isPending, startTransition] = useTransition();
 
-	const labelRef = useRef<HTMLInputElement | null>(null);
+  const labelRef = useRef<HTMLInputElement | null>(null);
 
-	const handleClick = () => {
-		startTransition(async () => {
-			const formData = new FormData();
-			for (const label of selectedLabels) {
-				formData.append('labels', label.value);
-			}
-			await createNewLabels(formData, productId);
-			setSelectedLabels([]);
-			router.refresh();
-		});
-	};
+  const handleClick = () => {
+    startTransition(async () => {
+      const formData = new FormData();
+      for (const label of selectedLabels) {
+        formData.append("labels", label.value);
+      }
+      await createNewLabels(formData, productId);
+      setSelectedLabels([]);
+      router.refresh();
+    });
+  };
 
-	const addToSelectedLabel = async () => {
-		if (labelRef.current!.value === '') return;
-		await setSelectedLabels((prevLabels) => [
-			...prevLabels,
-			{ value: labelRef.current?.value as string },
-		]);
-		setSelectedLabels((prevLabels) => {
-			return prevLabels.map((label, index) => {
-				return { value: label.value, id: index };
-			});
-		});
-		labelRef.current!.value = '';
-	};
+  const addToSelectedLabel = async () => {
+    if (labelRef.current!.value === "") return;
+    await setSelectedLabels((prevLabels) => [
+      ...prevLabels,
+      { value: labelRef.current?.value as string },
+    ]);
+    setSelectedLabels((prevLabels) => {
+      return prevLabels.map((label, index) => {
+        return { value: label.value, id: index };
+      });
+    });
+    labelRef.current!.value = "";
+  };
 
-	const handleDeleteSelectedLabels = (id: number) => {
-		setSelectedLabels((prevLabels) => {
-			return prevLabels.filter((label) => label.id !== id);
-		});
-	};
+  const handleDeleteSelectedLabels = (id: number) => {
+    setSelectedLabels((prevLabels) => {
+      return prevLabels.filter((label) => label.id !== id);
+    });
+  };
 
-	const handleDeleteCurrentLabels = (id: string) => {
-		startTransition(async () => {
-			await deleteLabel(productId, id);
-			router.refresh();
-		});
-	};
+  const handleDeleteCurrentLabels = (id: string) => {
+    startTransition(async () => {
+      await deleteLabel(productId, id);
+      router.refresh();
+    });
+  };
 
-	return (
-		<div className='max-w-sm h-[150dvh] mx-4 sm:mx-auto'>
-			{labels && labels.length > 0 && (
-				<h1>الكلمات الحالية</h1>
-			)}
-			<div className='grid grid-cols-4 gap-1 mb-4'>
-				{labels &&
-					labels.map((label) => (
-						<LabelPill
-							key={label.id}
-							id={label.id}
-							value={label.value}
-							handleDelete={
-								handleDeleteCurrentLabels
-							}
-						/>
-					))}
-			</div>
+  return (
+    <div className="mx-4 h-[150dvh] max-w-sm sm:mx-auto">
+      {labels && labels.length > 0 && <h1>الكلمات الحالية</h1>}
+      <div className="mb-4 grid grid-cols-4 gap-1">
+        {labels &&
+          labels.map((label) => (
+            <LabelPill
+              isPending={isPending}
+              key={label.id}
+              id={label.id}
+              value={label.value}
+              handleDelete={handleDeleteCurrentLabels}
+            />
+          ))}
+      </div>
 
-			{selectedLabels && selectedLabels.length > 0 && (
-				<h1>الكلمات الجديدة</h1>
-			)}
-			<div className='grid grid-cols-4 gap-1 mb-4'>
-				{selectedLabels &&
-					selectedLabels.map((label, index) => (
-						<LabelPill
-							key={label.id || index}
-							id={label.id || index}
-							value={label.value}
-							handleDelete={
-								handleDeleteSelectedLabels
-							}
-						/>
-					))}
-			</div>
-			<div className='flex relative z-0 w-full mb-5 group'>
-				<input
-					type='text'
-					name='label'
-					id='label'
-					className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-					placeholder=''
-					ref={labelRef}
-					onKeyDownCapture={async (e) => {
-						if (e.key === 'Enter') {
-							e.preventDefault();
-							addToSelectedLabel();
-						}
-					}}
-				/>
-				<label
-					htmlFor='label'
-					className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'
-				>
-					الكلمات المفتاحية
-				</label>
-				<Button
-					variant='ghost'
-					size='sm'
-					className='mt-1'
-					onClick={() => addToSelectedLabel()}
-				>
-					إدخال
-				</Button>
-			</div>
+      {selectedLabels && selectedLabels.length > 0 && <h1>الكلمات الجديدة</h1>}
+      <div className="mb-4 grid grid-cols-4 gap-1">
+        {selectedLabels &&
+          selectedLabels.map((label, index) => (
+            <LabelPill
+              isPending={isPending}
+              key={label.id || index}
+              id={label.id || index}
+              value={label.value}
+              handleDelete={handleDeleteSelectedLabels}
+            />
+          ))}
+      </div>
+      <div className="group relative z-0 mb-5 flex w-full">
+        <input
+          type="text"
+          name="label"
+          id="label"
+          className="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:focus:border-blue-500"
+          placeholder=""
+          ref={labelRef}
+          onKeyDownCapture={async (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addToSelectedLabel();
+            }
+          }}
+        />
+        <label
+          htmlFor="label"
+          className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
+        >
+          الكلمات المفتاحية
+        </label>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-1"
+          onClick={() => addToSelectedLabel()}
+        >
+          إدخال
+        </Button>
+      </div>
 
-			<div className='relative z-0 w-full mb-5 group'>
-				<Button
-					onClick={handleClick}
-					className='w-full'
-					disabled={isPending}
-				>
-					{isPending ? (
-						<Loader2 className='animate-spin' />
-					) : (
-						'حفظ'
-					)}
-				</Button>
-			</div>
-		</div>
-	);
+      <div className="group relative z-0 mb-5 w-full">
+        <Button onClick={handleClick} className="w-full" disabled={isPending}>
+          {isPending ? <Loader2 className="animate-spin" /> : "حفظ"}
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function LabelPill({
-	id,
-	value,
-	handleDelete,
+  id,
+  value,
+  handleDelete,
+  isPending = false,
 }: {
-	id: string | number | null;
-	value: string | null;
-	handleDelete: (id: any) => void;
+  isPending: boolean;
+  id: string | number | null;
+  value: string | null;
+  handleDelete: (id: any) => void;
 }) {
-	return (
-		<div
-			key={id || ''}
-			className='relative bg-none text-rayanSecondary-dark border border-rayanSecondary-dark inline-flex items-center pl-2 py-2 pr-8 mt-2 text-sm font-medium text-center rounded-lg focus:ring-4'
-		>
-			{value}
-			<div className='absolute inline-flex items-center justify-center w-5 h-5 cursor-pointer text-xs font-bold text-red-500 rounded-full -start-[-5px]'>
-				<Trash2 onClick={() => handleDelete(id)} />
-			</div>
-		</div>
-	);
+  return (
+    <div
+      key={id || ""}
+      className="relative mt-2 inline-flex items-center rounded-lg border border-rayanSecondary-dark bg-none py-2 pl-2 pr-8 text-center text-sm font-medium text-rayanSecondary-dark focus:ring-4"
+    >
+      {value}
+      <div className="absolute -start-[-5px] inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-xs font-bold text-red-500">
+        <Trash2 onClick={() => !isPending && handleDelete(id)} />
+      </div>
+    </div>
+  );
 }
