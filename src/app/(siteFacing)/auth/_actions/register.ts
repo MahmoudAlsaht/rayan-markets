@@ -63,8 +63,10 @@ export const register = async (
     process.env.SECRET_1,
   );
 
+  const date = Date.now() * 1000 * 60 * 60 * 24 * 100;
   cookies().set("token", token, {
     path: "/",
+    expires: date,
   });
 
   redirect("/");
