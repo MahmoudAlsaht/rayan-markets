@@ -25,6 +25,10 @@ export default function Home() {
         <ProductsHomeContainer type="newest offers" />
       </Suspense>
 
+      <Suspense fallback={<HomeProductSkeleton />}>
+        <ProductsHomeContainer type="views" />
+      </Suspense>
+
       <Suspense fallback={<SectionsContainerSkeleton count={4} />}>
         <SectionsHomeContainer type="brands" />
       </Suspense>

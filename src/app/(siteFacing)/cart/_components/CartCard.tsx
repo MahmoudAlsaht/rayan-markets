@@ -31,7 +31,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
           <Image
             fill
             priority
-            className="rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+            className="rounded-t-xl object-cover hover:shadow-xl"
             src={
               (product?.image.replace("/upload", "/upload/w_200") as string) ||
               ""
@@ -40,10 +40,10 @@ export default function CartCard({ product }: { product: CartProduct }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <div
-            className={`absolute -bottom-4 left-2 w-11/12 rounded-2xl bg-white px-2 py-2 pl-0 shadow-md shadow-slate-200 duration-500 sm:left-0 sm:w-full sm:scale-95 sm:hover:scale-100 sm:hover:shadow-xl ${product.limit < 1 ? "bg-gray-400" : "bg-white"}`}
+            className={`absolute -bottom-6 w-full bg-slate-200/85 py-2 shadow-md ${product.limit < 1 && "bg-gray-400"}`}
           >
             {
-              <div className="flex w-11/12 items-center justify-between sm:px-6 sm:pl-4">
+              <div className="flex w-full items-center justify-around">
                 <Button
                   disabled={product.limit < 1}
                   size="sm"
@@ -61,7 +61,11 @@ export default function CartCard({ product }: { product: CartProduct }) {
                   variant="secondary"
                   onClick={handleTakeFromCounter}
                 >
-                  <Minus className="size-6 text-rayanPrimary-dark" />
+                  {product.counter > 1 ? (
+                    <Minus className="text-rayanPrimary-dark" />
+                  ) : (
+                    <Trash2 className="size-7 text-destructive" />
+                  )}
                 </Button>
               </div>
             }
@@ -69,7 +73,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
         </div>
 
         <div className="mt-2 w-full py-3 sm:px-4">
-          <p className="text-md mt-2 block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
+          <p className="mt-4 block truncate text-center text-xs font-bold capitalize text-rayanPrimary-dark">
             {product.flavor ? (
               <>
                 {product.name} <span>({product.flavor})</span>
@@ -117,13 +121,13 @@ export default function CartCard({ product }: { product: CartProduct }) {
       </div>
 
       <div
-        className={`flex gap-4 p-2 sm:hidden ${product.limit < 1 || ((product?.counter as number) > product.limit && "text-muted")}`}
+        className={`flex items-center gap-4 p-2 sm:hidden ${product.limit < 1 || ((product?.counter as number) > product.limit && "text-muted")}`}
       >
         <div className="relative h-40 w-40">
           <Image
             fill
             priority
-            className="rounded-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+            className="rounded-xl object-cover hover:shadow-xl"
             src={
               (product?.image.replace("/upload", "/upload/w_200") as string) ||
               ""
@@ -151,12 +155,16 @@ export default function CartCard({ product }: { product: CartProduct }) {
               onClick={handleTakeFromCounter}
               className="h-6 w-8 rounded-md bg-white"
             >
-              <Minus className="text-rayanPrimary-dark" />
+              {product.counter > 1 ? (
+                <Minus className="text-rayanPrimary-dark" />
+              ) : (
+                <Trash2 className="size-7 text-destructive" />
+              )}
             </Button>
           </div>
         </div>
         <div>
-          <p className="text-md mt-2 block truncate font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
+          <p className="mt-2 block truncate text-xs font-bold capitalize text-rayanPrimary-dark sm:text-start">
             {product.flavor ? (
               <>
                 {product.name} <span>({product.flavor})</span>

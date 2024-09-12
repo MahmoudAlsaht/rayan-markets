@@ -27,18 +27,18 @@ export default function ProductCardDetails({
       )}
       <div
         dir="rtl"
-        className={`mt-4 w-full bg-inherit md:flex ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
+        className={`mt-4 w-full bg-inherit sm:flex ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
       >
-        <div className="relative mx-auto h-72 w-11/12 sm:h-96 sm:w-3/5 md:w-2/5">
-          <div className="relative h-full w-full">
+        <div className="relative mx-auto h-72 w-9/12 sm:mx-24 sm:h-80 sm:w-1/5">
+          <div className="relative h-full w-full p-10">
             <Image
               fill
               priority
-              className="rounded-3xl rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+              className="rounded-3xl rounded-t-xl object-cover shadow-xl"
               src={
                 product?.image?.path.replace(
                   "/upload",
-                  "/upload/w_400",
+                  "/upload/w_600",
                 ) as string
               }
               alt={`${product?.name || "product"}'s image`}
@@ -46,7 +46,7 @@ export default function ProductCardDetails({
             />
           </div>
           <div
-            className={`absolute rounded-lg bg-slate-100 py-3 transition-all duration-500 sm:left-0 ${productCart ? "-bottom-7 right-4 w-11/12" : "-bottom-6 right-1/4 w-1/2"} ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
+            className={`absolute bottom-0 w-full rounded-lg rounded-b-3xl bg-slate-200/80 py-3 shadow-md transition-all sm:left-0 ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "bg-slate-400 text-transparent"}`}
           >
             <HandleCartActions product={product} />
           </div>
@@ -57,10 +57,7 @@ export default function ProductCardDetails({
           )}
         </div>
 
-        <div className="mt-10 flex w-full flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start">
-          <p className="text-2xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl">
-            {product?.body}
-          </p>
+        <div className="flex flex-col items-center py-0 md:mt-8 md:w-1/2 md:items-start">
           {productCart && (productCart.limit || 0) < 1 && (
             <p className="mt-6 text-xl text-rayanWarning-dark">
               لا يمكنك اضافة المزيد من هذا المنتج{" "}
@@ -84,9 +81,18 @@ export default function ProductCardDetails({
               </del>
             )}
           </div>
-          <div className="mt-6 text-xl sm:text-2xl md:text-3xl">
-            {product?.description}
-          </div>
+          <p className="text-xl font-bold capitalize text-rayanPrimary-dark sm:text-3xl">
+            {product?.body}
+          </p>
+
+          {product.description && (
+            <div className="mt-6 text-xl sm:text-2xl md:text-3xl">
+              <h3 className="mx-6 mb-4 mt-6 text-3xl font-bold text-rayanSecondary-light">
+                الوصف:
+              </h3>
+              <p className="mx-auto w-10/12">{product?.description}</p>
+            </div>
+          )}
         </div>
       </div>
     </>

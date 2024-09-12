@@ -1,7 +1,7 @@
 import React from "react";
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
-import { ArrowRightCircle } from "lucide-react";
+import { ArrowLeftCircle } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -38,7 +38,7 @@ export default async function SectionsHomeContainer({
   const sections = await getSections(type);
 
   return sections.length ? (
-    <section className="my-4 sm:container" dir="ltr">
+    <section className="my-4 sm:container">
       <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mx-0 sm:mb-6 sm:mt-4">
         <small className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
           {type === "brands" ? "العلامات التجارية" : "الفئات"}
@@ -48,7 +48,7 @@ export default async function SectionsHomeContainer({
           href={`/sections/${type}`}
         >
           <span>المزيد</span>
-          <ArrowRightCircle />
+          <ArrowLeftCircle />
         </LoadingLink>
       </div>
       <Carousel
@@ -57,22 +57,20 @@ export default async function SectionsHomeContainer({
           loop: true,
           dragFree: true,
           slidesToScroll: "auto",
-          duration: 1500,
+          direction: "rtl",
+          duration: 3500,
         }}
         className="w-11/12"
       >
         <CarouselContent>
-          {sections.map(
-            (section, index) =>
-              index < 10 && (
-                <CarouselItem
-                  key={section.id}
-                  className="basis-1/3 sm:basis-1/4 md:basis-1/6"
-                >
-                  <SectionCarouselCard section={section as SectionCardProps} />
-                </CarouselItem>
-              ),
-          )}
+          {sections.map((section, index) => (
+            <CarouselItem
+              key={section.id}
+              className="basis-1/3 sm:basis-1/4 md:basis-1/6"
+            >
+              <SectionCarouselCard section={section as SectionCardProps} />
+            </CarouselItem>
+          ))}
         </CarouselContent>
       </Carousel>
     </section>

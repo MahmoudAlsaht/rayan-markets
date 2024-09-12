@@ -3,7 +3,7 @@ import { useProductCart } from "../../_context/ProductCartContext";
 import { ProductCardProps } from "../[productType]/[id]/page";
 import ProductMenuPrice from "./ProductMenuPrice";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 
 export default function HandleCartActions({
   product,
@@ -67,7 +67,11 @@ export default function HandleCartActions({
             className="bg-slate-100 hover:bg-slate-100"
             onClick={handleTakeFromCounter}
           >
-            <Minus className="size-7 text-rayanPrimary-dark" />
+            {productCart.counter > 1 ? (
+              <Minus className="size-7 text-rayanPrimary-dark" />
+            ) : (
+              <Trash2 className="size-7 text-destructive" />
+            )}
           </Button>
         </div>
       )}

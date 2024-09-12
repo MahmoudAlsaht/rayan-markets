@@ -58,16 +58,13 @@ export default function ProductCard({
           )}
         </div>
 
-        <LoadingLink
-          className="mt-3 w-full py-3 sm:px-4"
-          href={handleUpdateViews}
-        >
-          <p className="text-md block truncate text-center font-bold capitalize text-rayanPrimary-dark sm:text-start sm:text-lg">
+        <LoadingLink className="mt-3 w-full py-3" href={handleUpdateViews}>
+          <p className="mt-2 block text-center text-xs font-semibold text-rayanPrimary-dark sm:text-start sm:text-sm">
             {product?.name}
           </p>
-          <div className="mt-4 flex items-center justify-center gap-1">
+          <div className="mt-2 flex items-center justify-around">
             <div className="flex items-center justify-around sm:gap-2 md:justify-start">
-              <p className="my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark">
+              <p className="my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark sm:text-sm">
                 {formatCurrency(
                   product?.newPrice
                     ? product?.newPrice
@@ -77,7 +74,7 @@ export default function ProductCard({
             </div>
             {product?.newPrice && (
               <del>
-                <p className="cursor-auto text-sm text-gray-600 line-through">
+                <p className="cursor-auto text-xs text-gray-600 line-through sm:text-sm">
                   {formatCurrency(product?.price as number)}
                 </p>
               </del>

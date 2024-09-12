@@ -17,7 +17,7 @@ export default function SectionCarouselCard({
 
   return (
     <Card
-      className="border-0 bg-inherit"
+      className="rounded-3xl bg-inherit"
       onMouseOver={handleShowName}
       onMouseLeave={handleHideName}
     >
@@ -32,10 +32,13 @@ export default function SectionCarouselCard({
             alt={`${section.name}'s image`}
           />
           {showName && (
-            <span className="absolute bottom-0 hidden h-full w-full flex-col justify-center rounded-3xl bg-slate-700 bg-opacity-80 p-1 py-0 text-center text-3xl font-semibold text-rayanPrimary-dark sm:flex">
+            <span className="absolute bottom-0 hidden h-full w-full flex-col justify-center rounded-3xl bg-slate-50/0 p-1 py-0 text-center text-sm font-semibold text-rayanPrimary-dark duration-500 hover:bg-slate-50/85 sm:flex sm:text-lg">
               {section.name}
             </span>
           )}
+          <span className="absolute bottom-0 flex h-1/3 w-full flex-col justify-center rounded-md rounded-bl-3xl rounded-br-3xl bg-slate-200/85 p-1 py-0 text-center text-xs font-semibold text-rayanPrimary-dark sm:hidden">
+            {section.name}
+          </span>
         </CardContent>
       </LoadingLink>
     </Card>

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import QueryProvider from "./products/_components/QueryProvider";
+import Footer from "./_components/Footer";
 
 // export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export default async function SiteFacingLayout({
         {privacyPolicy}
         {children}
         <div className="h-24"></div>
+        <Footer />
       </main>
     </QueryProvider>
   );

@@ -1,11 +1,10 @@
 import React from "react";
-import { ArrowRightCircle } from "lucide-react";
+import { ArrowLeftCircle } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-
 import { searchProducts } from "../_actions/product";
 import { Button } from "@/components/ui/button";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
@@ -34,13 +33,6 @@ export default async function SectionsHomeContainer({
     <section className="my-6 sm:container">
       <hr className="my-2 border-slate-300" />
       <div className="mx-2 mb-3 flex items-center justify-between gap-2 sm:mb-6 sm:mt-4">
-        <LoadingLink
-          className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
-          href={`/products${type === "views" || type === "purchases" ? `/any?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
-        >
-          <ArrowRightCircle />
-          <span>المزيد</span>
-        </LoadingLink>
         <h2 className="text-xs font-semibold capitalize text-rayanPrimary-dark sm:text-2xl">
           {type === "views"
             ? "الأكثر مشاهدة"
@@ -48,6 +40,14 @@ export default async function SectionsHomeContainer({
               ? "الأكثر مبيعا"
               : "آخر العروض"}
         </h2>
+
+        <LoadingLink
+          className="flex gap-2 rounded-3xl bg-rayanPrimary-dark px-3 py-1 text-xs font-medium capitalize leading-6 text-white transition sm:text-sm"
+          href={`/products${type === "views" || type === "purchases" ? `/any?orderBy=${type}` : "/offers?orderBy=createdAt"}`}
+        >
+          <span>المزيد</span>
+          <ArrowLeftCircle />
+        </LoadingLink>
       </div>
 
       <Carousel
@@ -56,9 +56,9 @@ export default async function SectionsHomeContainer({
           loop: true,
           dragFree: true,
           slidesToScroll: "auto",
-          duration: 3000,
+          duration: 3500,
+          direction: "rtl",
         }}
-        dir="ltr"
         className="w-11/12"
       >
         <CarouselContent>
