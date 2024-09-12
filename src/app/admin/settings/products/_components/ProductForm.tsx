@@ -277,27 +277,25 @@ export function ProductForm({
         )}
       </div>
 
-      {productType && productType === "forHome" && (
-        <div className="group relative z-0 mb-5 w-full">
-          <label
-            htmlFor="description"
-            className="mb-2 block text-sm font-medium text-gray-900"
-          >
-            وصف المنتج
-          </label>
-          <textarea
-            id="description"
-            rows={4}
-            name="description"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="وصف المنتج..."
-            defaultValue={product?.description || ""}
-          />
-          {error?.description && (
-            <div className="text-destructive">{error?.description}</div>
-          )}
-        </div>
-      )}
+      <div className="group relative z-0 mb-5 w-full">
+        <label
+          htmlFor="description"
+          className="mb-2 block text-sm font-medium text-gray-900"
+        >
+          وصف المنتج
+        </label>
+        <textarea
+          id="description"
+          rows={4}
+          name="description"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          placeholder="وصف المنتج..."
+          defaultValue={product?.description || ""}
+        />
+        {error?.description && (
+          <div className="text-destructive">{error?.description}</div>
+        )}
+      </div>
 
       <label className="inline-flex cursor-pointer items-center">
         <input

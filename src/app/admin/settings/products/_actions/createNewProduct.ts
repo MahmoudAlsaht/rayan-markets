@@ -96,7 +96,7 @@ export async function createNewProduct(
       weights:
         data.productType === "weight" ? options?.map((w) => parseFloat(w)) : [],
       flavors: data.productType === "flavor" ? options : [],
-      description: data.productType === "forHome" ? data.description : null,
+      description: data.description,
       newPrice:
         data.isOffer === "on" ? parseFloat(data.newPrice as string) : null,
       offerStartsAt:

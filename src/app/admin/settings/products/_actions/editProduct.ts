@@ -90,12 +90,9 @@ export async function editProduct(
       flavors:
         data.productType === "flavor" ? options || currentProduct?.flavors : [],
       isOffer: data.isOffer === "on" ? true : false,
-      description:
-        data.productType === "forHome"
-          ? data.description
-            ? data.description
-            : currentProduct?.description
-          : null,
+      description: data.description
+        ? data.description
+        : currentProduct?.description,
       newPrice:
         data.isOffer === "on"
           ? parseFloat(data.newPrice as string) || currentProduct?.newPrice
