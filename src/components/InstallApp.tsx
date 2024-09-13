@@ -8,7 +8,7 @@ const InstallPWA: React.FC = () => {
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
   const [showInstallButton, setShowInstallButton] = useState<boolean>(false);
   const [platform, setPlatform] = useState<
-    "android" | "ios" | "windows" | "macos" | "other"
+    "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
 
   useLayoutEffect(() => {
@@ -30,6 +30,7 @@ const InstallPWA: React.FC = () => {
       if (/iphone|ipad|ipod/.test(userAgent)) return "ios";
       if (/win/.test(userAgent)) return "windows";
       if (/mac/.test(userAgent)) return "macos";
+      if (/firefox/.test(userAgent)) return "firefox";
       return "other";
     };
 
@@ -82,6 +83,17 @@ const InstallPWA: React.FC = () => {
   const handleInstall = () => {
     if (promptInstall) {
       (promptInstall as any).prompt();
+    } else if (platform === "firefox") {
+      // Firefox-specific installation
+      const manifestUrl = "./public/manifest.json";
+      const manifestElement = document.createElement("link");
+      manifestElement.rel = "manifest";
+      manifestElement.href = manifestUrl;
+      document.head.appendChild(manifestElement);
+
+      alert(
+        'To install on Firefox: Click the "Install" button in the address bar.',
+      );
     }
   };
 
@@ -112,6 +124,18 @@ const InstallPWA: React.FC = () => {
             <ol className="list-inside list-decimal">
               <li>Click the share button in the address bar</li>
               <li>Select &quot;Add to Dock&quot;</li>
+            </ol>
+          </div>
+        );
+      case "firefox":
+        return (
+          <div className="text-sm">
+            <p>To install on Firefox:</p>
+            <ol className="list-inside list-decimal">
+              <li>Click the &quot;Install&quot; button below</li>
+              <li>
+                Then click the &quot;Install&quot; button in the address bar
+              </li>
             </ol>
           </div>
         );
