@@ -1,7 +1,7 @@
 "use server";
 import { deleteCloudinaryImage, upload } from "@/cloudinary";
 import db from "@/db/db";
-import { addHours, addMinutes } from "date-fns";
+import { setHours, setMilliseconds, setMinutes, setSeconds } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { DateRange } from "react-day-picker";
@@ -24,7 +24,7 @@ const editProductSchema = z.object({
     .min(1, "الرجاء ادخال هذا الحقل")
     .regex(/^[0-9]\d*$/),
   productType: z.string().min(1, "الرجاء اختيار نوع المنتج"),
-  description: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
+  description: z.string().optional(),
   options: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
   isOffer: z.string().optional(),
   newPrice: z
@@ -69,12 +69,12 @@ export async function editProduct(
     });
   }
 
-  const options = data.options?.split(" ");
+  const options = data.options?.split(/[ \/,\\-]/);
 
   await db.product.update({
     where: { id },
     data: {
-      name: data.name || currentProduct?.name,
+      name: data.name.trim() || currentProduct?.name.trim(),
       categoryId: data.category || currentProduct?.categoryId,
       brandId: data.brand || currentProduct?.brandId,
       body: data.body || currentProduct?.body,
@@ -99,12 +99,20 @@ export async function editProduct(
           : null,
       offerStartsAt:
         data.isOffer === "on"
-          ? (date?.from && addHours(date?.from, 3)) ||
+          ? (date?.from &&
+              setMilliseconds(
+                setSeconds(setMinutes(setHours(date.from, 3), 0), 0),
+                0,
+              )) ||
             currentProduct?.offerStartsAt
           : null,
       offerEndsAt:
         data.isOffer === "on"
-          ? (date?.to && addMinutes(date.to, 1619)) ||
+          ? (date?.to &&
+              setMilliseconds(
+                setSeconds(setMinutes(setHours(date.to, 26), 59), 0),
+                0,
+              )) ||
             currentProduct?.offerEndsAt
           : null,
     },

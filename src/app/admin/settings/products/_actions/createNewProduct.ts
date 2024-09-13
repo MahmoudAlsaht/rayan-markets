@@ -1,7 +1,7 @@
 "use server";
 import { upload } from "@/cloudinary";
 import db from "@/db/db";
-import { addHours, addMinutes } from "date-fns";
+import { setHours, setMilliseconds, setMinutes, setSeconds } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { DateRange } from "react-day-picker";
@@ -24,7 +24,7 @@ const addProductSchema = z.object({
     .min(1, "الرجاء ادخال هذا الحقل")
     .regex(/^[0-9]\d*$/),
   productType: z.string().min(1, "الرجاء اختيار نوع المنتج"),
-  description: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
+  description: z.string().optional(),
   options: z.string().min(1, "الرجاء ادخال هذا الحقل").optional(),
   isOffer: z.string().optional(),
   newPrice: z
@@ -70,7 +70,7 @@ export async function createNewProduct(
       options: "",
     };
 
-  const options = data.options?.split(" ");
+  const options = data.options?.split(/[ \/,\\-]/);
 
   const productImage = await upload(data.productImage);
 
@@ -84,10 +84,10 @@ export async function createNewProduct(
 
   await db.product.create({
     data: {
-      name: data.name,
+      name: data.name.trim(),
       categoryId: data.category,
       brandId: data.brand,
-      body: data.body,
+      body: data.body.trim(),
       price: parseFloat(data.price),
       quantity: parseInt(data.quantity),
       productType: data.productType,
@@ -100,9 +100,21 @@ export async function createNewProduct(
       newPrice:
         data.isOffer === "on" ? parseFloat(data.newPrice as string) : null,
       offerStartsAt:
-        data.isOffer === "on" ? date?.from && addHours(date?.from, 3) : null,
+        data.isOffer === "on"
+          ? date?.from &&
+            setMilliseconds(
+              setSeconds(setMinutes(setHours(date.from, 3), 0), 0),
+              0,
+            )
+          : null,
       offerEndsAt:
-        data.isOffer === "on" ? date?.to && addMinutes(date.to, 1619) : null,
+        data.isOffer === "on"
+          ? date?.to &&
+            setMilliseconds(
+              setSeconds(setMinutes(setHours(date.to, 26), 59), 0),
+              0,
+            )
+          : null,
     },
   });
 

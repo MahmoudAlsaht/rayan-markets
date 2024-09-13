@@ -62,7 +62,7 @@ export default function SearchProducts({ className }: { className?: string }) {
         <Search />
       </DrawerTrigger>
       <DrawerContent dir="ltr">
-        <div className="mx-auto max-w-7xl overflow-auto">
+        <div className="mx-auto w-full overflow-auto">
           <DrawerHeader>
             <DrawerTitle>
               <nav>
@@ -141,6 +141,7 @@ export default function SearchProducts({ className }: { className?: string }) {
             <>
               {data?.products && (
                 <ProductsContainer
+                  handleClose={handleClose}
                   products={sortedProducts as ProductCardProps[]}
                 />
               )}

@@ -57,6 +57,7 @@ export default function DayTimePicker({
         </label>
       </div>
       <Calendar
+        disabled={{ before: new Date() }}
         hideNavigation
         mode="single"
         required

@@ -12,13 +12,15 @@ export default async function SiteFacingLayout({
   privacyPolicy: ReactNode;
 }) {
   return (
-    <QueryProvider>
-      <main dir="rtl">
-        {privacyPolicy}
-        {children}
-        <div className="h-24"></div>
-        <Footer />
-      </main>
-    </QueryProvider>
+    <>
+      <QueryProvider>
+        <main dir="rtl">
+          {privacyPolicy}
+          {children}
+          <div className="h-24 sm:h-44"></div>
+        </main>
+      </QueryProvider>
+      <Footer />
+    </>
   );
 }

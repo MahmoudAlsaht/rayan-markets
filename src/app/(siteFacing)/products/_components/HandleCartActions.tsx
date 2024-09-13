@@ -37,18 +37,19 @@ export default function HandleCartActions({
         <ProductMenuPrice
           disabled={product?.quantity < 1}
           flavors={
-            product?.flavors && product?.flavors.length
+            product?.flavors && product?.flavors.length > 0
               ? product?.flavors
               : null
           }
           weights={
-            product?.weights && product?.weights.length
+            product?.weights && product?.weights.length > 0
               ? product?.weights
               : null
           }
           handleAddToCart={handleAddToCart}
         />
       )}
+
       {productCart && (
         <div className="flex items-center justify-around">
           <Button

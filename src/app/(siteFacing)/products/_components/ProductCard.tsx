@@ -10,8 +10,10 @@ import { useRouter } from "next/navigation";
 
 export default function ProductCard({
   product,
+  handleClose,
 }: {
   product: ProductCardProps;
+  handleClose?: () => void;
 }) {
   const { productCart } = useProductCart();
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function ProductCard({
   const handleUpdateViews = async () => {
     await updateProductViews(product.id as string);
     router.push(`/products/any/${product.id}`);
+    handleClose && handleClose();
   };
 
   return (
@@ -35,7 +38,7 @@ export default function ProductCard({
             <Image
               fill
               priority
-              className="rounded-t-xl object-cover duration-500 sm:hover:scale-105 sm:hover:shadow-xl"
+              className="rounded-t-xl object-cover shadow-xl"
               src={
                 product?.image?.path.replace(
                   "/upload",

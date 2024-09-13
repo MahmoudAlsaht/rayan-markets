@@ -251,6 +251,11 @@ export function ProductForm({
           >
             الأوزان
           </label>
+          <div className="text-rayanWarning-dark">
+            استعمل احد هذه الرموز للفصل بين الخيارات <br />
+            (/{"  "}
+            {"  "}-\,)
+          </div>
           {error?.options && (
             <div className="text-destructive">{error.options}</div>
           )}

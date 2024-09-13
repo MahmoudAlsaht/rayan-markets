@@ -1,8 +1,8 @@
 import db from "@/db/db";
-import { OrderCard, OrderCardProp } from "../../_components/OrderCard";
+import { OrderCard } from "../../_components/OrderCard";
 import { notFound } from "next/navigation";
 import { checkUser } from "@/app/(siteFacing)/auth/_actions/isAuthenticated";
-import { select } from "../../_actions/searchOrders";
+import { OrderCardProp, select } from "../../_actions/searchOrders";
 import OrdersTabs from "../../_components/OrdersTabs";
 
 export default async function OrderDetails({

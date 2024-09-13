@@ -28,7 +28,6 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
-      disabled={{ before: new Date() }}
       weekStartsOn={6}
       locale={arSA}
       dir="rtl"

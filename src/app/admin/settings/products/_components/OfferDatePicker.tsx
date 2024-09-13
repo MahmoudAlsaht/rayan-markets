@@ -21,7 +21,6 @@ export default function OfferDatePicker({
   date: DateRange | undefined;
   setDate: Dispatch<SetStateAction<DateRange | undefined>>;
 }) {
-  console.log(date);
   return (
     <div className={cn("my-4 grid gap-2", className)}>
       <Popover>
@@ -53,7 +52,7 @@ export default function OfferDatePicker({
           <Calendar
             autoFocus
             mode="range"
-            defaultMonth={new Date(Date.now())}
+            defaultMonth={new Date()}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}

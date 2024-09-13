@@ -16,7 +16,7 @@ export default function ProductMenuPrice({
   disabled?: boolean;
   weights?: number[] | null;
   flavors?: string[] | null;
-  handleAddToCart: (weight?: number | string) => void;
+  handleAddToCart: (option?: number | string) => void;
 }) {
   const addProduct = () => handleAddToCart();
 
@@ -25,8 +25,11 @@ export default function ProductMenuPrice({
 
   return (
     <DropdownMenu dir="rtl">
-      <DropdownMenuTrigger asChild disabled={disabled}>
-        <ShoppingBagButton onClick={!disabled ? addProduct : () => null} />
+      <DropdownMenuTrigger className="flex w-full cursor-pointer items-center justify-center">
+        <>
+          <span className="basis-8/12">أضف للسلة</span>
+          <ShoppingBag className="size-6" />
+        </>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSeparator />
@@ -45,7 +48,7 @@ export default function ProductMenuPrice({
   );
 }
 
-function ShoppingBagButton({ onClick }: { onClick: () => void }) {
+function ShoppingBagButton({ onClick }: { onClick?: () => void }) {
   return (
     <div
       className="flex w-full cursor-pointer items-center justify-center"

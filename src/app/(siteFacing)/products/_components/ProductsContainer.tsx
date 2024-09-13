@@ -9,7 +9,9 @@ import React from "react";
 export default function ProductsContainer({
   products,
   data,
+  handleClose,
 }: {
+  handleClose?: () => void;
   products?: ProductCardProps[];
   data?: InfiniteData<
     {
@@ -35,7 +37,7 @@ export default function ProductsContainer({
         {products &&
           products?.map((product) => (
             <ProductCartProvider key={product.id} id={product.id as string}>
-              <ProductCard product={product} />
+              <ProductCard handleClose={handleClose} product={product} />
             </ProductCartProvider>
           ))}
       </section>
