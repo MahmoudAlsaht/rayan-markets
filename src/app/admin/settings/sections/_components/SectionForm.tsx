@@ -108,6 +108,8 @@ export function SectionForm({
         {error?.sectionImage && (
           <div className="text-destructive">{error.sectionImage}</div>
         )}
+        <p className="text-rayanWarning-dark">min width: 241.33px</p>
+        <p className="text-rayanWarning-dark">min height: 176px</p>
       </div>
 
       <div className="group relative z-0 mb-5 w-full">
@@ -121,6 +123,9 @@ export function SectionForm({
           type="file"
           multiple
         />
+        <p className="text-rayanWarning-dark">min width: 1336px</p>
+        <p className="text-rayanWarning-dark">min height: 320px</p>
+
         <div className="mt-2 grid grid-cols-2 gap-1">
           {section &&
             section.sectionBanners?.map((image) => (
@@ -147,6 +152,9 @@ export function SectionForm({
           type="file"
           multiple
         />
+        <p className="text-rayanWarning-dark">min width: 378.4px</p>
+        <p className="text-rayanWarning-dark">min height: 128px</p>
+
         <div className="mt-2 grid grid-cols-2 gap-1">
           {section &&
             section.mobileSectionBanners?.map((image) => (

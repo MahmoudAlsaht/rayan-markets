@@ -1,35 +1,28 @@
 "use client";
-import React, {
-  ChangeEventHandler,
-  SetStateAction,
-  useState,
-} from "react";
-
-import { format } from "date-fns";
+import React, { ChangeEventHandler, SetStateAction, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 
 export default function DayTimePicker({
   selected,
   setSelected,
 }: {
-  setSelected: React.Dispatch<SetStateAction<Date>>;
-  selected: Date;
+  setSelected: React.Dispatch<SetStateAction<Date | undefined>>;
+  selected: Date | undefined;
 }) {
-  const [timeValue, setTimeValue] = useState<string>("00:00");
+  const [timeValue, setTimeValue] = useState<string>("11:00");
 
   const handleTimeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const time = e.target.value;
     const [hours, minutes] = time.split(":").map((str) => parseInt(str, 10));
     const newSelectedDate = new Date(
-      selected.getFullYear(),
-      selected.getMonth(),
-      selected.getDate(),
+      (selected || new Date()).getFullYear(),
+      (selected || new Date()).getMonth(),
+      (selected || new Date()).getDate(),
       hours,
       minutes,
     );
     setSelected(newSelectedDate);
     setTimeValue(time);
-    console.log(newSelectedDate);
   };
 
   const handleDaySelect = (date: Date) => {
@@ -43,13 +36,15 @@ export default function DayTimePicker({
       hours,
       minutes,
     );
-    setSelected(new Date(format(date as Date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")));
+    setSelected(newDate);
   };
 
   return (
     <div>
       <div className="me-1">
-        اختر وقت من الساعة ال9 صباحاََ حتى ال12 منتصف الليل
+        <p className="mb-2 text-rayanWarning-dark">
+          اختر وقت من الساعة ال9 صباحاََ حتى ال12 منتصف الليل
+        </p>
         <label>
           <input
             className="rounded-sm bg-slate-600 px-3"
@@ -67,7 +62,14 @@ export default function DayTimePicker({
         required
         selected={selected}
         onSelect={handleDaySelect}
-        footer={`التاريخ المختار (${selected ? selected.toLocaleString() : "لا يوجد"})`}
+        footer={
+          <div>
+            التاريخ المختار{" "}
+            <span className="text-rayanWarning-dark">
+              ({selected ? selected.toLocaleString() : "لا يوجد"})
+            </span>
+          </div>
+        }
       />
     </div>
   );

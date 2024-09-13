@@ -1,14 +1,6 @@
 "use client";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
-import {
-  Anonymous,
-  Contact,
-  District,
-  OrderProduct,
-  Profile,
-  PromoCode,
-} from "@prisma/client";
-import { statuses } from "./OrdersTabs";
+
 import {
   format,
   differenceInMinutes,
@@ -22,23 +14,39 @@ import { completeOrder, rejectOrCancelOrder } from "../_actions/updateOrder";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import { OrderCardProp } from "../_actions/searchOrders";
 
-export type OrderCardProp = {
-  id: string;
-  billTotal: number;
-  orderId: string;
-  status: string;
-  paymentMethod: string;
-  orderTotal: number;
-  createdAt: Date;
-  promoCode: Partial<PromoCode>;
-  profile: Partial<Profile>;
-  anonymous: Partial<Anonymous>;
-  products: Partial<OrderProduct>[];
-  contact: Partial<Contact> & { district: Partial<District> };
-  note: string | null;
-  pickUpDate: Date | null;
-};
+const statuses: {
+  value: string;
+  displayName: string;
+  color?: string;
+}[] = [
+  {
+    value: "all",
+    displayName: "جميع الطلبات",
+    color: "",
+  },
+  {
+    value: "pending",
+    displayName: "قيد المعالجة",
+    color: "text-rayanWarning-dark",
+  },
+  {
+    value: "finished",
+    displayName: "تمت",
+    color: "text-sky-600",
+  },
+  {
+    value: "rejected",
+    displayName: "مرفوضة",
+    color: "text-pink-700",
+  },
+  {
+    value: "canceled",
+    displayName: "ملغية",
+    color: "text-destructive",
+  },
+];
 
 export function OrderCard({
   order,
@@ -182,13 +190,17 @@ export function OrderCard({
       </h3>
       {order?.pickUpDate && (
         <h3>
-          <span className="text-rayanSecondary-dark">موعد التسليم: </span>{" "}
+          <span className="text-rayanSecondary-dark">موعد الاستلام: </span>{" "}
           {pickUpDate}
         </h3>
       )}
-      <h3>
-        <span className="text-rayanSecondary-dark">المنطقة: </span>
-        {order?.contact?.district?.name}
+      <h3 className={order?.pickUpDate ? "text-rayanWarning-dark" : ""}>
+        <span className="text-rayanSecondary-dark">
+          {!order?.pickUpDate ? "المنطقة" : "فرع الاستلام"}:{" "}
+        </span>
+        {!order?.pickUpDate
+          ? order?.contact?.district?.name
+          : order?.pickUpStore}
       </h3>
       <h3>
         <span className="text-rayanSecondary-dark">رقم التواصل: </span>

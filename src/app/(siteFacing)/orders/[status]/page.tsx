@@ -1,5 +1,5 @@
-import { OrderCard, OrderCardProp } from "../_components/OrderCard";
-import { searchOrders } from "../_actions/searchOrders";
+import { OrderCard } from "../_components/OrderCard";
+import { OrderCardProp, searchOrders } from "../_actions/searchOrders";
 import OrdersTabs from "../_components/OrdersTabs";
 
 export default async function OrdersPage({

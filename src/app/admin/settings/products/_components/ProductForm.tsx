@@ -351,6 +351,8 @@ export function ProductForm({
           name="productImage"
           type="file"
         />
+        <p className="text-rayanWarning-dark">min width: 307.2px</p>
+        <p className="text-rayanWarning-dark">min height: 320px</p>
         {product && (
           <Image
             alt={product?.name as string}

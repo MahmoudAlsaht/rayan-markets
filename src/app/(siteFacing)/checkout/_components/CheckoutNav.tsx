@@ -7,10 +7,20 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useCart } from "../../_context/cart/CartContext";
+import { useStartLoading } from "../../_context/LoadingContext";
+import { useEffect } from "react";
 
 export default function CheckoutNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { cart } = useCart();
+  const { startLoading } = useStartLoading();
+
+  useEffect(() => {
+    if (!cart) startLoading(() => router.push("/"));
+  }, [cart, router, startLoading]);
 
   return (
     <Breadcrumb>

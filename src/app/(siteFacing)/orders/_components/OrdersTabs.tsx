@@ -10,7 +10,7 @@ import { Search } from "lucide-react";
 import BackButtonNav from "@/components/BackButtonNav";
 import { useCart } from "../../_context/cart/CartContext";
 
-export const statuses: {
+const statuses: {
   value: string;
   displayName: string;
   color?: string;
@@ -53,19 +53,19 @@ export default function OrdersTabs({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { checkCart } = useCart();
   const { startLoading } = useStartLoading();
   const [queryValue, setQueryValue] = useState<string>(search ? search : "");
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const { checkCart } = useCart();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     startLoading(() => router.push(`/orders/all/?search=${queryValue}`));
   };
 
-  checkCart();
   useEffect(() => {
     setIsAuthorized(userRole !== "customer" && userRole !== "anonymous");
+    checkCart();
   }, [isAuthorized, userRole]);
 
   return (

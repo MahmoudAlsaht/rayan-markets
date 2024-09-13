@@ -41,10 +41,8 @@ export default function SectionsPage({
   if (type !== "categories" && type !== "brands") return notFound();
 
   return (
-    <div dir="rtl" className="h-screen pb-16 sm:px-6">
-      <div className="sm:hidden">
-        <BackButtonNav goHome />
-      </div>
+    <div dir="rtl" className="mx-auto h-screen pb-16 sm:px-6">
+      <BackButtonNav goHome />
       <h1 className="mb-4 mt-10 text-center text-4xl">
         {type === "categories" ? "الفئات" : "العلامات التجارية"}
       </h1>

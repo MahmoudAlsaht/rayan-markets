@@ -76,7 +76,7 @@ export default function MainNavbar({
         className="relative top-auto z-50 mx-auto max-w-[1481.6px] border-gray-200 dark:bg-[#C7E7E2]"
         dir="rtl"
       >
-        <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+        <div className="mx-auto flex flex-wrap items-center justify-between p-4">
           <LoadingLink
             href="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"

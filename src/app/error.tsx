@@ -24,7 +24,7 @@ export default function Error({
       className="flex h-screen flex-col items-center justify-center text-4xl text-rayanSecondary-dark sm:text-6xl"
       dir="rtl"
     >
-      <div className="mx-auto max-w-screen-xl px-4 py-8 text-center text-2xl lg:py-16">
+      <div className="mx-auto px-4 py-8 text-center text-2xl lg:py-16">
         <div className="mb-8 text-destructive">
           <h6 className="">name: {error.name}</h6>
         </div>

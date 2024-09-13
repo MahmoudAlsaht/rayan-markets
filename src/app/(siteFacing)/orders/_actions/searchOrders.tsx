@@ -1,6 +1,64 @@
 import db from "@/db/db";
 import { checkUser } from "../../auth/_actions/isAuthenticated";
 import { redirect } from "next/navigation";
+import {
+  Anonymous,
+  Contact,
+  District,
+  OrderProduct,
+  Profile,
+  PromoCode,
+} from "@prisma/client";
+
+const statuses: {
+  value: string;
+  displayName: string;
+  color?: string;
+}[] = [
+  {
+    value: "all",
+    displayName: "جميع الطلبات",
+    color: "",
+  },
+  {
+    value: "pending",
+    displayName: "قيد المعالجة",
+    color: "text-rayanWarning-dark",
+  },
+  {
+    value: "finished",
+    displayName: "تمت",
+    color: "text-sky-600",
+  },
+  {
+    value: "rejected",
+    displayName: "مرفوضة",
+    color: "text-pink-700",
+  },
+  {
+    value: "canceled",
+    displayName: "ملغية",
+    color: "text-destructive",
+  },
+];
+
+export type OrderCardProp = {
+  id: string;
+  billTotal: number;
+  orderId: string;
+  status: string;
+  paymentMethod: string;
+  orderTotal: number;
+  createdAt: Date;
+  promoCode: Partial<PromoCode>;
+  profile: Partial<Profile>;
+  anonymous: Partial<Anonymous>;
+  products: Partial<OrderProduct>[];
+  contact: Partial<Contact> & { district: Partial<District> };
+  note: string | null;
+  pickUpDate: Date | null;
+  pickUpStore: string | null;
+};
 
 export const select = {
   id: true,
@@ -11,6 +69,7 @@ export const select = {
   orderTotal: true,
   createdAt: true,
   pickUpDate: true,
+  pickUpStore: true,
   promoCode: { select: { discount: true, promoType: true, code: true } },
   profile: true,
   anonymous: true,

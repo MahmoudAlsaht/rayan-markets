@@ -62,7 +62,7 @@ export default function SearchProducts({ className }: { className?: string }) {
         <Search />
       </DrawerTrigger>
       <DrawerContent dir="ltr">
-        <div className="mx-auto w-full overflow-auto">
+        <div className="mx-auto max-w-7xl overflow-auto">
           <DrawerHeader>
             <DrawerTitle>
               <nav>

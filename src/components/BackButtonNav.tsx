@@ -16,7 +16,7 @@ export default function BackButtonNav({
   return (
     <>
       <nav className="bg-inherit pb-2">
-        <div className="mx-auto flex h-14 max-w-screen-xl flex-wrap items-center justify-between p-4">
+        <div className="mx-auto flex h-14 flex-wrap items-center justify-between p-4">
           <Button
             data-collapse-toggle="navbar-default"
             type="button"

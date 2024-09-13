@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useState } from "react";
+import { ChangeEvent, FormEvent, ReactNode, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { GrAtm } from "react-icons/gr";
@@ -10,18 +10,36 @@ import SubmitButton from "@/components/SubmitButton";
 import { createNewOrder } from "../../orders/_actions/createNewOrder";
 import { useFormState } from "react-dom";
 import DayTimePicker from "./DayTimePicker";
-import { setHours, setMinutes, setSeconds } from "date-fns";
 
 export default function SelectPayment() {
-  const [isPickUp, setIsPickUp] = useState(false);
-  const [date, setDate] = useState<Date>(
-    setSeconds(setMinutes(setHours(new Date(), 24), 0), 0),
+  const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickUp">(
+    "delivery",
   );
+  const [paymentMethod, setPaymentMethod] = useState<
+    "card" | "cash" | "eWallet"
+  >("cash");
+  const [date, setDate] = useState<Date | undefined>();
 
   const [error, action] = useFormState(
-    createNewOrder.bind(null, isPickUp ? date : undefined),
-    {},
+    createNewOrder.bind(null, deliveryMethod === "pickUp" ? date : undefined),
+    null,
   );
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    type: "payment" | "delivery",
+  ) => {
+    if (type === "delivery")
+      setDeliveryMethod(e.target.value === "pickUp" ? "pickUp" : "delivery");
+    if (type === "payment")
+      setPaymentMethod(
+        e.target.value === "eWallet"
+          ? "eWallet"
+          : e.target.value === "card"
+            ? "card"
+            : "cash",
+      );
+  };
 
   return (
     <form
@@ -29,24 +47,48 @@ export default function SelectPayment() {
       className="h-full w-full p-4 sm:w-1/2 md:w-1/3"
       dir="rtl"
     >
-      <label className="mb-2 inline-flex cursor-pointer items-center gap-2">
-        <input
-          type="checkbox"
-          className="peer sr-only"
-          name="isPickUp"
-          onChange={(e) => setIsPickUp(e.target.checked)}
-          checked={isPickUp}
-        />
-        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full"></div>
-        {isPickUp ? "استلام من المحل" : "توصيل"}
-      </label>
-      {isPickUp && (
-        <div className="group relative z-0 mb-5 w-full">
-          <DayTimePicker selected={date} setSelected={setDate} />
-          {error.pickUpDate && (
+      <RadioGroup
+        defaultValue={deliveryMethod}
+        name="deliveryMethod"
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          handleChange(e, "delivery")
+        }
+      >
+        <RadioCard value="delivery" htmlFor="delivery">
+          توصيل للمنزل
+        </RadioCard>
+        <RadioCard value="pickUp" htmlFor="pickUp">
+          استلام من الفرع
+        </RadioCard>
+      </RadioGroup>
+      {error?.deliveryMethod && (
+        <div className="text-destructive">{error?.deliveryMethod}</div>
+      )}
+      {deliveryMethod === "pickUp" && (
+        <>
+          <div className="group relative z-0 mb-5 w-full">
+            <select
+              name="storeToPickUpFrom"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="">اختر الفرع</option>
+              {["شارع القدس", "حكما", "حنينا", "المطارق"].map((store) => (
+                <option key={store} value={store}>
+                  {store}
+                </option>
+              ))}
+            </select>
+            {error?.storeToPickUpFrom && (
+              <div className="text-destructive">{error?.storeToPickUpFrom}</div>
+            )}
+          </div>
+          <div className="group relative z-0 mb-5 w-full">
+            <DayTimePicker selected={date} setSelected={setDate} />
+          </div>
+          {error?.pickUpDate && (
             <div className="mt-2 text-destructive">{error.pickUpDate}</div>
           )}
-        </div>
+        </>
       )}
 
       <div className="group relative z-0 mb-5 w-full">
@@ -65,43 +107,52 @@ export default function SelectPayment() {
         />
       </div>
 
-      {!isPickUp && (
-        <RadioGroup name="paymentMethod">
-          <PaymentRadioCard value="cash" htmlFor="الدفع (نقدا) عند الاستلام">
-            <div>
-              الدفع <span className="text-rayanWarning-dark">( نقدا )</span> عند
-              الاستلام
-            </div>
-            <GiTakeMyMoney size="20" />
-          </PaymentRadioCard>
-
-          <PaymentRadioCard
-            value="card"
-            htmlFor="الدفع (بالبطاقة) عند الاستلام"
+      {deliveryMethod === "delivery" && (
+        <>
+          <RadioGroup
+            name="paymentMethod"
+            defaultValue={paymentMethod}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleChange(e, "payment")
+            }
           >
-            <div>
-              الدفع <span className="text-rayanWarning-dark">( بالبطاقة )</span>{" "}
-              عند الاستلام
-            </div>
-            <GrAtm size="20" />
-          </PaymentRadioCard>
-          <PaymentRadioCard value="eWallet" htmlFor="الدفع عن طريق المحفظة">
-            <span>الدفع عن طريق المحفظة</span>
-            <Image
-              alt="e-wallet icon"
-              src={EWalletIcon}
-              width={20}
-              height={20}
-            />
-          </PaymentRadioCard>
-        </RadioGroup>
+            <RadioCard value="cash" htmlFor="الدفع (نقدا) عند الاستلام">
+              <div>
+                الدفع <span className="text-rayanWarning-dark">( نقدا )</span>{" "}
+                عند الاستلام
+              </div>
+              <GiTakeMyMoney size="20" />
+            </RadioCard>
+
+            <RadioCard value="card" htmlFor="الدفع (بالبطاقة) عند الاستلام">
+              <div>
+                الدفع{" "}
+                <span className="text-rayanWarning-dark">( بالبطاقة )</span> عند
+                الاستلام
+              </div>
+              <GrAtm size="20" />
+            </RadioCard>
+            <RadioCard value="eWallet" htmlFor="الدفع عن طريق المحفظة">
+              <span>الدفع عن طريق المحفظة</span>
+              <Image
+                alt="e-wallet icon"
+                src={EWalletIcon}
+                width={20}
+                height={20}
+              />
+            </RadioCard>
+          </RadioGroup>
+          {error?.paymentMethod && (
+            <div className="text-destructive">{error.paymentMethod}</div>
+          )}
+        </>
       )}
       <SubmitButton className="mt-2" body="تنفيذ الطلب" />
     </form>
   );
 }
 
-function PaymentRadioCard({
+function RadioCard({
   children,
   value,
   htmlFor,

@@ -25,7 +25,7 @@ export default function ProductCard({
     <>
       <div
         dir="rtl"
-        className={`cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
+        className={`min-h-[320px] cursor-pointer rounded-xl border-x-2 border-b-2 border-slate-300 bg-inherit shadow-md shadow-slate-200 duration-500 sm:hover:scale-105 sm:hover:shadow-xl ${(product.quantity < 1 || (productCart && (productCart?.limit || 0) < 1)) && "opacity-20"}`}
       >
         <div className="relative h-44">
           <LoadingLink

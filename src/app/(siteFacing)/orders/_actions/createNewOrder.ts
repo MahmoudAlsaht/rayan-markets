@@ -10,15 +10,20 @@ import z from "zod";
 import { revalidatePath } from "next/cache";
 import { CartProduct } from "@/app/(siteFacing)/_context/cart/CartContext";
 
+const rayanStores = ["شارع القدس", "حكما", "حنينا", "المطارق"];
+
 const addOrderSchema = z.object({
   paymentMethod: z
     .enum(["card", "cash", "eWallet"], {
       required_error: "اختر طريقة الدفع",
     })
     .optional(),
-  isPickUp: z.string().optional(),
+  deliveryMethod: z.enum(["delivery", "pickUp"], {
+    required_error: "اختر طريقة التسليم",
+  }),
   note: z.string().optional(),
   pickUpDate: z.string().optional(),
+  storeToPickUpFrom: z.string().min(1, "اختر فرع الإستلام").optional(),
 });
 
 export async function createNewOrder(
@@ -65,13 +70,7 @@ export async function createNewOrder(
     },
   });
 
-  if (!contact)
-    return {
-      paymentMethod: "",
-      isPickUp: "",
-      note: "",
-      pickUpDate: "يجب تحديد تاريخ الاستلام",
-    };
+  if (!contact) return notFound();
 
   const productName = (product: CartProduct) =>
     product.flavor
@@ -109,6 +108,25 @@ export async function createNewOrder(
       : cart.total;
   const orderTotal = calcOrderBill + calcShippingDiscount;
 
+  if (data.deliveryMethod === "pickUp") {
+    if (!date)
+      return {
+        paymentMethod: "",
+        deliveryMethod: "",
+        note: "",
+        pickUpDate: "يجب تحديد تاريخ الاستلام",
+        storeToPickUpFrom: "",
+      };
+    if (data?.storeToPickUpFrom! in rayanStores)
+      return {
+        paymentMethod: "",
+        deliveryMethod: "",
+        note: "",
+        pickUpDate: "",
+        storeToPickUpFrom: "يجب تحديد فرع الاستلام",
+      };
+  }
+
   const newOrder = await db.order.create({
     data: {
       products: {
@@ -116,9 +134,10 @@ export async function createNewOrder(
           data: cart?.products.map((product) => newOrderProduct(product)),
         },
       },
-      paymentMethod: data.paymentMethod
-        ? data.paymentMethod
-        : "استلام من المحل",
+      paymentMethod:
+        data.deliveryMethod === "delivery"
+          ? data.paymentMethod || "cash"
+          : "استلام من المحل",
       status: "pending",
       billTotal: parseFloat(cart.total.toFixed(2)),
       promoCodeId: cart.promoCode?.id,
@@ -128,7 +147,8 @@ export async function createNewOrder(
       orderTotal: parseFloat(orderTotal.toFixed(2)),
       orderId: genOrderId(),
       note: data.note,
-      pickUpDate: data.isPickUp === "on" ? date : undefined,
+      pickUpDate: date,
+      pickUpStore: data.storeToPickUpFrom,
     },
   });
 

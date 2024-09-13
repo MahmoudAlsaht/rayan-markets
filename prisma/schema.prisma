@@ -229,7 +229,8 @@ model Order {
   orderTotal    Float
   note          String?
 
-  pickUpDate DateTime?
+  pickUpDate  DateTime?
+  pickUpStore String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
