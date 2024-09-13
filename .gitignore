@@ -44,3 +44,4 @@ next-env.d.ts
 /public/fallback-*
 /data
 /src/app/(siteFacing)/upload-data-via-sheets/*
+.vercel
