@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DownloadIcon, X, Info } from "lucide-react";
 
 const InstallPWA: React.FC = () => {
@@ -11,7 +11,7 @@ const InstallPWA: React.FC = () => {
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const checkInstallation = () => {
       if (typeof window !== "undefined") {
         if (
@@ -46,24 +46,25 @@ const InstallPWA: React.FC = () => {
           startDate == null
             ? true
             : now - JSON.parse(startDate) > 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
-        isExpired ? setShowInstallButton(true) : setShowInstallButton(false);
+        setShowInstallButton(isExpired);
       }
     };
-
-    setIsInstalled(checkInstallation());
-    setPlatform(detectPlatform());
-    checkExpirationAndSetButton();
 
     const installHandler = (e: Event) => {
       e.preventDefault();
       setPromptInstall(e);
-      setShowInstallButton(false);
+      setShowInstallButton(true);
     };
 
     const afterInstalledHandler = () => {
       localStorage.setItem("pwaInstalled", "1");
       setIsInstalled(true);
+      setShowInstallButton(false);
     };
+
+    setIsInstalled(checkInstallation());
+    setPlatform(detectPlatform());
+    checkExpirationAndSetButton();
 
     if (typeof window !== "undefined") {
       window.addEventListener("beforeinstallprompt", installHandler);
@@ -99,10 +100,9 @@ const InstallPWA: React.FC = () => {
     }
   };
 
-  if (process.env.NODE_ENV !== "production" || isInstalled === true || showInstallButton === false) {
+  if (isInstalled || !showInstallButton) {
     return null;
-}
-
+  }
 
   const renderInstallInstructions = () => {
     switch (platform) {
