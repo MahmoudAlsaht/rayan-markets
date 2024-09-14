@@ -6,7 +6,7 @@ import { DownloadIcon, X, Info } from "lucide-react";
 const InstallPWA: React.FC = () => {
   const [promptInstall, setPromptInstall] = useState<Event | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
-  const [showInstallButton, setShowInstallButton] = useState<boolean>(false);
+  const [startDateState, setStartDateState] = useState<number | null>();
   const [platform, setPlatform] = useState<
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
@@ -40,26 +40,19 @@ const InstallPWA: React.FC = () => {
 
     const checkExpirationAndSetButton = () => {
       if (typeof window !== "undefined") {
-        const now = new Date().getTime();
         const startDate = localStorage.getItem("startDate");
-        const isExpired =
-          startDate == null
-            ? true
-            : now - JSON.parse(startDate) > 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
-        setShowInstallButton(isExpired);
+setStartDateState(startDate ? JSON.parse(startDate) : null)
       }
     };
 
     const installHandler = (e: Event) => {
       e.preventDefault();
       setPromptInstall(e);
-      setShowInstallButton(true);
     };
 
     const afterInstalledHandler = () => {
       localStorage.setItem("pwaInstalled", "1");
       setIsInstalled(true);
-      setShowInstallButton(false);
     };
 
     setIsInstalled(checkInstallation());
@@ -81,7 +74,7 @@ const InstallPWA: React.FC = () => {
     if (typeof window !== "undefined") {
       const date = new Date().getTime() + 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
       localStorage.setItem("startDate", JSON.stringify(date));
-      setShowInstallButton(false);
+      setStartDateState(date);
     }
   };
 
@@ -100,7 +93,7 @@ const InstallPWA: React.FC = () => {
     }
   };
 
-  if (!showInstallButton) return null;
+  if (startDateState != null && new Date().getTime() - startDateState < 4 * 24 * 60 * 60 * 1000) return null;
 
  if (isInstalled) return null;
   
