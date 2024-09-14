@@ -99,13 +99,10 @@ const InstallPWA: React.FC = () => {
     }
   };
 
-  if (
-    isInstalled ||
-    !showInstallButton ||
-    process.env.NODE_ENV !== "production"
-  ) {
+  if (process.env.NODE_ENV !== "production" || isInstalled === true || showInstallButton === false) {
     return null;
-  }
+}
+
 
   const renderInstallInstructions = () => {
     switch (platform) {
