@@ -100,9 +100,10 @@ const InstallPWA: React.FC = () => {
     }
   };
 
-  if (isInstalled || !showInstallButton) {
-    return null;
-  }
+  if (!showInstallButton) return null;
+
+ if (isInstalled) return null;
+  
 
   const renderInstallInstructions = () => {
     switch (platform) {
@@ -141,7 +142,7 @@ const InstallPWA: React.FC = () => {
       default:
         return (
           <button
-            className="flex w-full items-center justify-center gap-2 rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
+            className="flex my-auto bg-inherit/60 w-full items-center justify-center gap-2 rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
             onClick={handleInstall}
           >
             <DownloadIcon className="mr-2" />
