@@ -58,7 +58,7 @@ export default async function SectionsHomeContainer({
           dragFree: true,
           slidesToScroll: "auto",
           direction: "rtl",
-          duration: 3500,
+          duration: 4000,
         }}
         className="w-11/12"
       >
