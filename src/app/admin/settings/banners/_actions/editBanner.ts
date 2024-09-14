@@ -32,7 +32,7 @@ export async function editBanner(
   const imagesIds = await uploadBannerImages(bannerImages);
   const mobileImagesIds = await uploadBannerImages(mobileImages);
 
-  const updatedBanner = await db.banner.update({
+  await db.banner.update({
     where: { id },
     data: {
       images: {

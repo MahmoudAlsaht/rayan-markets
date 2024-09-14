@@ -62,8 +62,7 @@ model Product {
   labelIds String[] @db.ObjectId
   labels   Label[]  @relation(fields: [labelIds], references: [id])
 
-  barCodeIds String[]  @db.ObjectId
-  barCode    BarCode[] @relation(fields: [barCodeIds], references: [id])
+  barCode BarCode[]
 
   imageId String? @unique @db.ObjectId
   image   Image?  @relation(fields: [imageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -106,8 +105,8 @@ model BarCode {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   value String
 
-  productIds String[]  @db.ObjectId
-  products   Product[] @relation(fields: [productIds], references: [id])
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

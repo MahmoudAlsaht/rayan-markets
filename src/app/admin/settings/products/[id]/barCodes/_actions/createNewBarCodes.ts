@@ -20,8 +20,8 @@ export async function createNewBarCodes(formData: FormData, productId: string) {
         await db.barCode.update({
           where: { id: dbBarCode.id },
           data: {
-            products: {
-              connect: [{ id: productId }],
+            product: {
+              connect: { id: productId },
             },
           },
         });

@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/db/db";
+import { Product } from "@prisma/client";
 import { addHours } from "date-fns";
 
 export const getAllProducts = async () => {
@@ -39,7 +40,10 @@ export const getAllProducts = async () => {
     index: index + 1,
     name: product.name,
     image: product.image?.path,
-    barCode: product.barCode,
+    barCodes: product.barCode.map((barCode) => ({
+      code: barCode.value,
+      id: barCode.id,
+    })),
   }));
 
   return selectedProducts;

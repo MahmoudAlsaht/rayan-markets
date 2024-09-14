@@ -18,16 +18,16 @@ const getSections = cache(
       select: {
         id: true,
         name: true,
+        type: true,
         cover: {
           select: {
             path: true,
           },
         },
       },
-      take: 10,
     });
   },
-  ["/", "getSections"],
+  ["/sections", "getSections"],
 );
 
 export default async function SectionsHomeContainer({

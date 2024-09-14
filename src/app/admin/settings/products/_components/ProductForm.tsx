@@ -8,6 +8,7 @@ import { Section } from "@prisma/client";
 import { useState } from "react";
 import OfferDatePicker from "./OfferDatePicker";
 import { DateRange } from "react-day-picker";
+import NewSectionShortcutForm from "./NewSectionShortcutForm";
 
 export function ProductForm({
   product,
@@ -55,6 +56,12 @@ export function ProductForm({
     to: product?.offerEndsAt || undefined,
   });
 
+  const [newCategory, setNewCategory] = useState<{
+    name: string;
+    id: string;
+  }>();
+  const [newBrand, setNewBrand] = useState<{ name: string; id: string }>();
+
   const [error, action] = useFormState(
     product == null
       ? createNewProduct.bind(null, date)
@@ -68,6 +75,7 @@ export function ProductForm({
     >
       <div className="flex gap-1">
         <div className="group relative z-0 mb-5 w-full">
+          <NewSectionShortcutForm setSection={setNewCategory} type="category" />
           <select
             name="category"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
@@ -79,9 +87,12 @@ export function ProductForm({
                 {product.category?.name}
               </option>
             ) : (
-              <option value="">اختر الفئة</option>
+              <option value={newCategory?.id || ""}>
+                {newCategory?.name || "اختر الفئة"}
+              </option>
             )}
             {categories &&
+              !newCategory &&
               categories.map((category) =>
                 product ? (
                   product.category?.id !== category.id && (
@@ -102,6 +113,7 @@ export function ProductForm({
         </div>
 
         <div className="group relative z-0 mb-5 w-full">
+          <NewSectionShortcutForm setSection={setNewBrand} type="brand" />
           <select
             name="brand"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
@@ -113,9 +125,12 @@ export function ProductForm({
                 {product.brand?.name}
               </option>
             ) : (
-              <option value="">اختر العلامة</option>
+              <option value={newBrand?.id || ""}>
+                {newBrand?.name || "اختر العلامة"}
+              </option>
             )}
             {brands &&
+              !newBrand &&
               brands.map((brand) =>
                 product ? (
                   product.brand?.id !== brand.id && (
@@ -348,7 +363,7 @@ export function ProductForm({
 
       <div className="group relative z-0 mb-5 w-full">
         <label className="mb-2 block text-gray-900" htmlFor="productImage">
-          تحميل صورة العلامة
+          تحميل صورة المنتج
         </label>
         <input
           className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"

@@ -82,7 +82,7 @@ export default function BarCodeForm({
           htmlFor="barCode"
           className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500 rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4"
         >
-          الكلمات المفتاحية
+          أدخل الكود
         </label>
         <Button
           variant="ghost"
@@ -102,7 +102,7 @@ export default function BarCodeForm({
 
       <div className="flex text-center sm:gap-10">
         <div>
-          {barCodes && barCodes.length > 0 && <h1>الكلمات الحالية</h1>}
+          {barCodes && barCodes.length > 0 && <h1>الأكواد الحالية</h1>}
           <div className="mb-4 flex w-1/2 flex-col">
             {barCodes &&
               barCodes.map((barCode) => (

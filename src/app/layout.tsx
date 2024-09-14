@@ -117,10 +117,9 @@ export default async function RootLayout({
               MobileNavBar={<BottomNavbar />}
             >
               <section className="mx-auto max-w-screen-2xl">{children}</section>
+              <InstallApp />
             </LoadingProvider>
           </CartProvider>
-
-          <InstallApp />
         </ThemeProvider>
       </body>
     </html>

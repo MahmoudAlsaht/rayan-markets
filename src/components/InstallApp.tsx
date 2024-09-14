@@ -14,12 +14,16 @@ const InstallPWA: React.FC = () => {
   useLayoutEffect(() => {
     const checkInstallation = () => {
       if (typeof window !== "undefined") {
-        return (
+        if (
           window.matchMedia("(display-mode: standalone)").matches ||
           document.referrer.startsWith("android-app://") ||
-          (navigator as any).standalone ||
-          localStorage.getItem("pwaInstalled") === "1"
-        );
+          (navigator as any).standalone
+        ) {
+          localStorage.setItem("pwaInstalled", "1");
+          return true;
+        }
+        localStorage.setItem("pwaInstalled", "0");
+        return false;
       }
       return false;
     };
@@ -42,7 +46,7 @@ const InstallPWA: React.FC = () => {
           startDate == null
             ? true
             : now - JSON.parse(startDate) > 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
-        if (isExpired) setShowInstallButton(true);
+        isExpired ? setShowInstallButton(true) : setShowInstallButton(false);
       }
     };
 
@@ -53,7 +57,7 @@ const InstallPWA: React.FC = () => {
     const installHandler = (e: Event) => {
       e.preventDefault();
       setPromptInstall(e);
-      setShowInstallButton(true);
+      setShowInstallButton(false);
     };
 
     const afterInstalledHandler = () => {
@@ -91,9 +95,7 @@ const InstallPWA: React.FC = () => {
       manifestElement.href = manifestUrl;
       document.head.appendChild(manifestElement);
 
-      alert(
-        'To install on Firefox: Click the "Install" button in the address bar.',
-      );
+      alert('للتثبيت على Firefox: انقر فوق زر "تثبيت" في شريط العناوين.');
     }
   };
 
@@ -110,43 +112,43 @@ const InstallPWA: React.FC = () => {
       case "ios":
         return (
           <div className="text-sm">
-            <p>To install:</p>
+            <p>للتثبيت:</p>
             <ol className="list-inside list-decimal">
-              <li>Tap the share button</li>
-              <li>Scroll down and tap &quot;Add to Home Screen&quot;</li>
+              <li>اضغط على زر المشاركة</li>
+              <li>
+                قم بالتمرير لأسفل وانقر على &quot;إضافة إلى الشاشة
+                الرئيسية&quot;
+              </li>
             </ol>
           </div>
         );
       case "macos":
         return (
           <div className="text-sm">
-            <p>To install:</p>
+            <p>للتثبيت:</p>
             <ol className="list-inside list-decimal">
-              <li>Click the share button in the address bar</li>
-              <li>Select &quot;Add to Dock&quot;</li>
+              <li>انقر على زر المشاركة في شريط العناوين</li>
+              <li>اختر &quot;أضف إلى Dock&quot;</li>
             </ol>
           </div>
         );
       case "firefox":
         return (
           <div className="text-sm">
-            <p>To install on Firefox:</p>
+            <p>للتثبيت على Firefox:</p>
             <ol className="list-inside list-decimal">
-              <li>Click the &quot;Install&quot; button below</li>
-              <li>
-                Then click the &quot;Install&quot; button in the address bar
-              </li>
+              <li>ثم انقر على &quot;ثَبَّتَ&quot; الزر في شريط العنوان</li>
             </ol>
           </div>
         );
       default:
         return (
           <button
-            className="flex w-full items-center justify-center rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
+            className="flex w-full items-center justify-center gap-2 rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
             onClick={handleInstall}
           >
             <DownloadIcon className="mr-2" />
-            <span>Install App</span>
+            <span>تثبيت</span>
           </button>
         );
     }
@@ -160,7 +162,7 @@ const InstallPWA: React.FC = () => {
       role="alert"
     >
       <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <Info className="mr-2" />
           <span className="font-semibold">Install Our App</span>
         </div>

@@ -17,6 +17,7 @@ import {
   ArrowBigLeft,
   ArrowBigRight,
   ChevronDown,
+  Clipboard,
   Loader2,
   MoreHorizontal,
   Plus,
@@ -55,16 +56,22 @@ import { useRouter } from "next/navigation";
 import { deleteProduct } from "../_actions/deleteProduct";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 
-export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
+type BarCode = { code: string; id: string };
+
+export default function ProductsTable({
+  data,
+}: {
+  data: Partial<Product & BarCode[]>[];
+}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [isPending, startTransition] = useTransition();
-
+  const [globalFilter, setGlobalFilter] = useState("");
   const router = useRouter();
 
-  const columns: ColumnDef<Partial<Product>>[] = [
+  const columns: ColumnDef<Partial<Product & BarCode[]>>[] = [
     {
       accessorKey: "index",
       header: () => <div className="text-right">{data.length}</div>,
@@ -77,6 +84,50 @@ export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
       header: () => <div className="text-right">الاسم</div>,
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("name" as string)}</div>
+      ),
+    },
+    {
+      accessorKey: "barCodes",
+      header: () => <div className="text-right">كود المنتج</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {(row.getValue("barCodes") as BarCode[]).length > 1 ? (
+            <DropdownMenu dir="rtl">
+              <DropdownMenuTrigger className="flex items-center rounded-lg p-2 text-rayanPrimary-dark hover:bg-slate-200">
+                <ChevronDown className="size-4" />
+                <span>{(row.getValue("barCodes") as BarCode[])[0]?.code}</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {(row.getValue("barCodes") as BarCode[]).map((code) => (
+                  <DropdownMenuItem
+                    className="flex cursor-pointer justify-between"
+                    key={code.id}
+                    onClick={() =>
+                      navigator.clipboard.writeText(code.code as string)
+                    }
+                  >
+                    {code.code}
+                    <Clipboard className="size-3" />
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (row.getValue("barCodes") as any[])[0]?.code ? (
+            <div
+              className="flex w-fit cursor-pointer items-center gap-1 rounded-lg p-2 hover:bg-slate-200"
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  (row.getValue("barCodes") as any[])[0]?.code as string,
+                )
+              }
+            >
+              <Clipboard className="size-4" />
+              {(row.getValue("barCodes") as any[])[0]?.code}
+            </div>
+          ) : (
+            "لا يوجد"
+          )}
+        </div>
       ),
     },
     {
@@ -176,12 +227,20 @@ export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    globalFilterFn: (row, columnId, filterValue) => {
+      const barCodes = row.getValue("barCodes");
+      return (barCodes as BarCode[]).some((barcode) =>
+        barcode.code.toLowerCase().includes(filterValue.toLowerCase()),
+      );
+    },
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
+    onGlobalFilterChange: setGlobalFilter,
   });
 
   return (
@@ -227,6 +286,15 @@ export default function ProductsTable({ data }: { data: Partial<Product>[] }) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="اكتب كود المنتج"
+          onChange={(e) => setGlobalFilter(e.target.value)}
+          className="ml-2 max-w-sm"
+          value={globalFilter ?? ""}
+        />
       </div>
 
       <div className="rounded-md border">

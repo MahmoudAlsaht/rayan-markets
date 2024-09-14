@@ -185,68 +185,26 @@ async function getMostProducts() {
   };
 }
 
-async function getAllProducts(
-  orderBy,
-  productType,
-  skip,
-  limit,
-  filterSortPrice,
-) {
-  const [products, totalCount] = await Promise.all([
-    await db.product.findMany({
-      where:
-        productType === "for-home"
-          ? { productType: "forHome" }
-          : productType === "offers"
-            ? { isOffer: true }
-            : {},
-      orderBy: orderProductBy(orderBy, productType, filterSortPrice),
-      select: selectProduct,
-      take: limit + 1,
-      skip,
-    }),
-    db?.product.count(),
-  ]);
-
-  const hasNextPage = skip + limit < (totalCount || 0);
-
-  return { products: products as ProductCardProps[], hasNextPage, totalCount };
-}
-
 async function getMatchedProducts(
-  query,
-  skip,
-  limit,
-  filterSortPrice,
-  productType,
+  baseWhere,
   orderBy,
+  productType,
+  filterSortPrice,
+  limit,
+  skip,
 ) {
   const [products, totalCount] = await Promise.all([
-    await db.product.findMany({
-      where: {
-        AND: [
-          productType === "for-home"
-            ? { productType: "forHome" }
-            : productType === "offers"
-              ? { isOffer: true }
-              : {},
-          {
-            OR: [
-              { name: { contains: query, mode: "insensitive" } },
-              { body: { contains: query, mode: "insensitive" } },
-            ],
-          },
-        ],
-      },
+    db.product.findMany({
+      where: baseWhere,
       orderBy: orderProductBy(orderBy, productType, filterSortPrice),
       select: selectProduct,
       take: limit + 1,
       skip,
     }),
-    db?.product.count(),
+    db.product.count({ where: baseWhere }),
   ]);
 
-  const hasNextPage = skip + limit < (totalCount || 0);
+  const hasNextPage = products.length > limit;
 
   return { products: products as ProductCardProps[], hasNextPage, totalCount };
 }
@@ -257,81 +215,62 @@ async function getSectionProducts(
   productType,
   skip,
   limit,
-  sectionType: string,
   filterSortPrice,
 ) {
-  const [products, totalCount] = await Promise.all([
-    sectionType === "categories"
-      ? ((
-          await db.section.findFirst({
-            where: {
-              AND: [
-                {
-                  name: {
-                    contains: query as string,
-                    mode: "insensitive",
-                  },
-                  type: {
-                    equals: sectionType,
-                  },
-                },
-              ],
-            },
-            select: {
-              categoryProducts: {
-                where:
-                  productType === "for-home"
-                    ? { productType: "forHome" }
-                    : productType === "offers"
-                      ? { isOffer: true }
-                      : {},
-                orderBy: orderProductBy(orderBy, productType, filterSortPrice),
-                select: selectProduct,
-                take: limit + 1,
-                skip,
-              },
-            },
-          })
-        )?.categoryProducts as ProductCardProps[])
-      : ((
-          await db.section.findFirst({
-            where: {
-              AND: [
-                {
-                  name: {
-                    contains: query as string,
-                    mode: "insensitive",
-                  },
-                  type: {
-                    equals: sectionType,
-                  },
-                },
-              ],
-            },
-            select: {
-              brandProducts: {
-                where:
-                  productType === "for-home"
-                    ? { productType: "forHome" }
-                    : productType === "offers"
-                      ? { isOffer: true }
-                      : {},
-                orderBy: orderProductBy(orderBy, productType, filterSortPrice),
-                select: selectProduct,
-                take: limit + 1,
-                skip,
-              },
-            },
-          })
-        )?.brandProducts as ProductCardProps[]),
-    sectionType === "categories"
-      ? await db?.section.count({ where: { type: "categories" } })
-      : await db?.section.count({ where: { type: "brands" } }),
+  const [section, totalCount] = await Promise.all([
+    await db.section.findFirst({
+      where: {
+        name: {
+          contains: query as string,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        categoryProducts: {
+          where:
+            productType === "for-home"
+              ? { productType: "forHome" }
+              : productType === "offers"
+                ? { isOffer: true }
+                : {},
+          orderBy: orderProductBy(orderBy, productType, filterSortPrice),
+          select: selectProduct,
+          take: limit + 1,
+          skip,
+        },
+        brandProducts: {
+          where:
+            productType === "for-home"
+              ? { productType: "forHome" }
+              : productType === "offers"
+                ? { isOffer: true }
+                : {},
+          orderBy: orderProductBy(orderBy, productType, filterSortPrice),
+          select: selectProduct,
+          take: limit + 1,
+          skip,
+        },
+      },
+    }),
+    await db?.product.count({
+      where: {
+        OR: [{ category: { name: query } }, { brand: { name: query } }],
+      },
+    }),
   ]);
 
   const hasNextPage = skip + limit < (totalCount || 0);
 
-  return { products, hasNextPage, totalCount };
+  return {
+    products: section
+      ? ([
+          ...section.brandProducts,
+          ...section.categoryProducts,
+        ] as ProductCardProps[])
+      : [],
+    hasNextPage,
+    totalCount,
+  };
 }
 
 export async function searchProducts({
@@ -374,24 +313,32 @@ export async function searchProducts({
       : {}),
   };
 
-  const [products, totalCount] = await Promise.all([
-    db.product.findMany({
-      where: baseWhere,
-      orderBy: orderProductBy(orderBy, productType, filterSortPrice),
-      select: selectProduct,
-      take: limit + 1,
+  return (
+    await getMatchedProducts(
+      baseWhere,
+      orderBy,
+      productType,
+      filterSortPrice,
+      limit,
       skip,
-    }),
-    db.product.count({ where: baseWhere }),
-  ]);
-
-  const hasNextPage = products.length > limit;
-
-  return {
-    products: products.slice(0, limit) as ProductCardProps[],
-    hasNextPage,
-    totalCount,
-  };
+    )
+  ).products.length > 0
+    ? await getMatchedProducts(
+        baseWhere,
+        orderBy,
+        productType,
+        filterSortPrice,
+        limit,
+        skip,
+      )
+    : await getSectionProducts(
+        query,
+        orderBy,
+        productType,
+        skip,
+        limit,
+        filterSortPrice,
+      );
 }
 
 export async function getProductsForSection(

@@ -12,9 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import logout from "../auth/_actions/logout";
-import SearchProducts from "./SearchProducts";
+import SearchProducts from "../products/_components/SearchProducts";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
 import { useCart } from "@/app/(siteFacing)/_context/cart/CartContext";
+import QueryProvider from "../products/_components/QueryProvider";
 
 export default function MainNavbar({
   user,
@@ -107,9 +108,11 @@ export default function MainNavbar({
                 </li>
               )}
 
-              <li className="hover:cursor-pointer">
-                <SearchProducts />
-              </li>
+              <QueryProvider>
+                <li className="hover:cursor-pointer">
+                  <SearchProducts />
+                </li>
+              </QueryProvider>
 
               {cart && (
                 <LoadingLink

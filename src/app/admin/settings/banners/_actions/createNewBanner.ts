@@ -37,7 +37,7 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
   const imagesIds = await uploadBannerImages(bannerImages);
   const mobileImagesIds = await uploadBannerImages(mobileImages);
 
-  if (checkBannerExists == null) {
+  if (!checkBannerExists) {
     await db.banner.create({
       data: {
         bannerType: data.bannerType,
@@ -52,7 +52,7 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
 
     revalidatePath("/", "layout");
 
-    return redirect("/admin/settings/banners");
+    redirect("/admin/settings/banners");
   }
 
   await db.banner.update({
@@ -67,31 +67,32 @@ export async function createNewBanner(_prevState: unknown, formData: FormData) {
     },
   });
 
-  data.bannerType === "main" && revalidatePath("/");
-  data.bannerType === "offers" && revalidatePath("/products/offers");
-  data.bannerType === "forHome" && revalidatePath("/products/for-home");
+  revalidatePath("/", "layout");
 
   redirect("/admin/settings/banners");
 }
 
-async function uploadBannerImages(files: File[]) {
+async function uploadBannerImages(files: File[] | null) {
   const uploadedImages: { id: string }[] = [];
 
-  for (const file of files) {
-    const image = await upload(file);
-    if (image?.filename && image.path) {
-      const newImage = await db.image.create({
-        data: {
-          imageType: "BannerImage",
-          filename: image?.filename as string,
-          path: image?.path as string,
-        },
-      });
-      uploadedImages.push({
-        id: newImage.id,
-      });
+  if (files && files.length > 0)
+    for (const file of files) {
+      if (file.size > 0) {
+        const image = await upload(file);
+        if (image?.filename && image.path) {
+          const newImage = await db.image.create({
+            data: {
+              imageType: "BannerImage",
+              filename: image?.filename as string,
+              path: image?.path as string,
+            },
+          });
+          uploadedImages.push({
+            id: newImage.id,
+          });
+        }
+      }
     }
-  }
 
   return uploadedImages;
 }

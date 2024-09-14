@@ -10,33 +10,24 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useFormState } from "react-dom";
-import { handleSearchInput, sortBasedOnPrice } from "../_actions/product";
-import { useEffect, useState } from "react";
-import ProductsContainer from "../products/_components/ProductsContainer";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ProductCardProps } from "../products/[productType]/[id]/page";
+import { ProductCardProps } from "../[productType]/[id]/page";
+import ProductsInfiniteScrolling from "./ProductsInfiniteScrolling";
 
 export default function SearchProducts({ className }: { className?: string }) {
   const formRef = React.useRef<HTMLFormElement | null>(null);
   const [priceType, setPriceType] = useState("all");
-  const [sortedProducts, setSortedProducts] = useState<
-    ProductCardProps[] | null | undefined
-  >(null);
+  const [query, setQuery] = useState<string>();
+  const queryRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
 
   const [pending, startSearching] = React.useTransition();
-
-  const [data, searchAction] = useFormState(handleSearchInput, null);
-
-  useEffect(() => {
-    if (formRef.current) formRef.current.reset();
-  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -45,16 +36,12 @@ export default function SearchProducts({ className }: { className?: string }) {
     setOpen(false);
   };
 
-  useEffect(() => {
-    const sortProducts = async () => {
-      const fetchedProducts = await sortBasedOnPrice(
-        data?.products as ProductCardProps[],
-        priceType,
-      );
-      setSortedProducts(fetchedProducts);
-    };
-    sortProducts();
-  }, [data, priceType]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    startSearching(async () => {
+      setQuery(queryRef.current?.value || "");
+    });
+  };
 
   return (
     <Drawer open={open} onClose={handleClose}>
@@ -92,13 +79,8 @@ export default function SearchProducts({ className }: { className?: string }) {
                       <form
                         dir="rtl"
                         className="relative"
-                        action={searchAction}
                         ref={formRef}
-                        onSubmit={() => {
-                          startSearching(
-                            async () => await formRef.current?.requestSubmit(),
-                          );
-                        }}
+                        onSubmit={handleSubmit}
                       >
                         <input
                           type="text"
@@ -106,6 +88,7 @@ export default function SearchProducts({ className }: { className?: string }) {
                           name="query"
                           className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 ps-9 text-sm text-gray-900"
                           placeholder="منتج،قسم،علامة تجارية ...."
+                          ref={queryRef}
                         />
                         <Button
                           type="submit"
@@ -138,14 +121,10 @@ export default function SearchProducts({ className }: { className?: string }) {
               <Loader2 className="size-24 animate-spin text-rayanPrimary-dark dark:text-rayanPrimary-light" />
             </div>
           ) : (
-            <>
-              {data?.products && (
-                <ProductsContainer
-                  handleClose={handleClose}
-                  products={sortedProducts as ProductCardProps[]}
-                />
-              )}
-            </>
+            <ProductsInfiniteScrolling
+              sortPrice={priceType}
+              query={query || ""}
+            />
           )}
           <div className="h-20"></div>
         </div>
