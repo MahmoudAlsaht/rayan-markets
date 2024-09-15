@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { DownloadIcon, X, Info } from "lucide-react";
 
 const InstallPWA: React.FC = () => {
@@ -17,7 +17,7 @@ const InstallPWA: React.FC = () => {
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const checkInstallation = () => {
       if (typeof window !== "undefined") {
         if (
