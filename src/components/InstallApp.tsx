@@ -151,7 +151,7 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     <div
       dir="rtl"
       id="toast-default"
-      className="fixed top-1/3 h-48 sm:bottom-3 z-50 mr-1 flex w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
+      className="fixed top-1/2 h-40 sm:bottom-3 z-50 mr-1 flex w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
       role="alert"
     >
       <div className="mb-2 flex items-center justify-between">
