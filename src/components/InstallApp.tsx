@@ -151,17 +151,17 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     <div
       dir="rtl"
       id="toast-default"
-      className="fixed top-1/2 h-40 sm:bottom-3 z-50 mr-1 flex w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
+      className="fixed bottom-6 h-40 sm:bottom-3 z-50 mr-1 flex w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
       role="alert"
     >
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 order-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Info className="mr-2" />
-          <span className="font-semibold">Install Our App</span>
+          <Info className="mr-2 order-2" />
+          <span className="font-semibold order-1">Install Our App</span>
         </div>
         <button
           type="button"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg p-1.5 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+          className="inline-flex order-1 h-8 w-8 items-center justify-center rounded-lg p-1.5 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
           aria-label="Close"
           onClick={handleDismiss}
         >
