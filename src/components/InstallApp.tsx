@@ -5,25 +5,21 @@ import { DownloadIcon, X, Info } from "lucide-react";
 
 const InstallPWA: React.FC = () => {
   const [promptInstall, setPromptInstall] = useState<Event | null>(null);
-  const [isInstalled, setIsInstalled] = useState<boolean>(false);
-  const [startDateState, setStartDateState] = useState<number | null>(null);
+  const [isInstalled, setIsInstalled] = useState(true);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const [platform, setPlatform] = useState<
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
 
   useLayoutEffect(() => {
-    if (typeof window !== "undefined") setIsInstalled(() => {
-					return localStorage.getItem("pwaInstalled") === '1' ? true : false;
-})
-
     const checkInstallation = () => {
       if (typeof window !== "undefined") {
         if (
           window.matchMedia("(display-mode: standalone)").matches ||
           document.referrer.startsWith("android-app://") ||
-          (navigator as any).standalone
+          (navigator as any).standalone ||
+          localStorage.getItem("pwaInstalled") === "1"
         ) {
-          localStorage.setItem("pwaInstalled", "1");
           return true;
         }
         localStorage.setItem("pwaInstalled", "0");
@@ -44,13 +40,20 @@ const InstallPWA: React.FC = () => {
 
     const checkExpirationAndSetButton = () => {
       if (typeof window !== "undefined") {
+        const now = new Date().getTime();
         const startDate = localStorage.getItem("startDate");
-setStartDateState(startDate ? JSON.parse(startDate) : null)
+        const isExpired =
+          startDate == null
+            ? true
+            : now - JSON.parse(startDate) > 1000 * 60 * 60 * 24 * 4;
+        if (isExpired) setShowInstallButton(true);
       }
     };
 
     const installHandler = (e: Event) => {
       e.preventDefault();
+      localStorage.setItem("pwaInstalled", "0");
+      setIsInstalled(false);
       setPromptInstall(e);
     };
 
@@ -74,17 +77,16 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     }
   }, []);
 
-    if (typeof window === "undefined") return null; 
-
   const handleDismiss = () => {
     if (typeof window !== "undefined") {
       const date = new Date().getTime() + 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
       localStorage.setItem("startDate", JSON.stringify(date));
-      setStartDateState(date);
+      setShowInstallButton(false);
     }
   };
 
   const handleInstall = () => {
+    console.log(promptInstall);
     if (promptInstall) {
       (promptInstall as any).prompt();
     } else if (platform === "firefox") {
@@ -99,10 +101,13 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     }
   };
 
-  if (startDateState != null && new Date().getTime() - startDateState < 4 * 24 * 60 * 60 * 1000) return null;
-
- if (isInstalled) return null;
-  
+  if (
+    isInstalled ||
+    !showInstallButton ||
+    typeof window === "undefined" ||
+    process.env.NODE_ENV !== "production"
+  )
+    return null;
 
   const renderInstallInstructions = () => {
     switch (platform) {
@@ -141,7 +146,7 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
       default:
         return (
           <button
-            className="flex my-auto bg-inherit/60 w-full items-center justify-center gap-2 rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
+            className="bg-inherit/60 my-auto flex w-full items-center justify-center gap-2 rounded-lg p-2 text-rayanPrimary-light hover:bg-rayanSecondary-light"
             onClick={handleInstall}
           >
             <DownloadIcon className="mr-2" />
@@ -155,7 +160,7 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     <div
       dir="rtl"
       id="toast-default"
-      className="fixed bottom-0 h-36 sm:bottom-3 z-50 mr-1 flex w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
+      className="fixed bottom-0 z-50 mr-1 flex h-36 w-[97%] flex-col rounded-lg bg-rayanSecondary-dark p-4 shadow sm:bottom-3 sm:right-14 sm:mr-0 sm:w-full sm:max-w-xs"
       role="alert"
     >
       <div dir="ltr" className="mb-2 flex items-center justify-between">
