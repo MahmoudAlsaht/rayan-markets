@@ -76,6 +76,8 @@ setStartDateState(startDate ? JSON.parse(startDate) : null)
     }
   }, []);
 
+    if (typeof window === "undefined") return null; 
+
   const handleDismiss = () => {
     if (typeof window !== "undefined") {
       const date = new Date().getTime() + 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
