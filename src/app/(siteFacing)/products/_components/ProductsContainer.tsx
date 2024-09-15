@@ -29,7 +29,7 @@ export default function ProductsContainer({
           <React.Fragment key={i}>
             {pages.products?.map((product) => (
               <ProductCartProvider key={product.id} id={product.id as string}>
-                <ProductCard product={product} />
+                <ProductCard handleClose={handleClose} product={product} />
               </ProductCartProvider>
             ))}
           </React.Fragment>

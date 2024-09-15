@@ -14,6 +14,7 @@ export default function ProductsInfiniteScrolling({
   orderBy,
   query,
   sortPrice,
+  handleClose,
 }: {
   query?: string;
   sectionType?: string;
@@ -21,6 +22,7 @@ export default function ProductsInfiniteScrolling({
   productType?: string;
   orderBy?: string;
   sortPrice?: string;
+  handleClose?: () => void;
 }) {
   const { ref, inView } = useInView();
 
@@ -91,7 +93,7 @@ export default function ProductsInfiniteScrolling({
 
   return (
     <>
-      <ProductsContainer data={data} />
+      <ProductsContainer handleClose={handleClose} data={data} />
 
       <div ref={ref}>
         {isFetchingNextPage ? (

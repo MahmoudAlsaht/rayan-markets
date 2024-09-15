@@ -122,6 +122,7 @@ export default function SearchProducts({ className }: { className?: string }) {
             </div>
           ) : (
             <ProductsInfiniteScrolling
+              handleClose={handleClose}
               sortPrice={priceType}
               query={query || ""}
             />

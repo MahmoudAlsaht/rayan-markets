@@ -61,11 +61,14 @@ export default function ProductCard({
           )}
         </div>
 
-        <LoadingLink className="mt-3 w-full py-3" href={handleUpdateViews}>
+        <LoadingLink
+          className="mt-3 flex w-full flex-col items-center py-3 text-center"
+          href={handleUpdateViews}
+        >
           <p className="mt-2 block text-center text-xs font-semibold text-rayanPrimary-dark sm:text-start sm:text-sm">
             {product?.name}
           </p>
-          <div className="mt-2 flex items-center justify-around">
+          <div className="mt-2 flex w-full items-center justify-around">
             <div className="flex items-center justify-around sm:gap-2 md:justify-start">
               <p className="my-3 cursor-auto text-sm font-semibold text-rayanSecondary-dark sm:text-sm">
                 {formatCurrency(
