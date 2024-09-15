@@ -10,9 +10,10 @@ const InstallPWA: React.FC = () => {
        if (typeof window ! == "undefined") {
 const startDate = localStorage.getItem("startDate");
 return startDate ? JSON.parse(startDate) 
-: null} 
+: null
+}
+return null; 
      };
-return null;
 );
   const [platform, setPlatform] = useState<
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
