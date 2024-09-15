@@ -6,13 +6,7 @@ import { DownloadIcon, X, Info } from "lucide-react";
 const InstallPWA: React.FC = () => {
   const [promptInstall, setPromptInstall] = useState<Event | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
-  const [startDateState, setStartDateState] = useState<number | null>(() => { 
-    if (typeof window !== "undefined") { 
-        const startDate = localStorage.getItem("startDate"); 
-        return startDate ? JSON.parse(startDate) : null; 
-    } 
-    return null; 
-});
+  const [startDateState, setStartDateState] = useState<number | null>(null);
   const [platform, setPlatform] = useState<
     "android" | "ios" | "windows" | "macos" | "firefox" | "other"
   >("other");
