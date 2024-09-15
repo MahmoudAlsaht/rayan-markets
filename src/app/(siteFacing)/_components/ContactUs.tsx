@@ -81,8 +81,7 @@ export default function ContactUs({
               >
                 <button
                   className={
-                    "align-center h-10 w-10 items-center justify-center rounded-full font-normal shadow-md outline-none focus:outline-none" &&
-                    `${!isContactPage && "mr-2"}`
+                    `align-center h-10 w-10 items-center justify-center rounded-full font-normal shadow-md outline-none focus:outline-none ${!isContactPage && "mr-2"}`
                   }
                   type="button"
                 >
