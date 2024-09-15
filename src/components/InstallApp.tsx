@@ -13,7 +13,7 @@ const InstallPWA: React.FC = () => {
 
   useLayoutEffect(() => {
     if (typeof window !== "undefined") setIsInstalled(() => {
-					return localStorage.getItem("pwaInstalled") === '1'
+					return JSON.parse(localStorage.getItem("pwaInstalled")) === '1' ? true : false;
 })
 
     const checkInstallation = () => {
