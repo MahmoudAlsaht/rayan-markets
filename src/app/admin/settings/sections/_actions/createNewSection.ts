@@ -1,4 +1,5 @@
 "use server";
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import { upload } from "@/cloudinary";
 import db from "@/db/db";
 import { revalidatePath } from "next/cache";
@@ -33,7 +34,10 @@ export async function createNewSection(
     await db.section.findMany({
       where: { type: data.type },
     })
-  ).find((s) => s.name === data.name);
+  ).find(
+    async (s) =>
+      s.name === ((await trimAndNormalizeProductData(data.name)) as string),
+  );
 
   if (checkSectionExists != undefined)
     return {
@@ -46,7 +50,7 @@ export async function createNewSection(
 
   const newSection = await db.section.create({
     data: {
-      name: data.name,
+      name: (await trimAndNormalizeProductData(data.name)) as string,
       type: data.type,
       cover: {
         create: {

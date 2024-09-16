@@ -1,42 +1,42 @@
-'use server';
-import db from '@/db/db';
-import { z } from 'zod';
-import { redirect } from 'next/navigation';
+"use server";
+import db from "@/db/db";
+import { z } from "zod";
+import { redirect } from "next/navigation";
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 
 const addDistrictSchema = z.object({
-	name: z.string().min(1, 'يجب تحديد اسم المنطقة'),
-	shippingFees: z.string().min(1, 'يجب تحديد تكلفة التوصيل'),
+  name: z.string().min(1, "يجب تحديد اسم المنطقة"),
+  shippingFees: z.string().min(1, "يجب تحديد تكلفة التوصيل"),
 });
 
 export const createNewDistrict = async (
-	_pervState: unknown,
-	formData: FormData,
+  _pervState: unknown,
+  formData: FormData,
 ) => {
-	const result = await addDistrictSchema.safeParse(
-		Object.fromEntries(formData.entries()),
-	);
+  const result = await addDistrictSchema.safeParse(
+    Object.fromEntries(formData.entries()),
+  );
 
-	if (result.success === false)
-		return result.error.formErrors.fieldErrors;
+  if (result.success === false) return result.error.formErrors.fieldErrors;
 
-	const data = result.data;
+  const data = result.data;
 
-	const district = await db.district.findUnique({
-		where: { name: data.name },
-	});
+  const district = await db.district.findUnique({
+    where: { name: (await trimAndNormalizeProductData(data.name)) as string },
+  });
 
-	if (district !== null)
-		return {
-			name: 'هذه المنطقة مدعومة بالفعل',
-			shippingFees: '',
-		};
+  if (district !== null)
+    return {
+      name: "هذه المنطقة مدعومة بالفعل",
+      shippingFees: "",
+    };
 
-	await db.district.create({
-		data: {
-			name: data.name,
-			shippingFees: parseFloat(data.shippingFees),
-		},
-	});
+  await db.district.create({
+    data: {
+      name: (await trimAndNormalizeProductData(data.name)) as string,
+      shippingFees: parseFloat(data.shippingFees),
+    },
+  });
 
-	redirect('/admin/settings/districts');
+  redirect("/admin/settings/districts");
 };

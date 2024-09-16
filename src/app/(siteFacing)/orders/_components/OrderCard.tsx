@@ -77,6 +77,10 @@ export function OrderCard({
     ? format(order?.pickUpDate as Date, "yyyy/MM/dd الساعة HH:mm")
     : null;
 
+  const deliveryTime = order?.deliveryTime
+    ? format(order?.deliveryTime as Date, "yyyy/MM/dd الساعة HH:mm")
+    : null;
+
   const generateDisplayDate = () =>
     minutesPassed >= 60
       ? hoursPassed >= 24
@@ -185,13 +189,19 @@ export function OrderCard({
               ? "نقدا"
               : order?.paymentMethod === "eWallet"
                 ? "عن طريق المحفظة"
-                : "استلام من المحل"}
+                : "من المحل"}
         </span>
       </h3>
       {order?.pickUpDate && (
         <h3>
           <span className="text-rayanSecondary-dark">موعد الاستلام: </span>{" "}
           {pickUpDate}
+        </h3>
+      )}
+      {order?.deliveryTime && (
+        <h3>
+          <span className="text-rayanSecondary-dark">موعد التوصيل: </span>{" "}
+          {deliveryTime}
         </h3>
       )}
       <h3 className={order?.pickUpDate ? "text-rayanWarning-dark" : ""}>

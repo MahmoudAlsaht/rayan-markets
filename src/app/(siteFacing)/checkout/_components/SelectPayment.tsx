@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEvent, FormEvent, ReactNode, useState } from "react";
+import { ChangeEvent, ReactNode, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { GrAtm } from "react-icons/gr";
@@ -10,20 +10,62 @@ import SubmitButton from "@/components/SubmitButton";
 import { createNewOrder } from "../../orders/_actions/createNewOrder";
 import { useFormState } from "react-dom";
 import DayTimePicker from "./DayTimePicker";
+import { DeliveryTime } from "@prisma/client";
+import {
+  getHours,
+  setMinutes,
+  setHours,
+  getMinutes,
+  addMinutes,
+  isAfter,
+} from "date-fns";
 
-export default function SelectPayment() {
+function isValidSelection(selectedHour: number): boolean {
+  const currentDate = new Date();
+  const selectedDate = setMinutes(setHours(currentDate, selectedHour), 0);
+
+  const timeDifference = addMinutes(currentDate, 45);
+  return isAfter(selectedDate, timeDifference);
+}
+
+export default function SelectPayment({
+  deliveryTimes,
+}: {
+  deliveryTimes: DeliveryTime;
+}) {
   const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickUp">(
     "delivery",
   );
+  const [deliveryTime, setDeliveryTime] = useState<Date | undefined>();
+
   const [paymentMethod, setPaymentMethod] = useState<
     "card" | "cash" | "eWallet"
   >("cash");
   const [date, setDate] = useState<Date | undefined>();
 
   const [error, action] = useFormState(
-    createNewOrder.bind(null, deliveryMethod === "pickUp" ? date : undefined),
+    createNewOrder.bind(
+      null,
+      deliveryMethod === "delivery" ? deliveryTime : undefined,
+      deliveryMethod === "pickUp" ? date : undefined,
+    ),
     null,
   );
+
+  const handleSelectDelivery = (e: ChangeEvent<HTMLSelectElement>) => {
+    const now = Date.now();
+    const selected = setHours(new Date(), parseInt(e.target.value));
+    if (getHours(now) === parseInt(e.target.value) && getMinutes(now) > 15) {
+      const toursIndex = deliveryTimes.tours.indexOf(parseInt(e.target.value));
+      const selected = setHours(
+        new Date(),
+        toursIndex === deliveryTimes.tours.length - 1 ? 0 : toursIndex,
+      );
+      setDeliveryTime(setMinutes(selected, 0));
+      return;
+    }
+    setDeliveryTime(setMinutes(selected, 0));
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -55,7 +97,7 @@ export default function SelectPayment() {
         }
       >
         <RadioCard value="delivery" htmlFor="delivery">
-          توصيل للمنزل
+          توصيل{" "}
         </RadioCard>
         <RadioCard value="pickUp" htmlFor="pickUp">
           استلام من الفرع
@@ -109,6 +151,33 @@ export default function SelectPayment() {
 
       {deliveryMethod === "delivery" && (
         <>
+          {deliveryTimes != null && (
+            <div className="group relative z-0 mb-5 w-full">
+              <p className="mb-2 text-rayanWarning-dark">
+                أوقات التوصيل من الساعة {deliveryTimes.start} و حتى الساعة{" "}
+                {deliveryTimes.end}
+              </p>
+              <select
+                name="deliveryTime"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                onChange={handleSelectDelivery}
+              >
+                <option value="">اختر وقت التوصيل</option>
+                {deliveryTimes.tours.map((tour, i) => (
+                  <option
+                    disabled={!isValidSelection(tour)}
+                    value={tour}
+                    key={`${i}-${deliveryTimes.id}-${tour}`}
+                  >
+                    {` ${tour === 0 ? 12 : tour > 0 && tour < 12 ? tour : tour - 12}:00${tour >= 0 && tour < 12 ? "am" : "pm"} `}{" "}
+                  </option>
+                ))}
+              </select>
+              {error?.deliveryTime && (
+                <div className="text-destructive">{error.deliveryTime}</div>
+              )}
+            </div>
+          )}
           <RadioGroup
             name="paymentMethod"
             defaultValue={paymentMethod}

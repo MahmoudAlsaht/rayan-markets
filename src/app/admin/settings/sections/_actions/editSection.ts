@@ -1,4 +1,5 @@
 "use server";
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import { deleteCloudinaryImage, upload } from "@/cloudinary";
 import db from "@/db/db";
 import { revalidatePath } from "next/cache";
@@ -56,7 +57,9 @@ export async function editSection(
   await db.section.update({
     where: { id },
     data: {
-      name: data.name || currentSection?.name,
+      name: data.name
+        ? ((await trimAndNormalizeProductData(data.name)) as string)
+        : currentSection?.name,
       type: data.type || currentSection?.type,
     },
   });

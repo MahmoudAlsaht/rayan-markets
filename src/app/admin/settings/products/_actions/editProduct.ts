@@ -1,4 +1,5 @@
 "use server";
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import { deleteCloudinaryImage, upload } from "@/cloudinary";
 import db from "@/db/db";
 import { setHours, setMilliseconds, setMinutes, setSeconds } from "date-fns";
@@ -74,10 +75,14 @@ export async function editProduct(
   await db.product.update({
     where: { id },
     data: {
-      name: data.name.trim() || currentProduct?.name.trim(),
+      name:
+        ((await trimAndNormalizeProductData(data.name)) as string) ||
+        currentProduct?.name.trim(),
       categoryId: data.category || currentProduct?.categoryId,
       brandId: data.brand || currentProduct?.brandId,
-      body: data.body || currentProduct?.body,
+      body:
+        ((await trimAndNormalizeProductData(data.body)) as string) ||
+        currentProduct?.body,
       price: parseFloat(data.price) || currentProduct?.price,
       quantity: parseInt(data.quantity) || currentProduct?.quantity,
       productType: data.productType
@@ -91,7 +96,7 @@ export async function editProduct(
         data.productType === "flavor" ? options || currentProduct?.flavors : [],
       isOffer: data.isOffer === "on" ? true : false,
       description: data.description
-        ? data.description
+        ? ((await trimAndNormalizeProductData(data.description)) as string)
         : currentProduct?.description,
       newPrice:
         data.isOffer === "on"

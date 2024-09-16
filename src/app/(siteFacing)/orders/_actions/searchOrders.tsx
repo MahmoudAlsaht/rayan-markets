@@ -58,6 +58,7 @@ export type OrderCardProp = {
   note: string | null;
   pickUpDate: Date | null;
   pickUpStore: string | null;
+  deliveryTime: Date | null;
 };
 
 export const select = {
@@ -70,6 +71,7 @@ export const select = {
   createdAt: true,
   pickUpDate: true,
   pickUpStore: true,
+  deliveryTime: true,
   promoCode: { select: { discount: true, promoType: true, code: true } },
   profile: true,
   anonymous: true,

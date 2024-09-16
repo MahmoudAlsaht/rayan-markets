@@ -14,6 +14,10 @@ export default async function CheckoutPage({
     ? await db.district.findMany({ select: { id: true, name: true } })
     : null;
 
+  const deliveryTimes =
+    (await db.deliveryTime.findFirst()) ||
+    (await db.deliveryTime.create({ data: {} }));
+
   return (
     <>
       {step === "contact" ? (
@@ -23,7 +27,7 @@ export default async function CheckoutPage({
           <SelectContact profileId={user.profile?.id as string} />
         )
       ) : step === "payment-method" ? (
-        <SelectPayment />
+        <SelectPayment deliveryTimes={deliveryTimes} />
       ) : (
         step
       )}

@@ -23,10 +23,12 @@ const addOrderSchema = z.object({
   }),
   note: z.string().optional(),
   pickUpDate: z.string().optional(),
+  deliveryTime: z.string().optional(),
   storeToPickUpFrom: z.string().min(1, "اختر فرع الإستلام").optional(),
 });
 
 export async function createNewOrder(
+  deliveryTime: Date | undefined,
   date: Date | undefined,
   _: unknown,
   formData: FormData,
@@ -114,8 +116,9 @@ export async function createNewOrder(
         paymentMethod: "",
         deliveryMethod: "",
         note: "",
-        pickUpDate: "يجب تحديد تاريخ الاستلام",
+        pickUpDate: "يجب تحديد وقت الاستلام",
         storeToPickUpFrom: "",
+        deliveryTime: "",
       };
     if (data?.storeToPickUpFrom! in rayanStores)
       return {
@@ -124,8 +127,20 @@ export async function createNewOrder(
         note: "",
         pickUpDate: "",
         storeToPickUpFrom: "يجب تحديد فرع الاستلام",
+        deliveryTime: "",
       };
   }
+
+  if (data.deliveryMethod === "delivery")
+    if (!deliveryTime)
+      return {
+        paymentMethod: "",
+        deliveryMethod: "",
+        note: "",
+        pickUpDate: "",
+        storeToPickUpFrom: "",
+        deliveryTime: "اختر وقت التوصيل",
+      };
 
   const newOrder = await db.order.create({
     data: {
@@ -148,6 +163,7 @@ export async function createNewOrder(
       orderId: genOrderId(),
       note: data.note,
       pickUpDate: date,
+      deliveryTime: deliveryTime,
       pickUpStore: data.storeToPickUpFrom,
     },
   });

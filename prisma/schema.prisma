@@ -219,6 +219,15 @@ model OrderProduct {
   orderId     String @db.ObjectId
 }
 
+model DeliveryTime {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  start String @default("11:00")
+  end   String @default("23:00")
+
+  tours Int[] @default([13, 15, 17, 19, 21, 23])
+}
+
 model Order {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   billTotal     Float
@@ -230,6 +239,8 @@ model Order {
 
   pickUpDate  DateTime?
   pickUpStore String?
+
+  deliveryTime DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,4 +1,5 @@
 "use server";
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import { upload } from "@/cloudinary";
 import db from "@/db/db";
 import { setHours, setMilliseconds, setMinutes, setSeconds } from "date-fns";
@@ -52,7 +53,14 @@ export async function createNewProduct(
   const data = result.data;
 
   const checkProductExists = await db.product.findFirst({
-    where: { name: data.name },
+    where: {
+      AND: [
+        { name: (await trimAndNormalizeProductData(data.name)) as string },
+        { body: (await trimAndNormalizeProductData(data.body)) as string },
+        data.category ? { categoryId: data.category } : {},
+        data.brand ? { brandId: data.brand } : {},
+      ],
+    },
   });
 
   if (checkProductExists != null)
@@ -84,10 +92,10 @@ export async function createNewProduct(
 
   await db.product.create({
     data: {
-      name: data.name.trim(),
+      name: (await trimAndNormalizeProductData(data.name)) as string,
       categoryId: data.category,
       brandId: data.brand,
-      body: data.body.trim(),
+      body: (await trimAndNormalizeProductData(data.body)) as string,
       price: parseFloat(data.price),
       quantity: parseInt(data.quantity),
       productType: data.productType,
@@ -96,7 +104,9 @@ export async function createNewProduct(
       weights:
         data.productType === "weight" ? options?.map((w) => parseFloat(w)) : [],
       flavors: data.productType === "flavor" ? options : [],
-      description: data.description,
+      description: data.description
+        ? ((await trimAndNormalizeProductData(data.description)) as string)
+        : undefined,
       newPrice:
         data.isOffer === "on" ? parseFloat(data.newPrice as string) : null,
       offerStartsAt:

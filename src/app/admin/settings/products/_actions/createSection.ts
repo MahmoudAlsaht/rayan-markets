@@ -1,5 +1,6 @@
 "use server";
 
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import { upload } from "@/cloudinary";
 import db from "@/db/db";
 
@@ -13,10 +14,13 @@ export async function createSection(formData: FormData) {
   if (image == null) return "imageError";
 
   const isSectionExists = await db.section.findFirst({
-    where: { AND: [{ name }, { type }] },
+    where: {
+      AND: [
+        { name: (await trimAndNormalizeProductData(name)) as string },
+        { type },
+      ],
+    },
   });
-
-  console.log(isSectionExists);
 
   if (isSectionExists) return "duplicate";
 
@@ -29,7 +33,7 @@ export async function createSection(formData: FormData) {
 
   const newSection = await db.section.create({
     data: {
-      name,
+      name: (await trimAndNormalizeProductData(name)) as string,
       type,
       cover: {
         create: {

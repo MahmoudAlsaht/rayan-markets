@@ -6,7 +6,7 @@ import ProductsHomeContainer, {
 import SectionsHomeContainer from "./_components/SectionsHomeContainer";
 import { SectionsContainerSkeleton } from "./sections/_components/SectionsContainer";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="h-full">
       <Suspense>

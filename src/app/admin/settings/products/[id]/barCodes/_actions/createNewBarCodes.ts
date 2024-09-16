@@ -1,5 +1,6 @@
 "use server";
 
+import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
 import db from "@/db/db";
 
 export async function createNewBarCodes(formData: FormData, productId: string) {
@@ -7,7 +8,11 @@ export async function createNewBarCodes(formData: FormData, productId: string) {
 
   for (const barCode of selectedBarCodes) {
     const dbBarCode = await db.barCode.findFirst({
-      where: { value: barCode as string },
+      where: {
+        value: (await trimAndNormalizeProductData(
+          barCode.toString(),
+        )) as string,
+      },
     });
     if (dbBarCode != null) {
       const product = await db.product.findUnique({
@@ -32,7 +37,9 @@ export async function createNewBarCodes(formData: FormData, productId: string) {
         data: {
           barCode: {
             create: {
-              value: barCode as string,
+              value: (await trimAndNormalizeProductData(
+                barCode.toString(),
+              )) as string,
             },
           },
         },
