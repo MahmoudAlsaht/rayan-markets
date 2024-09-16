@@ -42,6 +42,6 @@ next-env.d.ts
 /public/swe-worker-*
 /public/workbox-*
 /public/fallback-*
+/upload-data-via-sheets/*
 /data
-/src/app/(siteFacing)/upload-data-via-sheets/*
 .vercel
