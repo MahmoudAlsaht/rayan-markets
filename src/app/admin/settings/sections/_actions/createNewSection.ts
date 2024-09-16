@@ -1,5 +1,5 @@
 "use server";
-import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
+import { trimAndNormalizeProductData } from "@/lib/trimAndNormalizeProductData";
 import { upload } from "@/cloudinary";
 import db from "@/db/db";
 import { revalidatePath } from "next/cache";

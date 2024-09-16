@@ -2,7 +2,7 @@
 import db from "@/db/db";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
+import { trimAndNormalizeProductData } from "@/lib/trimAndNormalizeProductData";
 
 const EditDistrictSchema = z.object({
   name: z.string().min(1, "يجب تحديد اسم المنطقة").optional(),

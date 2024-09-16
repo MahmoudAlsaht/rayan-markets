@@ -1,6 +1,6 @@
 "use server";
 
-import { trimAndNormalizeProductData } from "@/app/(siteFacing)/upload-data-via-sheets/_actions/uploadData";
+import { trimAndNormalizeProductData } from "@/lib/trimAndNormalizeProductData";
 import db from "@/db/db";
 
 export async function createNewBarCodes(formData: FormData, productId: string) {
