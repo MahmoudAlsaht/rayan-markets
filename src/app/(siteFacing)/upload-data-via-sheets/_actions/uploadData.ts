@@ -7,6 +7,9 @@ import { deleteCloudinaryImage } from "@/cloudinary";
 import { Image, Section } from "@prisma/client";
 import { trimAndNormalizeProductData } from "@/lib/trimAndNormalizeProductData";
 
+async function wait(duration: number) {
+  await new Promise((resolve) => setTimeout(resolve, duration));
+}
 export type ProductData = {
   name: string;
   body: string;
@@ -30,6 +33,7 @@ export async function generateOrUpdateData(
 ): Promise<void> {
   try {
     for (const item of fileData) {
+      await wait(10500);
       const trimmedItem = (await trimAndNormalizeProductData(
         item,
       )) as ProductData;
