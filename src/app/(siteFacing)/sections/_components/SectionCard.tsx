@@ -29,8 +29,8 @@ export default function SectionCard({
             alt={`${section.name}'s image`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+<span className="absolute bottom-0 flex h-1/3 w-full flex-col justify-center rounded-md rounded-bl-3xl rounded-br-3xl bg-slate-200/85 p-1 py-0 text-center text-xs font-semibold text-rayanPrimary-dark">{section.name}</span> 
         </div>
-        <h3 className="text-center text-xs sm:text-xl lg:text-2xl">{section.name}</h3>
       </LoadingLink>
     </div>
   );
