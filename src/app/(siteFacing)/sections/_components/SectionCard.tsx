@@ -1,6 +1,7 @@
 'use client'
 import Image from "next/image";
 import { LoadingLink } from "@/app/(siteFacing)/_context/LoadingContext";
+import { Card, CardContent } from "@/components/ui/card";
 
 export type SectionCardProps = {
   id: string;
