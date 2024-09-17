@@ -30,7 +30,7 @@ export default function SectionCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <h3 className="text-center text-lg sm:text-2xl">{section.name}</h3>
+        <h3 className="text-center text-xs sm:text-xl lg:text-2xl">{section.name}</h3>
       </LoadingLink>
     </div>
   );
