@@ -16,7 +16,7 @@ export default function SectionCard({
   section: SectionCardProps;
 }) {
   return (
-    <div className="cursor-pointer rounded-3xl duration-500 sm:w-full sm:hover:scale-105 sm:hover:shadow-xl">
+    <div className="cursor-pointer rounded-3xl duration-500 sm:w-full sm:hover:scale-105 shadow-md sm:hover:shadow-xl">
       <LoadingLink href={`/sections/${section.type}/${section.id}`}>
         <div className="relative h-24 sm:h-44">
           <Image
