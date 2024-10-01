@@ -37,12 +37,14 @@ export default function CartContainer() {
 
       <div className="container flex flex-col items-center gap-2">
         <CheckPromoForm cart={cart} />
-        <Button
-          disabled={(cart?.total || 0) < CART_MIN}
+        <LoadingLink
+          href="/checkout/contact"
           className="w-full rounded-xl sm:w-1/3"
         >
-          <LoadingLink href="/checkout/contact">تأكيد الاختيار</LoadingLink>
-        </Button>
+          <Button disabled={(cart?.total || 0) < CART_MIN} className="w-full">
+            تأكيد الاختيار
+          </Button>
+        </LoadingLink>
         {(cart?.total || 0) < CART_MIN ? (
           <div className="text-center text-lg text-destructive sm:order-1 sm:text-xl">
             <p>المبلغ الإجمالي: ({formatCurrency(cart?.total || 0)}) </p>
