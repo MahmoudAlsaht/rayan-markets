@@ -59,6 +59,7 @@ export type OrderCardProp = {
   pickUpDate: Date | null;
   pickUpStore: string | null;
   deliveryTime: Date | null;
+  clientName: string;
 };
 
 export const select = {
@@ -98,7 +99,6 @@ export async function searchOrders(
     query,
     status,
   );
-
   return { user, orders };
 }
 

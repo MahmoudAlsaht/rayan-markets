@@ -19,6 +19,7 @@ import {
   addMinutes,
   isAfter,
 } from "date-fns";
+import { se } from "date-fns/locale";
 
 function isValidSelection(selectedHour: number): boolean {
   const currentDate = new Date();
@@ -54,12 +55,14 @@ export default function SelectPayment({
 
   const handleSelectDelivery = (e: ChangeEvent<HTMLSelectElement>) => {
     const now = Date.now();
-    const selected = setHours(new Date(), parseInt(e.target.value));
-    if (getHours(now) === parseInt(e.target.value) && getMinutes(now) > 15) {
+    const selected = setHours(now, parseInt(e.target.value));
+    if (getHours(now) === getHours(selected) && getMinutes(now) > 15) {
       const toursIndex = deliveryTimes.tours.indexOf(parseInt(e.target.value));
       const selected = setHours(
-        new Date(),
-        toursIndex === deliveryTimes.tours.length - 1 ? 0 : toursIndex,
+        now,
+        toursIndex + 1 === deliveryTimes.tours.length
+          ? deliveryTimes.tours[0]
+          : deliveryTimes.tours[toursIndex],
       );
       setDeliveryTime(setMinutes(selected, 0));
       return;

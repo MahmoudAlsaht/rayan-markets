@@ -15,6 +15,13 @@ export default async function OrderDetails({
     select,
   });
 
+  const clientName = order?.profile
+    ? ((await db.user.findUnique({ where: { id: order.profile.userId } }))
+        ?.username as string)
+    : order?.anonymous
+      ? order.anonymous.name
+      : "";
+
   const user = await checkUser();
 
   if (order == null) return notFound();
@@ -24,7 +31,7 @@ export default async function OrderDetails({
       <main className="mx-auto mt-10 w-11/12 rounded-xl bg-slate-50 px-6 py-2">
         <OrderCard
           user={user}
-          order={order as OrderCardProp}
+          order={{ ...order, clientName } as OrderCardProp}
           isOrderDetailsPage
         />
       </main>
