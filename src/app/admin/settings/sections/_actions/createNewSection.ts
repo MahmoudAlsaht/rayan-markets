@@ -32,14 +32,15 @@ export async function createNewSection(
 
   const checkSectionExists = (
     await db.section.findMany({
-      where: { type: data.type },
+      where: { name: data.name },
     })
   ).find(
     async (s) =>
       s.name === ((await trimAndNormalizeProductData(data.name)) as string),
   );
 
-  if (checkSectionExists != undefined)
+  console.log(checkSectionExists);
+  if (checkSectionExists)
     return {
       name: "هذا القسم موجود بالفعل",
       type: "",
